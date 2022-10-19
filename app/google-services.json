@@ -1,0 +1,145 @@
+{
+  "project_info": {
+    "project_number": "173097730295",
+    "firebase_url": "https://coinlivechat-f3a4e-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "coinlivechat-f3a4e",
+    "storage_bucket": "coinlivechat-f3a4e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173097730295:android:26356d087b0185a6dbd3f2",
+        "android_client_info": {
+          "package_name": "com.coinlive.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173097730295-9q7pogci0uunv5hij2k696fora313od8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFxcoq0iGor6D6og5W4ZHiwZ9ldv4dYi0"
+        },
+        {
+          "current_key": "AIzaSyCcUuJn2UuKJOm2Zl6L5wXTrQP-Sc1j6h4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173097730295-1srb0uaquv942aj1sedgob599nuufqi5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "173097730295-2tkbftqghjgi6ckep9ofu9506qn6ne9q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tenxchat.clc"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173097730295:android:eb73a19b8632b134dbd3f2",
+        "android_client_info": {
+          "package_name": "com.tenxchat.coin_live_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173097730295-b6bb31gslbjs0cdasek5qa2u8u7v5tbg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tenxchat.coin_live_chat",
+            "certificate_hash": "de5fc731aef1b82583509c1776374ecf56be1973"
+          }
+        },
+        {
+          "client_id": "173097730295-cds8kr9bhbukp3ntgv87lcvarb95oce9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tenxchat.coin_live_chat",
+            "certificate_hash": "50317f7a5681e4e5f78a771035eb7427d66bf65d"
+          }
+        },
+        {
+          "client_id": "173097730295-ck20mrq4nrc5blfs5pc0qcaob75o755r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tenxchat.coin_live_chat",
+            "certificate_hash": "15538b5eb2cf83f4c05ba1f1debce29be2931f1f"
+          }
+        },
+        {
+          "client_id": "173097730295-fc4avjk8c53u0vn6hqsf07reng4u46hk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tenxchat.coin_live_chat",
+            "certificate_hash": "52e9ea111487bcf7e225d1fa746e83deae4e3aec"
+          }
+        },
+        {
+          "client_id": "173097730295-pqm7v7sp8siddt3q7gbn5q08jctump75.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tenxchat.coin_live_chat",
+            "certificate_hash": "3a85a528e48743620599b66d4fe2f25f31f00da7"
+          }
+        },
+        {
+          "client_id": "173097730295-rtpvgdtk7dko354m0emi596l5sl4o2q8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tenxchat.coin_live_chat",
+            "certificate_hash": "c6bc2d2ae74482e2d9c0ddde5eabd0cb015c6727"
+          }
+        },
+        {
+          "client_id": "173097730295-tcqi0k3lklv3daelf8ch97m86bsc9smm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tenxchat.coin_live_chat",
+            "certificate_hash": "98a313cf597d89cde24faf82f0b4aeb6ee3b519a"
+          }
+        },
+        {
+          "client_id": "173097730295-9q7pogci0uunv5hij2k696fora313od8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFxcoq0iGor6D6og5W4ZHiwZ9ldv4dYi0"
+        },
+        {
+          "current_key": "AIzaSyCcUuJn2UuKJOm2Zl6L5wXTrQP-Sc1j6h4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173097730295-1srb0uaquv942aj1sedgob599nuufqi5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "173097730295-2tkbftqghjgi6ckep9ofu9506qn6ne9q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tenxchat.clc"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
