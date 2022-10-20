@@ -7,7 +7,7 @@ import com.coinlive.chat.exception.NetworkException
 import com.coinlive.chat.exception.RequestFailException
 
 
-object CoinRepository {
+class CoinRepository {
     private val service: CoinService = RestApiClient.coinService
 
     fun getCoin(coinId: String, auth: String): Coin {

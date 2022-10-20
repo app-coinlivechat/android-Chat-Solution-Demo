@@ -6,7 +6,7 @@ import com.coinlive.chat.api.service.UploadService
 import com.coinlive.chat.exception.NetworkException
 import com.coinlive.chat.exception.RequestFailException
 
-object UploadRepository {
+class UploadRepository {
     private val service: UploadService = RestApiClient.uploadService
 
     fun uploadImage(auth: String, file: List<Int>): String {

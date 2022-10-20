@@ -7,7 +7,7 @@ import com.coinlive.chat.exception.NetworkException
 import com.coinlive.chat.exception.RequestFailException
 import com.coinlive.chat.firebase.service.Authentication
 
-object ChattingMemberRepository {
+class ChattingMemberRepository {
     private val service: ChattingMemberService = RestApiClient.chattingMemberService
 
     fun getChannelList(apiKey: String): List<Channel> {

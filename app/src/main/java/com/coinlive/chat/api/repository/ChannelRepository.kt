@@ -6,7 +6,7 @@ import com.coinlive.chat.api.service.ChannelService
 import com.coinlive.chat.exception.NetworkException
 import com.coinlive.chat.exception.RequestFailException
 
-object ChannelRepository {
+class ChannelRepository {
     private val service: ChannelService = RestApiClient.channelService
 
     fun getUserCount(coinId: String, auth: String): UserCount {

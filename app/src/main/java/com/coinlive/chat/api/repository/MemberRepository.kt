@@ -6,7 +6,7 @@ import com.coinlive.chat.api.service.MemberService
 import com.coinlive.chat.exception.NetworkException
 import com.coinlive.chat.exception.RequestFailException
 
-object MemberRepository {
+class MemberRepository {
     private val service: MemberService = RestApiClient.memberService
 
     fun isAvailableNickName(nickName: String): String {

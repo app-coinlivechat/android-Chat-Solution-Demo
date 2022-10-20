@@ -7,7 +7,7 @@ import com.coinlive.chat.api.service.NotificationService
 import com.coinlive.chat.exception.NetworkException
 import com.coinlive.chat.exception.RequestFailException
 
-object NotificationRepository {
+class NotificationRepository {
     private val service: NotificationService = RestApiClient.notificationService
 
     fun setNotification(auth: String, coinId: String, notiType: String): Boolean {
