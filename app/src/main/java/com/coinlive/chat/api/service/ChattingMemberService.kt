@@ -18,19 +18,23 @@ interface ChattingMemberService {
      */
 
     @GET("v1/chatting-member/channel")
-    fun getChannelList(@Header("Authorization") apiKey:String): Call<RestApiResponse<ChannelList>>
+    fun getChannelList(@Header("Authorization") apiKey: String): Call<RestApiResponse<ChannelList>>
 
     @GET("v1/chatting-member/customer/info")
-    fun getCustomerInfo(@Header("Authorization") apiKey:String): Call<RestApiResponse<Customer>>
+    fun getCustomerInfo(@Header("Authorization") apiKey: String): Call<RestApiResponse<Customer>>
 
     @GET("v1/chatting-member/my/info")
-    fun getCustomerMemberInfo(@Header("Authorization") auth:String): Call<RestApiResponse<CustomerUser>>
+    fun getCustomerMemberInfo(@Header("Authorization") auth: String): Call<RestApiResponse<CustomerUser>>
 
     @POST("v1/chatting-member/sign-up")
-    fun customerUserSingUp(@Header("Authorization") customToken:String, @Body user:CustomerUserSignUpBody) :
-            Call<RestApiResponse<CustomerUserSignUpResponse>>
+    fun customerUserSingUp(
+        @Header("Authorization") auth: String,
+        @Body user: CustomerUserSignUpBody
+    ): Call<RestApiResponse<CustomerUserSignUpResponse>>
 
     @POST("v1/chatting-member/token")
-    fun getCustomToken(@Header("Authorization") apiKey:String, @Body user:CustomTokenBody) :
-            Call<RestApiResponse<CustomerUserSignUpResponse>>
+    fun getCustomToken(
+        @Header("Authorization") apiKey: String,
+        @Body user: CustomTokenBody
+    ): Call<RestApiResponse<CustomerUserSignUpResponse>>
 }

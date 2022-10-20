@@ -19,13 +19,16 @@ interface UploadService {
 
     @Multipart
     @POST("v1/upload/image")
-    fun uploadImage(@Header("Authorization") auth:String, @Part file:List<Int>) : Call<RestApiResponse<Upload>>
+    fun uploadImage(@Header("Authorization") auth: String, @Part file: List<Int>): Call<RestApiResponse<Upload>>
 
     @DELETE("v1/upload/image")
-    fun deleteImage(@Header("Authorization") auth:String, @Body url:Upload) : Call<RestApiResponse<Upload>>
+    fun deleteImage(@Header("Authorization") auth: String, @Body url: Upload): Call<RestApiResponse<Upload>>
 
     @Multipart
     @POST("v1/upload/profile")
-    fun uploadProfile(@Header("Authorization") auth:String, @Query("nft") isNft:Boolean, @Part file:List<Int>) :
-            Call<RestApiResponse<Upload>>
+    fun uploadProfile(
+        @Header("Authorization") auth: String,
+        @Query("nft") isNft: Boolean,
+        @Part file: List<Int>
+    ): Call<RestApiResponse<Upload>>
 }

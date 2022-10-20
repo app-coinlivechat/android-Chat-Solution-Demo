@@ -7,18 +7,21 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface NotificationService {
-/*
-/v2/notification [POST] // 노티 설정, [DELETE] // 노티 해제
-/v2/notification/type [GET] // 채팅 알림 설정 타입 조회
- */
+    /*
+    /v2/notification [POST] // 노티 설정, [DELETE] // 노티 해제
+    /v2/notification/type [GET] // 채팅 알림 설정 타입 조회
+     */
     @POST("v2/notification")
-    fun setNotification(@Header("Authorization") auth:String, @Body body: NotificationBody): Call<RestApiResponse<Void>>
+    fun setNotification(
+        @Header("Authorization") auth: String,
+        @Body body: NotificationBody
+    ): Call<RestApiResponse<Void>>
 
     @DELETE("v2/notification")
-    fun deleteNotification(@Header("Authorization") auth:String, @Body body: NotificationBody):
+    fun deleteNotification(@Header("Authorization") auth: String, @Body body: NotificationBody):
             Call<RestApiResponse<Void>>
 
     @GET("v2/notification/type")
-    fun getNotificationType(@Path("cid") coinId:String, @Header("Authorization") auth:String) :
+    fun getNotificationType(@Path("cid") coinId: String, @Header("Authorization") auth: String):
             Call<RestApiResponse<NotificationTypeList>>
 }

@@ -1,4 +1,3 @@
-
 package com.coinlive.chat.api
 
 import com.coinlive.chat.BuildConfig
@@ -12,24 +11,31 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 object RestApiClient {
-    private val baseUrl = if(BuildConfig.DEBUG) "https://dev.coinlivechat.com/" else "https://api.coinlivechat.com/"
-    val coinService:CoinService
-    val channelService:ChannelService
-    val chattingMemberService:ChattingMemberService
-    val memberService:MemberService
-    val notificationService:NotificationService
-    val uploadService:UploadService
+    private val baseUrl = if (BuildConfig.DEBUG) "https://dev.coinlivechat.com/" else "https://api.coinlivechat.com/"
+    val coinService: CoinService
+    val channelService: ChannelService
+    val chattingMemberService: ChattingMemberService
+    val memberService: MemberService
+    val notificationService: NotificationService
+    val uploadService: UploadService
+
     init {
         val client: OkHttpClient = OkHttpClient.Builder()
-            .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(if(BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else
-                HttpLoggingInterceptor.Level.NONE))
+            .addNetworkInterceptor(
+                HttpLoggingInterceptor().setLevel(
+                    if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else
+                        HttpLoggingInterceptor.Level.NONE
+                )
+            )
             .addInterceptor(Interceptor {
-                val request:Request = it.request().newBuilder().addHeader("Accept-Language","ko").build()
+                val request: Request = it.request().newBuilder().addHeader("Accept-Language", "ko").build()
                 it.proceed(request)
             })
             .build()
 
-        val retrofit:Retrofit = Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).client(client).build()
+        val retrofit: Retrofit =
+            Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).client(client)
+                .build()
 
         coinService = retrofit.create(CoinService::class.java)
         channelService = retrofit.create(ChannelService::class.java)
@@ -38,10 +44,6 @@ object RestApiClient {
         notificationService = retrofit.create(NotificationService::class.java)
         uploadService = retrofit.create(UploadService::class.java)
     }
-
-
-
-
 
 
 }

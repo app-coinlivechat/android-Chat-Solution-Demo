@@ -21,17 +21,20 @@ interface MemberService {
     fun isAvailableNickName(@Body nickName: NickNameBody): Call<RestApiResponse<NickName>>
 
     @PUT("v1/member/nickname")
-    fun setNickName(@Header("Authorization") auth:String,@Body nickName: NickNameBody): Call<RestApiResponse<NickNameBody>>
+    fun setNickName(
+        @Header("Authorization") auth: String,
+        @Body nickName: NickNameBody
+    ): Call<RestApiResponse<NickNameBody>>
 
     @POST("v1/member/check")
-    fun signupCheck(@Body firebaseUuid: MemberSignupCheckBody) : Call<RestApiResponse<MemberSignupCheck>>
+    fun signupCheck(@Body firebaseUuid: MemberSignupCheckBody): Call<RestApiResponse<MemberSignupCheck>>
 
     @GET("v1/member/{mid}/info")
-    fun getUserInfo(@Header("Authorization") auth:String,@Path("mid") id:String): Call<RestApiResponse<User>>
+    fun getUserInfo(@Header("Authorization") auth: String, @Path("mid") id: String): Call<RestApiResponse<User>>
 
     @PUT("vv1/member/profile/basic")
-    fun setBasicProfile(@Header("Authorization") auth:String): Call<RestApiResponse<Upload>>
+    fun setBasicProfile(@Header("Authorization") auth: String): Call<RestApiResponse<Upload>>
 
     @GET("v1/member/my/info")
-    fun getMyInfo(@Header("Authorization") auth:String): Call<RestApiResponse<MyInfo>>
+    fun getMyInfo(@Header("Authorization") auth: String): Call<RestApiResponse<MyInfo>>
 }
