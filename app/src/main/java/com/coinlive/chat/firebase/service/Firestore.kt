@@ -2,21 +2,24 @@ package com.coinlive.chat.firebase.service
 
 import com.coinlive.chat.firebase.CoinliveChat
 import com.coinlive.chat.firebase.MessageListener
+import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.chat.util.CalendarHelper
+import com.coinlive.chat.util.LoggerHelper
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.snapshots
-import com.google.firebase.firestore.model.Document
 import com.google.firebase.ktx.Firebase
 import java.util.*
-import java.util.EventListener
 import kotlin.collections.ArrayList
+
+interface SendFailListener {
+    fun sendFail(chat: Chat)
+}
 
 /**
  * coin 채팅을 받아오기 위한 클래스 입니다.
  * Firestore 를 사용하기 위해서는 [Authentication.signIn] 을 선행애햐 합니다.
  */
-class Firestore(val coinId: String, val listener: MessageListener){
+class Firestore(val coinId: String, val listener: MessageListener) {
     companion object {
         private val BASE_PATH = if (CoinliveChat.isDebug) "clc-dev" else "clc-prod"
     }
@@ -105,7 +108,7 @@ class Firestore(val coinId: String, val listener: MessageListener){
         query.get().addOnSuccessListener {
             if (it.size() == 0) {    // standardTime 에 더이상 불러올 데이터가 없으니 이전 날짜의 데이터를 불러온다.
                 standardTime.set(Calendar.DATE, standardTime.get(Calendar.DATE) - 1)
-                val now = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+                val now = CalendarHelper.nowCalendar()
 
                 if (now.get(Calendar.DATE) - standardTime.get(Calendar.DATE) <= 7) {
                     fetchMessage(standardSize, notificationMap, standardTime)
@@ -166,6 +169,22 @@ class Firestore(val coinId: String, val listener: MessageListener){
 
     fun sort() {
 
+    }
+
+    fun sendMessage(chat:Chat, failListener: SendFailListener) {
+        chat.messageId?.let {
+            Firebase.firestore.collection("$BASE_PATH/${CalendarHelper.getTodayMidnightTimeStamp()}/$coinId")
+                .document(it).set(chat).addOnFailureListener {
+                    listener.failSendMessage(chat)
+                    failListener.sendFail(chat)
+                }
+        } ?: run {
+            LoggerHelper.de("chat messageId is null")
+        }
+    }
+
+    fun getServerTimeStamp() :FieldValue {
+        return FieldValue.serverTimestamp()
     }
 
 
