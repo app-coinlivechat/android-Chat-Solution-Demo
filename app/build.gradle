@@ -5,6 +5,7 @@ plugins {
     // Add the Google services Gradle plugin
     id 'com.google.gms.google-services'
     id 'org.jetbrains.dokka'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -37,10 +38,8 @@ android {
 }
 
 dependencies {
-
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.6.1'
+//    implementation 'androidx.core:core-ktx:1.7.0'
+//    implementation 'androidx.appcompat:appcompat:1.5.1'
 
     // retrofit2
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -48,6 +47,18 @@ dependencies {
 
     // Gson
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+
+
+    implementation("androidx.room:room-runtime:2.4.3")
+    annotationProcessor("androidx.room:room-compiler:2.4.3")
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:2.4.3")
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:2.4.3")
 
     implementation platform('com.google.firebase:firebase-bom:31.0.0')
     implementation 'com.google.firebase:firebase-auth-ktx'
