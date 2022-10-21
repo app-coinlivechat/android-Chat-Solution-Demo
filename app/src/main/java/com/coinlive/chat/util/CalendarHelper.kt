@@ -15,18 +15,17 @@ object CalendarHelper {
      * UTC 기준
      */
     fun getYesterdayMidnightTimeStamp(): Long {
-        val today = getTodayMidnight();
+        val today = getTodayMidnight()
         today.set(Calendar.DATE, today.get(Calendar.DATE) - 1)
         return today.timeInMillis
     }
 
-    fun getDayAgoMidnightTimeStamp(daysAgo:Int) : Long {
-        val today = getTodayMidnight();
-        today.set(Calendar.DATE, today.get(Calendar.DATE) - daysAgo)
-        return today.timeInMillis
+    fun getDayAgoMidnightTimeStamp(standardCalendar: Calendar,daysAgo:Int) : Long {
+        standardCalendar.set(Calendar.DATE, standardCalendar.get(Calendar.DATE) - daysAgo)
+        return standardCalendar.timeInMillis
     }
 
-    private fun getTodayMidnight(): Calendar {
+    fun getTodayMidnight(): Calendar {
         val now = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         val tempTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
         tempTime.clear()
