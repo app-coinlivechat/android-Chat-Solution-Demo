@@ -8,4 +8,5 @@ data class NickName(
 
 data class NickNameBody(
     @SerializedName("nik") val nickName:String,
+    @SerializedName("ccid") val customerId:String,
 )

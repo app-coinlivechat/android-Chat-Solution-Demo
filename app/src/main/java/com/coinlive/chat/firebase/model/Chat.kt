@@ -2,7 +2,8 @@ package com.coinlive.chat.firebase.model
 
 import com.google.gson.annotations.SerializedName
 
-data class FirebaseChat(
+data class Chat(
+    var messageId:String?,
     @SerializedName("sym") val symbol:String,
     @SerializedName("aid") val firebaseAuthId:String?,
     @SerializedName("cid") val coinId:String,
@@ -23,7 +24,7 @@ data class FirebaseChat(
     @SerializedName("rp_men") val replyEnMessage:String?,
     @SerializedName("rp_mid") val replyUserId:String?,
     @SerializedName("lab") val label:String?,
-    @SerializedName("emo") val emoji:Map<String, EmojiChat>?,
+    @SerializedName("emo") val emoji:Map<String, Emoji>?,
     @SerializedName("img") val images:List<String>?,
     @SerializedName("isHolder") val isHolder:Boolean = false,
     @SerializedName("asset") val asset: Asset?,

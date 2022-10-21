@@ -6,7 +6,6 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
-import retrofit2.http.Path
 
 interface ChattingMemberService {
     /*
@@ -27,14 +26,14 @@ interface ChattingMemberService {
     fun getCustomerMemberInfo(@Header("Authorization") auth: String): Call<RestApiResponse<CustomerUser>>
 
     @POST("v1/chatting-member/sign-up")
-    fun customerUserSingUp(
+    fun customerUserSignUp(
         @Header("Authorization") auth: String,
         @Body user: CustomerUserSignUpBody
-    ): Call<RestApiResponse<CustomerUserSignUpResponse>>
+    ): Call<RestApiResponse<CustomerUserSignUp>>
 
     @POST("v1/chatting-member/token")
     fun getCustomToken(
         @Header("Authorization") apiKey: String,
         @Body user: CustomTokenBody
-    ): Call<RestApiResponse<CustomerUserSignUpResponse>>
+    ): Call<RestApiResponse<CustomerUserSignUp>>
 }

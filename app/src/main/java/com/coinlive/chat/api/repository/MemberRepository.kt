@@ -9,8 +9,8 @@ import com.coinlive.chat.exception.RequestFailException
 class MemberRepository {
     private val service: MemberService = RestApiClient.memberService
 
-    fun isAvailableNickName(nickName: String): String {
-        val response = service.isAvailableNickName(NickNameBody(nickName)).execute().body()
+    fun isAvailableNickName(nickName: String, customerId:String): String {
+        val response = service.isAvailableNickName(NickNameBody(nickName,customerId)).execute().body()
             ?: throw NetworkException("MemberRepository.isAvailableNickName error!")
 
         if (!response.isSuccess() && response.d == null) {
@@ -22,8 +22,8 @@ class MemberRepository {
         return response.d!!.word
     }
 
-    fun setNickName(nickName: String, auth: String): String {
-        val response = service.setNickName(auth, NickNameBody(nickName)).execute().body()
+    fun setNickName(nickName: String, auth: String, customerId:String): String {
+        val response = service.setNickName(auth, NickNameBody(nickName, customerId)).execute().body()
             ?: throw NetworkException("MemberRepository.setNickName error!")
 
         if (!response.isSuccess() && response.d == null) {
@@ -32,7 +32,7 @@ class MemberRepository {
                 response.code, response.msg
             )
         }
-        return response.d!!.nickName
+        return response.d!!.word
     }
 
     fun signupCheck(firebaseUuid: String): MemberSignupCheck {
@@ -48,18 +48,6 @@ class MemberRepository {
         return response.d!!
     }
 
-    fun getUserInfo(id: String, auth: String): User {
-        val response = service.getUserInfo(auth, id).execute().body()
-            ?: throw NetworkException("MemberRepository.getUserInfo error!")
-
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException(
-                "MemberRepository.getUserInfo fail. please check id or auth",
-                response.code, response.msg
-            )
-        }
-        return response.d!!
-    }
 
     fun setBasicProfile(auth: String): Upload {
         val response = service.setBasicProfile(auth).execute().body()
@@ -74,17 +62,6 @@ class MemberRepository {
         return response.d!!
     }
 
-    fun getMyInfo(auth: String): MyInfo {
-        val response = service.getMyInfo(auth).execute().body()
-            ?: throw NetworkException("MemberRepository.getMyInfo error!")
 
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException(
-                "MemberRepository.getMyInfo fail. please check id or auth",
-                response.code, response.msg
-            )
-        }
-        return response.d!!
-    }
 
 }

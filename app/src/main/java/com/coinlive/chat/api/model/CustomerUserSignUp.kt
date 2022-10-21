@@ -8,7 +8,7 @@ data class CustomerUserSignUpBody(
     @SerializedName("nik") val nickName:String
 )
 
-data class CustomerUserSignUpResponse(
+data class CustomerUserSignUp(
     @SerializedName("fbid") val firebaseUuid:String,
     @SerializedName("token")val customToken:String
 )

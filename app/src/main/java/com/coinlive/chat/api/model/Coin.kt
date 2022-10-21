@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class Coin(
     @SerializedName("cid") val id:String,
     @SerializedName("ico") val iconUrl:String?,
-    @SerializedName("name") val name:String?,
+    val name:String?,
     @SerializedName("sym") val symbol:String,
     @SerializedName("ama") val isAma:Boolean?,
     @SerializedName("amat") val amaTime:String?,
