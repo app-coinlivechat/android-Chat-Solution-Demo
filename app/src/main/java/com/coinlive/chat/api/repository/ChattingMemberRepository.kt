@@ -30,7 +30,6 @@ class ChattingMemberRepository {
         return response.d!!
     }
 
-    //TODO memberRepository getMyInfo 랑 뭐가 다른지 체크 필요
     fun getCustomerMemberInfo(auth: String): CustomerUser {
         val response = service.getCustomerMemberInfo(auth).execute().body()
             ?: throw NetworkException("getCustomerMemberInfo error!")
@@ -41,9 +40,6 @@ class ChattingMemberRepository {
         return response.d!!
     }
 
-    /**
-     *
-     */
     fun customerUserSignUp(auth: String, user: CustomerUserSignUpBody): CustomerUserSignUp {
         val response = service.customerUserSignUp(auth, user).execute().body()
             ?: throw NetworkException("customerUserSingUp error!")
@@ -58,15 +54,6 @@ class ChattingMemberRepository {
         return response.d!!
     }
 
-
-    /**
-     * 사용자를 Firebase Authentication에 로그인하고 coinlive에 가입하기 위해 Firebase Authentication [CustomerUserSignUp]을
-     * 전달 받습니다.
-     * @param[apiKey] coinlive에서 전달 받은 customerApiKey
-     * @param[uuid] 사용자 uuid
-     * @return[CustomerUserSignUp] 사용자 uuid를 이용하여 Firebase Authentication에 로그인 할 수 있는 정보를 전달합니다.
-     * 전달받은 데이터를 이용하여 [Authentication.signIn] 또는 [customerUserSignUp]을 이용하는데 사용하십시요.
-     */
     fun getCustomToken(apiKey: String, uuid: String): CustomerUserSignUp {
         val response = service.getCustomToken(apiKey, CustomTokenBody(uuid)).execute().body()
             ?: throw NetworkException("getCustomToken error!")

@@ -35,8 +35,8 @@ class UploadRepository {
         return response.d!!.url
     }
 
-    fun uploadProfileImage(auth: String, image: List<Int>, isNft: Boolean): String {
-        val response = service.uploadProfile(auth, isNft, image).execute().body()
+    fun uploadProfileImage(auth: String, image: List<Int>): String {
+        val response = service.uploadProfile(auth, false, image).execute().body()
             ?: throw NetworkException("UploadRepository.uploadProfile error!")
 
         if (!response.isSuccess() && response.d == null) {
