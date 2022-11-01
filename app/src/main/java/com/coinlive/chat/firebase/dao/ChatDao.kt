@@ -7,15 +7,15 @@ import com.coinlive.chat.firebase.model.Chat
 
 @Dao
 interface ChatDao {
-    @Query("SELECT memberId FROM chat WHERE memberId = :messageId")
-    suspend fun getMessage(messageId:String) : Chat
+    @Query("SELECT * FROM chat WHERE messageId = :messageId")
+    fun getMessage(messageId:String) : Chat?
 
-    @Query("DELETE FROM chat WHERE memberId = :messageId")
-    suspend fun deleteMessage(messageId:String)
+    @Query("DELETE FROM chat WHERE messageId = :messageId")
+    fun deleteMessage(messageId:String)
 
     @Insert
     fun insertMessage(chat: Chat)
 
     @Query("DELETE FROM chat WHERE insertTime <= :standardTime")
-    suspend fun deleteOldMessage(standardTime:Long)
+    fun deleteOldMessage(standardTime:Long)
 }
