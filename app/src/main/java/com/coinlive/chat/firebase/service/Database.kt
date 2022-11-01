@@ -19,17 +19,17 @@ abstract class ChatDatabase : RoomDatabase() {
 
 class Converters {
     @TypeConverter
-    fun fromStringList(value: List<String>): String = Gson().toJson(value)
+    fun fromStringList(value: ArrayList<String>): String = Gson().toJson(value)
 
     @TypeConverter
-    fun toStringList(value: String): List<String> = Gson().fromJson(value, Array<String>::class.java).toList()
+    fun toStringList(value: String): ArrayList<String> = Gson().fromJson(value, ArrayList<String>()::class.java)
 
     @TypeConverter
-    fun fromEmojiMap(value: Map<String, Emoji>): String = Gson().toJson(value)
+    fun fromEmojiMap(value: HashMap<String, Emoji>): String = Gson().toJson(value)
 
     @TypeConverter
-    fun toEmojiMap(value: String): Map<String, Emoji> =
-        Gson().fromJson(value, HashMap<String, Emoji>()::class.java).toMap()
+    fun toEmojiMap(value: String): HashMap<String, Emoji> =
+        Gson().fromJson(value, HashMap<String, Emoji>()::class.java)
 
     @TypeConverter
     fun fromAsset(value: Asset): String = Gson().toJson(value)
