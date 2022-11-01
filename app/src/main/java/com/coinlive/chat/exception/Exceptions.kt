@@ -15,5 +15,8 @@ class RequestFailException(message: String, respCode: ResponseCode, respMsg: Str
     ("RequestFailException : $respCode, $respMsg\n $message", Error.REQUEST_FAIL.code)
 
 class FirebaseIdTokenException(message: String) :
-    CoinliveException("$message FirebaseAuthException : ${Error.ID_TOKEN.msg}", Error.ID_TOKEN.code) {
-}
+    CoinliveException("$message FirebaseAuthException : ${Error.ID_TOKEN.msg}", Error.ID_TOKEN.code)
+
+class SendMessageException(message: String) :
+    CoinliveException("$message SendMessageException : ${Error.SEND_MESSAGE.msg}", Error.SEND_MESSAGE.code)
+
