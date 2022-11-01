@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Emoji(
     @SerializedName("cnt") val count:Int,
-    @SerializedName("mid") val mIds:List<String>
+    @SerializedName("mid") val mIds:ArrayList<String>
 )
 
 
@@ -16,7 +16,7 @@ static const String emojiGood = ':+1:';
   static const String emojiCry = ':cry:';
   static const String emojiAstonished = ':astonished:';
  */
-enum class EmojiType(value:String) {
+enum class EmojiType(val key:String) {
     GOOD(":+1:"),
     HEART(":heart:"),
     CLAP(":clap:"),
