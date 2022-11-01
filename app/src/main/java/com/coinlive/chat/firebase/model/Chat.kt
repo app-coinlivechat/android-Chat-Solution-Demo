@@ -2,11 +2,13 @@ package com.coinlive.chat.firebase.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.coinlive.chat.util.MessageIdGenerator
+import com.google.firebase.Timestamp
 import com.google.gson.annotations.SerializedName
 
 @Entity
 data class Chat(
-    @PrimaryKey var messageId:String?= null,
+    @PrimaryKey val messageId:String = MessageIdGenerator.generateMessageId(),
     @SerializedName("sym") val symbol:String,
     @SerializedName("aid") val firebaseAuthId:String?= null,
     @SerializedName("cid") val coinId:String,
@@ -31,5 +33,5 @@ data class Chat(
     @SerializedName("img") val images:List<String>?= null,
     @SerializedName("isHolder") val isHolder:Boolean = false,
     @SerializedName("asset") val asset: Asset?= null,
-    @SerializedName("st") val st:Any?= null
+    @SerializedName("st") val st:Timestamp?= null
 )
