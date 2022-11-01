@@ -4,7 +4,7 @@ import com.coinlive.chat.api.model.*
 import com.coinlive.chat.api.repository.*
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.exception.FirebaseIdTokenException
-import com.coinlive.chat.firebase.service.Authentication
+import com.coinlive.chat.firebase.service.CoinliveAuthentication
 
 class CoinliveRestApi {
     private val coinRepo = CoinRepository();
@@ -90,7 +90,7 @@ class CoinliveRestApi {
      * @param[apiKey] coinlive에서 전달 받은 customerApiKey
      * @param[uuid] 사용자 uuid
      * @return[CustomerUserSignUp] 사용자 uuid를 이용하여 Firebase Authentication에 로그인 할 수 있는 정보를 전달합니다.
-     * 전달받은 데이터를 이용하여 [Authentication.signIn] 또는 [customerUserSignUp]을 이용하는데 사용하십시요.
+     * 전달받은 데이터를 이용하여 [CoinliveAuthentication.signIn] 또는 [customerUserSignUp]을 이용하는데 사용하십시요.
      */
     fun getCustomToken(apiKey: String, uuid: String,callback: ResponseCallback<CustomerUserSignUp>) {
         try {
@@ -181,7 +181,7 @@ class CoinliveRestApi {
     }
 
     private fun getAuth(): String {
-        return Authentication.getFirebaseToken() ?: throw FirebaseIdTokenException("getAuth error")
+        return CoinliveAuthentication.getFirebaseToken() ?: throw FirebaseIdTokenException("getAuth error")
     }
 
 }

@@ -5,7 +5,6 @@ import com.coinlive.chat.api.model.*
 import com.coinlive.chat.api.service.ChattingMemberService
 import com.coinlive.chat.exception.NetworkException
 import com.coinlive.chat.exception.RequestFailException
-import com.coinlive.chat.firebase.service.Authentication
 
 class ChattingMemberRepository {
     private val service: ChattingMemberService = RestApiClient.chattingMemberService

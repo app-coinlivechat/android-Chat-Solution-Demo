@@ -5,7 +5,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
-object Authentication {
+object CoinliveAuthentication {
 
     /**
      * coinlive Firebase Authentication에 로그인을 합니다.
