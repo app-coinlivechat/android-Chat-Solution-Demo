@@ -3,6 +3,9 @@ package com.coinlive.chat.firebase
 import android.content.Context
 import androidx.room.Room
 import com.coinlive.chat.api.model.CustomerUser
+import com.coinlive.chat.api.model.Channel
+import com.coinlive.chat.api.model.Customer
+import com.coinlive.chat.api.CoinliveRestApi
 import com.coinlive.chat.exception.SendMessageException
 import com.coinlive.chat.firebase.`interface`.AmaListener
 import com.coinlive.chat.firebase.`interface`.CmNoticeListener
@@ -19,15 +22,23 @@ import kotlin.collections.HashMap
 
 /**
  * Coinlive 채팅 솔루션을 사용하기 위한 class 입니다.
+ *
  * 각 코인 채팅방의 화면 마다 CoinliveChat 이 생성되어야 합니다.
+ *
+ * 채널간 전환/변경 시 해당 채널에 맞는 object를 사용해주세요.
+ *
+ * 코인라이브는 일반적으로 하나의 채팅이 하나의 코인/토큰과 매칭되어 사용됩니다.
+ *
  * Coinlive는 Firebase RealTimeDatabase 와 Cloud Firestore를 사용하기 때문에 반드시
  * [CoinliveAuthentication.signIn] 을 선행애햐 합니다.
- * @param[coinId] 코인 id ([CoinliveRestApi.getChannelList]를 통해 받아온 [Channel.coinId]를 이용하세요)
- * @param[coinSymbol] 코인 심볼 ([CoinliveRestApi.getChannelList]를 통해 받아온 [Channel.coinSymbol]을 이용하세요)
- * @param[customerName] Customer 이름 ([CoinliveRestApi.getCustomerInfo]를 통해 받아온 [Customer.name]을 이용하세요)
- * @param[listener] 신규,삭제,수정,로드 등 메세지들의 이벤트 listener
- * @param[cmNoticeListener] CM 공지 사항을 전달 받기 위한 listener
- * @param[amaListener] AMA 상태를 전달 받기 위한 lisener
+ *
+ * 마지막으로 채널간 전환/변경하거나 종료시 [close]를 호출해 object를 해제해주세요.
+ * @param[coinId] 채널의 코인 아이디 ([CoinliveRestApi.getChannelList]를 통해 받아온 [Channel.coinId]를 이용하세요)
+ * @param[coinSymbol] 채널의 코인 심볼 ([CoinliveRestApi.getChannelList]를 통해 받아온 [Channel.coinSymbol]을 이용하세요)
+ * @param[customerName] 커스토머의 이름 ([CoinliveRestApi.getCustomerInfo]를 통해 받아온 [Customer.name]을 이용하세요)
+ * @param[listener] 신규,삭제,수정,로드 등 메세지들의 이벤트 Listener
+ * @param[cmNoticeListener] CM 공지 사항을 전달 받기 위한 Listener
+ * @param[amaListener] AMA 상태를 전달 받기 위한 Listener
  * @param[context] 전송 실패 메세지를 로컬 DB에 저장하기 위한 context
  */
 class CoinliveChat(
@@ -39,15 +50,6 @@ class CoinliveChat(
     amaListener: AmaListener,
     private val context: Context,
 ) {
-
-    companion object {
-        /**
-         * 테스트 환경을 위해 현재 build mode를 설정합니다.
-         * 디폴트 값은 true 입니다.
-         * release mode로 build하기 위해서는 반드시 값을 false로 변경해야 합니다.
-         */
-        var isDebug: Boolean = true
-    }
 
     private val realtimeDatabaseWrapper: RealtimeDatabaseWrapper =
         RealtimeDatabaseWrapper(coinId, cmNoticeListener, amaListener)
@@ -283,7 +285,7 @@ class CoinliveChat(
     /**
      * [CoinliveChat]을 더이상 사용하지 않을 경우 호출합니다.
      */
-    fun dispose() {
+    fun close() {
         realtimeDatabaseWrapper.close()
         firestoreWrapper.close()
     }

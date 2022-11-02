@@ -1,7 +1,7 @@
 package com.coinlive.chat.firebase.service
 
+import com.coinlive.chat.Coinlive
 import com.coinlive.chat.api.model.enum.CoinNotiType
-import com.coinlive.chat.firebase.CoinliveChat
 import com.coinlive.chat.firebase.`interface`.MessageListener
 import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.chat.firebase.model.enum.MessageType
@@ -24,7 +24,7 @@ interface SendEventListener {
 class FirestoreWrapper(val coinId: String, private val listener: MessageListener) :
     EventListener<QuerySnapshot> {
     companion object {
-        private val BASE_PATH = if (CoinliveChat.isDebug) "clc-dev" else "clc-prod"
+        private val BASE_PATH = if (Coinlive.isDebug) "clc-dev" else "clc-prod"
     }
 
 
@@ -120,6 +120,9 @@ class FirestoreWrapper(val coinId: String, private val listener: MessageListener
             if (oldMessage.size < diffSize) {
                 fetchMessage(standardSize, notificationMap, standardTime, diffSize - oldMessage.size)
             }
+        }.addOnFailureListener {
+            // TODO log or exception
+//            throw
         }
 
         if (!existCollectionSnapshot.contains(collectionPath)) {

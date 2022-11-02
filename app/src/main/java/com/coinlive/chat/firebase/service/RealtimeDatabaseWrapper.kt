@@ -1,6 +1,6 @@
 package com.coinlive.chat.firebase.service
 
-import com.coinlive.chat.firebase.CoinliveChat
+import com.coinlive.chat.Coinlive
 import com.coinlive.chat.firebase.`interface`.AmaListener
 import com.coinlive.chat.firebase.`interface`.CmNoticeListener
 import com.coinlive.chat.firebase.model.Ama
@@ -13,7 +13,7 @@ import com.google.firebase.ktx.Firebase
 
 class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, val amaListener: AmaListener) {
     companion object {
-        private val BASE_PATH = if (CoinliveChat.isDebug) "clc-dev" else "clc-prod"
+        private val BASE_PATH = if (Coinlive.isDebug) "clc-dev" else "clc-prod"
     }
 
     private val amaRef: DatabaseReference = Firebase.database.reference.child("$BASE_PATH/ama/$coinId")
@@ -45,7 +45,7 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
         query.addValueEventListener(cmValueEventListener)
     }
 
-    private val cmValueEventListener = object : ValueEventListener{
+    private val cmValueEventListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             val cm = snapshot.getValue<Cm>() ?: return
             cmListener.getCmNotice(cm.message)
@@ -58,8 +58,8 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
      * AMA 상태를 로드하고 데이터를 [AmaListener.getAma] 를 통해 전달합니다.
      *
      */
-    private fun initAma(){
-        val query  = amaRef.limitToFirst(1)
+    private fun initAma() {
+        val query = amaRef.limitToFirst(1)
         query.get().addOnSuccessListener {
             val ama = it.getValue<Ama>() ?: return@addOnSuccessListener
             this.ama = ama
@@ -69,7 +69,7 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
         query.addValueEventListener(amaValueEventListener)
     }
 
-    private val amaValueEventListener = object : ValueEventListener{
+    private val amaValueEventListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             val ama = snapshot.getValue<Ama>() ?: return
             this@RealtimeDatabaseWrapper.ama = ama
