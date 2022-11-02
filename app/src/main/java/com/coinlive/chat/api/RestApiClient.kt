@@ -1,6 +1,7 @@
 package com.coinlive.chat.api
 
 import com.coinlive.chat.BuildConfig
+import com.coinlive.chat.Coinlive
 import com.coinlive.chat.api.service.*
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -11,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 object RestApiClient {
-    private val baseUrl = if (BuildConfig.DEBUG) "https://dev.coinlivechat.com/" else "https://api.coinlivechat.com/"
+    private val baseUrl = if (Coinlive.isDebug) "https://dev.coinlivechat.com/" else "https://api.coinlivechat.com/"
     val coinService: CoinService
     val channelService: ChannelService
     val chattingMemberService: ChattingMemberService

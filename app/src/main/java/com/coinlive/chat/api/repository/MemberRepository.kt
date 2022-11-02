@@ -5,6 +5,7 @@ import com.coinlive.chat.api.model.*
 import com.coinlive.chat.api.service.MemberService
 import com.coinlive.chat.exception.NetworkException
 import com.coinlive.chat.exception.RequestFailException
+import com.coinlive.chat.util.LoggerHelper
 
 class MemberRepository {
     private val service: MemberService = RestApiClient.memberService
@@ -15,7 +16,7 @@ class MemberRepository {
 
         if (!response.isSuccess() && response.d == null) {
             throw RequestFailException(
-                "MemberRepository.isAvailableNickName fail. please check nickName",
+                "MemberRepository.isAvailableNickName fail. please check nickName or customerId",
                 response.code, response.msg
             )
         }
@@ -28,7 +29,7 @@ class MemberRepository {
 
         if (!response.isSuccess() && response.d == null) {
             throw RequestFailException(
-                "MemberRepository.setNickName fail. please check nickName or auth",
+                "MemberRepository.setNickName fail. please check nickName or auth, customerId",
                 response.code, response.msg
             )
         }
@@ -55,11 +56,64 @@ class MemberRepository {
 
         if (!response.isSuccess() && response.d == null) {
             throw RequestFailException(
-                "MemberRepository.setBasicProfile fail. please check id or auth",
+                "MemberRepository.setBasicProfile fail. please check auth",
                 response.code, response.msg
             )
         }
         return response.d!!
+    }
+
+    fun getReportType(auth: String): List<ReportType> {
+        val response = service.getReportType(auth).execute().body()
+            ?: throw NetworkException("MemberRepository.getReportType error!")
+
+        if (!response.isSuccess() && response.d == null) {
+            throw RequestFailException(
+                "MemberRepository.getReportType fail. please check auth",
+                response.code, response.msg
+            )
+        }
+        return response.d!!.list
+    }
+
+    fun setReport(auth: String, reportMid: String,reportTypeId: String): Boolean {
+        val response = service.setReport(auth, MemberReportBody(reportMid,reportTypeId)).execute().body()
+            ?: throw NetworkException("MemberRepository.setReport error!")
+
+        return when {
+            response.isSuccess() -> {
+                true
+            }
+            else -> {
+                LoggerHelper.de("MemberRepository.setReport fail. please check reportMid,reportTypeId or auth " +
+                        "${response.code}, ${response.msg}")
+                false
+            }
+        }
+    }
+
+    fun deleteBlock(auth: String, blockMid: String): List<String> {
+        val response = service.deleteBlock(auth, blockMid).execute().body()
+            ?: throw NetworkException("MemberRepository.deleteBlock error!")
+        if (!response.isSuccess() && response.d == null) {
+            throw RequestFailException(
+                "MemberRepository.deleteBlock fail. please check blockMid or auth",
+                response.code, response.msg
+            )
+        }
+        return response.d!!.mIds
+    }
+
+    fun addBlock(auth: String, blockMid: String): List<String> {
+        val response = service.addBlock(auth, blockMid).execute().body()
+            ?: throw NetworkException("MemberRepository.addBlock error!")
+        if (!response.isSuccess() && response.d == null) {
+            throw RequestFailException(
+                "MemberRepository.addBlock fail. please check blockMid or auth",
+                response.code, response.msg
+            )
+        }
+        return response.d!!.mIds
     }
 
 

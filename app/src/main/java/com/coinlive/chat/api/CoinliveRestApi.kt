@@ -132,6 +132,38 @@ class CoinliveRestApi {
         }
     }
 
+    fun getReportType(callback: ResponseCallback<List<ReportType>>) {
+        try {
+            callback.onSuccess(memberRepo.getReportType(getAuth()))
+        } catch (e: CoinliveException) {
+            callback.onFail(e)
+        }
+    }
+
+    fun setReport(reportMid: String,reportTypeId: String,callback: ResponseCallback<Boolean>) {
+        try {
+            callback.onSuccess(memberRepo.setReport(getAuth(),reportMid,reportTypeId))
+        } catch (e: CoinliveException) {
+            callback.onFail(e)
+        }
+    }
+
+    fun deleteBlock(blockMid: String,callback: ResponseCallback<List<String>>) {
+        try {
+            callback.onSuccess(memberRepo.deleteBlock(getAuth(),blockMid))
+        } catch (e: CoinliveException) {
+            callback.onFail(e)
+        }
+    }
+
+    fun addBlock(blockMid: String,callback: ResponseCallback<List<String>>) {
+        try {
+            callback.onSuccess(memberRepo.addBlock(getAuth(),blockMid))
+        } catch (e: CoinliveException) {
+            callback.onFail(e)
+        }
+    }
+
     fun setNotification(coinId: String, notiType: String,callback: ResponseCallback<Boolean>) {
         try {
             callback.onSuccess(notificationRepo.setNotification(getAuth(),coinId,notiType))
@@ -151,6 +183,14 @@ class CoinliveRestApi {
     fun getNotificationType(coinId: String,callback: ResponseCallback<List<NotificationType>>) {
         try {
             callback.onSuccess(notificationRepo.getNotificationType(getAuth(),coinId))
+        } catch (e: CoinliveException) {
+            callback.onFail(e)
+        }
+    }
+
+    fun getNotificationSetting(coinId: String,callback: ResponseCallback<Map<String,Boolean>>) {
+        try {
+            callback.onSuccess(notificationRepo.getNotificationSetting(getAuth(),coinId))
         } catch (e: CoinliveException) {
             callback.onFail(e)
         }
@@ -181,7 +221,7 @@ class CoinliveRestApi {
     }
 
     private fun getAuth(): String {
-        return CoinliveAuthentication.getFirebaseToken() ?: throw FirebaseIdTokenException("getAuth error")
+        return CoinliveAuthentication.getFirebaseToken()
     }
 
 }

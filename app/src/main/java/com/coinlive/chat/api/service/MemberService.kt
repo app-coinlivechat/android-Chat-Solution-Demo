@@ -12,9 +12,9 @@ interface MemberService {
     회원탈퇴 -> 운영으로 처리
     /v1/member/{mid}/info [GET] {auth} // mid 회원 정보 조회
     /v1/member/profile/basic [PUT] {auth} // 유저 프로필 기본 이미지 설정
-    /v1/member/my/info [GET] {auth} // 해당 사용자의 회원 정보 조회
-    /v1/member/report/type [GET] -> 준영님 확인 후 다시 노티
-    /v1/member/report [POST] -> 준영님 확인 후 다시 노티
+    /v1/member/report/type [GET] {auth} // 신고 타입 조회
+    /v1/member/report [POST] {auth} // 유저 신고
+    /v1/member/{bMid}/block [Delete, post] {auth} //유저 차단 추가,삭제
      */
 
     @GET("v1/member/check/nickname")
@@ -23,13 +23,31 @@ interface MemberService {
     @PUT("v1/member/nickname")
     fun setNickName(
         @Header("Authorization") auth: String,
-        @Body nickName: NickNameBody
+        @Body nickName: NickNameBody,
     ): Call<RestApiResponse<NickName>>
 
     @POST("v1/member/check")
     fun signupCheck(@Body firebaseUuid: MemberSignupCheckBody): Call<RestApiResponse<MemberSignupCheck>>
 
-    @PUT("vv1/member/profile/basic")
+    @PUT("v1/member/profile/basic")
     fun setBasicProfile(@Header("Authorization") auth: String): Call<RestApiResponse<Upload>>
+
+    @GET("v1/member/report/type")
+    fun getReportType(@Header("Authorization") auth: String): Call<RestApiResponse<ReportTypeList>>
+
+    @POST("v1/member/report")
+    fun setReport(@Header("Authorization") auth: String, @Body body: MemberReportBody): Call<RestApiResponse<Void>>
+
+    @DELETE("v1/member/{bMid}/block")
+    fun deleteBlock(
+        @Header("Authorization") auth: String,
+        @Path("bMid") blockMid: String,
+    ): Call<RestApiResponse<BlockList>>
+
+    @POST("v1/member/{bMid}/block")
+    fun addBlock(
+        @Header("Authorization") auth: String,
+        @Path("bMid") blockMid: String,
+    ): Call<RestApiResponse<BlockList>>
 
 }

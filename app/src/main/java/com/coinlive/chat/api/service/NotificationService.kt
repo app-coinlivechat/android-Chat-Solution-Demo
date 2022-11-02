@@ -1,6 +1,7 @@
 package com.coinlive.chat.api.service
 
 import com.coinlive.chat.api.model.NotificationBody
+import com.coinlive.chat.api.model.NotificationMap
 import com.coinlive.chat.api.model.NotificationTypeList
 import com.coinlive.chat.api.model.RestApiResponse
 import retrofit2.Call
@@ -24,4 +25,8 @@ interface NotificationService {
     @GET("v2/notification/type")
     fun getNotificationType(@Path("cid") coinId: String, @Header("Authorization") auth: String):
             Call<RestApiResponse<NotificationTypeList>>
+
+    @GET("v1/notification/{cid}/setting")
+    fun getNotificationSetting(@Path("cid") coinId: String, @Header("Authorization") auth: String):
+            Call<RestApiResponse<NotificationMap>>
 }
