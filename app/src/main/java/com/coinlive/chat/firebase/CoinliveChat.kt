@@ -34,12 +34,17 @@ class CoinliveChat(
     applicationContext: Context,
 ) {
 
-    /**
-     * 테스트 환경을 위해 현재 build mode를 설정합니다.
-     * 디폴트 값은 true 입니다.
-     * release build 진행시 반드시 false로 값을 변경해야 합니다.
-     */
-    var isDebug: Boolean = true
+    companion object {
+        /**
+         * 테스트 환경을 위해 현재 build mode를 설정합니다.
+         * 디폴트 값은 true 입니다.
+         */
+        var isDebug: Boolean = true
+//            get() = field
+//            set(value) {
+//                field = value
+//            }
+    }
 
     private val realtimeDatabaseWrapper: RealtimeDatabaseWrapper =
         RealtimeDatabaseWrapper(coinId, cmNoticeListener, amaListener)
@@ -97,7 +102,7 @@ class CoinliveChat(
             }
 
             if (chat.emoji[emojiType.key] != emoji) {  // 이전 chat.emoji 모델과 데이터가 다를 경우
-                val copyEmoji: HashMap<String, Emoji> = HashMap()
+                val copyEmoji : HashMap<String,Emoji> = HashMap()
                 copyEmoji.putAll(chat.emoji)
                 copyEmoji[emojiType.key] = emoji
                 firestoreWrapper.updateEmoji(chat.copy(emoji = copyEmoji))
@@ -116,13 +121,13 @@ class CoinliveChat(
 
         var emoji: Emoji? = chat.emoji[emojiType.key]
         if (emoji != null && emoji.mIds.contains(memberId)) { // emojiType의 이모지가 존재하고 emoji.mIds에 memberId가 존재할 경우
-            val mIdList = emoji.mIds
+            val mIdList =  emoji.mIds
             mIdList.remove(memberId)
-            emoji = Emoji(emoji.count - 1, mIdList)
+            emoji = Emoji(emoji.count - 1,mIdList)
         }
 
         if (emoji != null && chat.emoji[emojiType.key] != emoji) {  // 이전 chat.emoji 모델과 데이터가 다를 경우
-            val copyEmoji: HashMap<String, Emoji> = HashMap()
+            val copyEmoji : HashMap<String,Emoji> = HashMap()
             copyEmoji.putAll(chat.emoji)
             copyEmoji[emojiType.key] = emoji
             firestoreWrapper.updateEmoji(chat.copy(emoji = copyEmoji))
@@ -156,7 +161,7 @@ class CoinliveChat(
             throw SendMessageException("이미지 10개 이상 보낼수 없습니다.")
         }
 
-        if (urlList == null && message.trim().isEmpty()) {
+        if(urlList == null && message.trim().isEmpty()) {
             throw SendMessageException("message is Empty")
         }
 
@@ -208,7 +213,7 @@ class CoinliveChat(
         if (chat.images != null && chat.images.size > 10) {
             throw SendMessageException("이미지 10개 이상 보낼수 없습니다.")
         }
-        if (chat.images == null && (chat.koMessage.trim().isEmpty() || chat.enMessage.trim().isEmpty())) {
+        if(chat.images == null && (chat.koMessage.trim().isEmpty() || chat.enMessage.trim().isEmpty())) {
             throw SendMessageException("message is Empty")
         }
 
@@ -229,7 +234,7 @@ class CoinliveChat(
                 //  재전송 성공시 DB에서 삭제하기
                 chatDao.deleteMessage(chat.messageId)
             }
-        }, isRetry = true)
+        },isRetry = true)
     }
 
     /**
