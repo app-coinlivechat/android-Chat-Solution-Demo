@@ -10,5 +10,6 @@ data class CustomerUser(
     @SerializedName("img") val profileImage:String,
     @SerializedName("mid") val id:String,
     @SerializedName("nik") val nickName:String,
+    @SerializedName("block") val blockUserMidList:ArrayList<String>,
     val status: UserStatus
 )
