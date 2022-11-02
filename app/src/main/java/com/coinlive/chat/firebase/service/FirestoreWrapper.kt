@@ -2,7 +2,7 @@ package com.coinlive.chat.firebase.service
 
 import com.coinlive.chat.api.model.enum.CoinNotiType
 import com.coinlive.chat.firebase.CoinliveChat
-import com.coinlive.chat.firebase.MessageListener
+import com.coinlive.chat.firebase.`interface`.MessageListener
 import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.chat.firebase.model.enum.MessageType
 import com.coinlive.chat.util.CalendarHelper
@@ -21,10 +21,6 @@ interface SendEventListener {
     fun success(chat: Chat)
 }
 
-/**
- * coin 채팅을 받아오기 위한 클래스 입니다.
- * Firestore 를 사용하기 위해서는 [CoinliveAuthentication.signIn] 을 선행애햐 합니다.
- */
 class FirestoreWrapper(val coinId: String, private val listener: MessageListener) :
     EventListener<QuerySnapshot> {
     companion object {

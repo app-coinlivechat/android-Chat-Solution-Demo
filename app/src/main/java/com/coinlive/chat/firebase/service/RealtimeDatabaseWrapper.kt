@@ -1,6 +1,8 @@
 package com.coinlive.chat.firebase.service
 
 import com.coinlive.chat.firebase.CoinliveChat
+import com.coinlive.chat.firebase.`interface`.AmaListener
+import com.coinlive.chat.firebase.`interface`.CmNoticeListener
 import com.coinlive.chat.firebase.model.Ama
 import com.coinlive.chat.firebase.model.Cm
 import com.google.firebase.database.*
@@ -9,18 +11,6 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
 
-interface CmNoticeListener{
-    fun getCmNotice(msg:String?)
-}
-
-interface AmaListener{
-    fun getAma(ama:Ama?)
-}
-
-/**
- * Ama 진행 상태와 CM 공지사항을 실시간으로 받아오기 위한 클래스 입니다.
- * RealTimeDatabase를 사용하기 위해서는 [CoinliveAuthentication.signIn] 을 선행애햐 합니다.
- */
 class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, val amaListener: AmaListener) {
     companion object {
         private val BASE_PATH = if (CoinliveChat.isDebug) "clc-dev" else "clc-prod"
@@ -49,16 +39,16 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
 
         val query = cmRef.orderByChild("t").limitToFirst(1)
         query.get().addOnSuccessListener {
-            val cm = it.getValue<Cm>()
-            cmListener.getCmNotice(cm?.message)
+            val cm = it.getValue<Cm>() ?: return@addOnSuccessListener
+            cmListener.getCmNotice(cm.message)
         }
         query.addValueEventListener(cmValueEventListener)
     }
 
     private val cmValueEventListener = object : ValueEventListener{
         override fun onDataChange(snapshot: DataSnapshot) {
-            val cm = snapshot.getValue<Cm>()
-            cmListener.getCmNotice(cm?.message)
+            val cm = snapshot.getValue<Cm>() ?: return
+            cmListener.getCmNotice(cm.message)
         }
 
         override fun onCancelled(error: DatabaseError) {}
@@ -71,7 +61,7 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
     private fun initAma(){
         val query  = amaRef.limitToFirst(1)
         query.get().addOnSuccessListener {
-            val ama = it.getValue<Ama>()
+            val ama = it.getValue<Ama>() ?: return@addOnSuccessListener
             this.ama = ama
             amaListener.getAma(ama)
         }
@@ -81,7 +71,7 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
 
     private val amaValueEventListener = object : ValueEventListener{
         override fun onDataChange(snapshot: DataSnapshot) {
-            val ama = snapshot.getValue<Ama>()
+            val ama = snapshot.getValue<Ama>() ?: return
             this@RealtimeDatabaseWrapper.ama = ama
             amaListener.getAma(ama)
         }

@@ -4,9 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import com.coinlive.chat.api.model.CustomerUser
 import com.coinlive.chat.exception.SendMessageException
+import com.coinlive.chat.firebase.`interface`.AmaListener
+import com.coinlive.chat.firebase.`interface`.CmNoticeListener
+import com.coinlive.chat.firebase.`interface`.MessageListener
 import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.chat.firebase.model.Emoji
-import com.coinlive.chat.firebase.model.EmojiType
+import com.coinlive.chat.firebase.model.enum.EmojiType
 import com.coinlive.chat.firebase.model.enum.MessageType
 import com.coinlive.chat.firebase.service.*
 import com.coinlive.chat.util.CalendarHelper
@@ -15,53 +18,10 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 /**
- * 신규,삭제,수정,로드 등 메세지들의 이벤트 listener
- */
-interface MessageListener {
-    /**
-     * 로드된 메세지 중 삭제된 메세지를 전달합니다.
-     * @param[chat] 삭제된 메세지의 [Chat] object가 전달 됩니다.
-     */
-    fun deletedMessage(chat: Chat)
-
-    /**
-     * 로드된 메세지 중 수정된 메세지를 전달합니다.
-     * 이모지 리액션이 추가,삭제 될 경우 발생합니다.
-     * @param[chat] 수정된 메세지의 [Chat] object가 전달 됩니다.
-     */
-    fun modifyMessage(chat: Chat)
-
-    /**
-     * 로드된 메세지 리스트를 전달합니다.
-     * [CoinliveChat.reload]를 요청할 경우 [isReload] 값은 true로 전달 됩니다.
-     * @param[chatList] 로드된 메세지 리스트를 전달합니다.
-     * @param[isReload] 다시 로드된 메세지 리스트의 상태값을 전달합니다.
-     */
-    fun oldMessages(chatList: ArrayList<Chat>, isReload: Boolean)
-
-    /**
-     * 새로 추가된 메세지를 전달합니다.
-     * @param[chat] 추가된 메세지의 [Chat] object가 전달 됩니다.
-     */
-    fun newMessages(chat: Chat)
-
-    /**
-     * 전송 실패된 메세지를 전달합니다.
-     * [CoinliveChat.retrySendMessage]를 요청해서 실패할 경우에도 발생됩니다.
-     * @param[chat] 전송 실패된 메세지의 [Chat] object가 전달 됩니다.
-     */
-    fun failSendMessage(chat: Chat)
-
-    /**
-     * 재 전송 실패된 메세지를 전달합니다.
-     * @param[messageId] 재 전송 실패된 메세지의 id가 전달됩니다.
-     */
-    fun retrySendMessageSuccess(messageId: String)
-}
-
-/**
  * Coinlive 채팅 솔루션을 사용하기 위한 class 입니다.
  * 각 코인 채팅방의 화면 마다 CoinliveChat 이 생성되어야 합니다.
+ * Coinlive는 Firebase RealTimeDatabase 와 Cloud Firestore를 사용하기 때문에 반드시
+ * [CoinliveAuthentication.signIn] 을 선행애햐 합니다.
  * @param[coinId] 코인 id ([CoinliveRestApi.getChannelList]를 통해 받아온 [Channel.coinId]를 이용하세요)
  * @param[coinSymbol] 코인 심볼 ([CoinliveRestApi.getChannelList]를 통해 받아온 [Channel.coinSymbol]을 이용하세요)
  * @param[customerName] Customer 이름 ([CoinliveRestApi.getCustomerInfo]를 통해 받아온 [Customer.name]을 이용하세요)
@@ -77,7 +37,7 @@ class CoinliveChat(
     listener: MessageListener,
     cmNoticeListener: CmNoticeListener,
     amaListener: AmaListener,
-    context: Context,
+    private val context: Context,
 ) {
 
     companion object {
@@ -235,10 +195,15 @@ class CoinliveChat(
     private fun createChat(message: String = "", myInfo: CustomerUser, urlList: ArrayList<String>?): Chat {
         return Chat(
             koMessage = message, enMessage = message, firebaseAuthId = myInfo.firebaseUuid,
-            st = firestoreWrapper.getServerTimeStamp(), exchange = customerName, symbol = coinSymbol, coinId = coinId,
+            st = firestoreWrapper.getServerTimeStamp(), appName = customerName, symbol = coinSymbol, coinId = coinId,
             insertTime = CalendarHelper.nowCalendar().timeInMillis, messageType = MessageType.USER.toLowName(),
-            chattingLocale = "ko", memberId = myInfo.id, images = urlList
+            chattingLocale = getAppResourceLocale(), memberId = myInfo.id, images = urlList
         )
+    }
+
+    private fun getAppResourceLocale() : String {
+        val locale = context.resources.configuration.locales[0]
+        return locale.toString().substring(0,2)
     }
 
     /**

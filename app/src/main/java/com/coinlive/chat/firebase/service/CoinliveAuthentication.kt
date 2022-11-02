@@ -5,10 +5,13 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
+/**
+ * Coinlive Firebase를 이용하기 위한 클래스입니다.
+ */
 object CoinliveAuthentication {
 
     /**
-     * coinlive Firebase Authentication에 로그인을 합니다.
+     * Coinlive Firebase Authentication에 로그인을 합니다.
      * @param[customToken] [ChattingMemberRepository.getCustomToken] 을 이용해서 받은 값을 말합니다.
      * @return[FirebaseUser] Firebase Authentication에 정상적으로 로그인이 됐다면 null이 아닌 값이 전달 됩니다.
      * @see com.coinlive.chat.api.repository.ChattingMemberRepository.getCustomToken
@@ -18,7 +21,7 @@ object CoinliveAuthentication {
     }
 
     /**
-     * coinlive Firebase Authentication에 로그아웃 합니다.
+     * Coinlive Firebase Authentication에 로그아웃 합니다.
      */
     fun signOut() {
         Firebase.auth.signOut()
