@@ -2,6 +2,7 @@ package com.coinlive.chat.firebase.service
 
 import com.coinlive.chat.Coinlive
 import com.coinlive.chat.api.model.enum.CoinNotiType
+import com.coinlive.chat.exception.Error
 import com.coinlive.chat.firebase.`interface`.MessageListener
 import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.chat.firebase.model.enum.MessageType
@@ -21,7 +22,7 @@ interface SendEventListener {
     fun success(chat: Chat)
 }
 
-class FirestoreWrapper(val coinId: String, private val listener: MessageListener) :
+class FirestoreWrapper(private val coinId: String, private val listener: MessageListener) :
     EventListener<QuerySnapshot> {
     companion object {
         private val BASE_PATH = if (Coinlive.isDebug) "clc-dev" else "clc-prod"
@@ -33,6 +34,7 @@ class FirestoreWrapper(val coinId: String, private val listener: MessageListener
     private var initTimeStamp: Calendar? = null
     private var notificationMap: Map<String, Boolean>? = null
     private var timer: Timer? = null
+    private var isLoading: Boolean = false
 
 
     init {
@@ -89,6 +91,7 @@ class FirestoreWrapper(val coinId: String, private val listener: MessageListener
         standardTime: Calendar = CalendarHelper.getTodayMidnight(),
         diffSize: Long = 50,
     ) {
+        if (isLoading) return else isLoading = true
         this.notificationMap = notificationMap
 
         val collectionPath = "$BASE_PATH/${standardTime.timeInMillis}/$coinId"
@@ -98,7 +101,6 @@ class FirestoreWrapper(val coinId: String, private val listener: MessageListener
         if (documentSnapshotList.size > 0) {
             query.startAfter(documentSnapshotList.last())
         }
-
         query.get().addOnSuccessListener {
             val documents = it.documents
             if (documents.size == 0) {    // standardTime 에 더이상 불러올 데이터가 없으니 이전 날짜의 데이터를 불러온다.
@@ -121,14 +123,17 @@ class FirestoreWrapper(val coinId: String, private val listener: MessageListener
                 fetchMessage(standardSize, notificationMap, standardTime, diffSize - oldMessage.size)
             }
         }.addOnFailureListener {
-            // TODO log or exception
-//            throw
+            isLoading = false
+            LoggerHelper.de("FirestoreWrapper.fetchMessage error!!\n" +
+                    "${Error.QUERY_FETCH_MESSAGE.code}, ${Error.QUERY_FETCH_MESSAGE.msg}\n" +
+                    "${it.message}")
         }
 
         if (!existCollectionSnapshot.contains(collectionPath)) {
             collection.addSnapshotListener(this)
             existCollectionSnapshot.add(collectionPath)
         }
+        isLoading = false
     }
 
     fun reload(notificationMap: Map<String, Boolean>) {

@@ -22,7 +22,7 @@ interface MessageListener {
 
     /**
      * 로드된 메세지 리스트를 전달합니다.
-     * [CoinliveChat.reload]를 요청할 경우 [isReload] 값은 true로 전달 됩니다.
+     * [CoinliveChat.reloadMessages]를 요청할 경우 [isReload] 값은 true로 전달 됩니다.
      * @param[chatList] 로드된 메세지 리스트를 전달합니다.
      * @param[isReload] 다시 로드된 메세지 리스트의 상태값을 전달합니다.
      */
