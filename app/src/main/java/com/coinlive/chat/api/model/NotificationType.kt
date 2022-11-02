@@ -13,3 +13,7 @@ data class NotificationType(
     @SerializedName("tg") val tag:String,
     @SerializedName("ntid") val id:String
 )
+
+data class NotificationMap(
+    @SerializedName("noti") val notiMap : HashMap<String,Boolean>
+)
