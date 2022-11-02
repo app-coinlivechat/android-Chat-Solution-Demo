@@ -14,16 +14,62 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
+/**
+ * 신규,삭제,수정,로드 등 메세지들의 이벤트 listener
+ */
 interface MessageListener {
+    /**
+     * 로드된 메세지 중 삭제된 메세지를 전달합니다.
+     * @param[chat] 삭제된 메세지의 [Chat] object가 전달 됩니다.
+     */
     fun deletedMessage(chat: Chat)
+
+    /**
+     * 로드된 메세지 중 수정된 메세지를 전달합니다.
+     * 이모지 리액션이 추가,삭제 될 경우 발생합니다.
+     * @param[chat] 수정된 메세지의 [Chat] object가 전달 됩니다.
+     */
     fun modifyMessage(chat: Chat)
+
+    /**
+     * 로드된 메세지 리스트를 전달합니다.
+     * [CoinliveChat.reload]를 요청할 경우 [isReload] 값은 true로 전달 됩니다.
+     * @param[chatList] 로드된 메세지 리스트를 전달합니다.
+     * @param[isReload] 다시 로드된 메세지 리스트의 상태값을 전달합니다.
+     */
     fun oldMessages(chatList: ArrayList<Chat>, isReload: Boolean)
+
+    /**
+     * 새로 추가된 메세지를 전달합니다.
+     * @param[chat] 추가된 메세지의 [Chat] object가 전달 됩니다.
+     */
     fun newMessages(chat: Chat)
+
+    /**
+     * 전송 실패된 메세지를 전달합니다.
+     * [CoinliveChat.retrySendMessage]를 요청해서 실패할 경우에도 발생됩니다.
+     * @param[chat] 전송 실패된 메세지의 [Chat] object가 전달 됩니다.
+     */
     fun failSendMessage(chat: Chat)
+
+    /**
+     * 재 전송 실패된 메세지를 전달합니다.
+     * @param[messageId] 재 전송 실패된 메세지의 id가 전달됩니다.
+     */
     fun retrySendMessageSuccess(messageId: String)
 }
 
-
+/**
+ * Coinlive 채팅 솔루션을 사용하기 위한 class 입니다.
+ * 각 코인 채팅방의 화면 마다 CoinliveChat 이 생성되어야 합니다.
+ * @param[coinId] 코인 id ([CoinliveRestApi.getChannelList]를 통해 받아온 [Channel.coinId]를 이용하세요)
+ * @param[coinSymbol] 코인 심볼 ([CoinliveRestApi.getChannelList]를 통해 받아온 [Channel.coinSymbol]을 이용하세요)
+ * @param[customerName] Customer 이름 ([CoinliveRestApi.getCustomerInfo]를 통해 받아온 [Customer.name]을 이용하세요)
+ * @param[listener] 신규,삭제,수정,로드 등 메세지들의 이벤트 listener
+ * @param[cmNoticeListener] CM 공지 사항을 전달 받기 위한 listener
+ * @param[amaListener] AMA 상태를 전달 받기 위한 lisener
+ * @param[context] 전송 실패 메세지를 로컬 DB에 저장하기 위한 context
+ */
 class CoinliveChat(
     private val coinId: String,
     private val coinSymbol: String,
@@ -31,19 +77,16 @@ class CoinliveChat(
     listener: MessageListener,
     cmNoticeListener: CmNoticeListener,
     amaListener: AmaListener,
-    applicationContext: Context,
+    context: Context,
 ) {
 
     companion object {
         /**
          * 테스트 환경을 위해 현재 build mode를 설정합니다.
          * 디폴트 값은 true 입니다.
+         * release mode로 build하기 위해서는 반드시 값을 false로 변경해야 합니다.
          */
         var isDebug: Boolean = true
-//            get() = field
-//            set(value) {
-//                field = value
-//            }
     }
 
     private val realtimeDatabaseWrapper: RealtimeDatabaseWrapper =
@@ -52,7 +95,7 @@ class CoinliveChat(
     private var isLoading: Boolean = false
     private val db by lazy {
         Room.databaseBuilder(
-            applicationContext,
+            context,
             ChatDatabase::class.java,
             "coinlive_chat"
         ).build()
@@ -82,6 +125,7 @@ class CoinliveChat(
 
     /**
      * 상대방 메세지의 이모지 리액션을 추가합니다.
+     * [chat.memberId]와 [memberId] 가 동일할 경우 자신의 메세지로 판단하여 이모지를 추가하지 않습니다.
      * @param[chat] 이모지 리액션을 추가할 메세지
      * @param[memberId] 자신의 id
      * @param[emojiType] 추가할 EmojiType
@@ -112,6 +156,7 @@ class CoinliveChat(
 
     /**
      * 상대방 메세지의 추가한 이모지 리액션을 삭제합니다.
+     * [chat.memberId]와 [memberId] 가 동일할 경우 자신의 메세지로 판단하여 이모지를 추가하지 않습니다.
      * @param[chat] 이모지 리액션을 삭제할 메세지
      * @param[memberId] 자신의 id
      * @param[emojiType] 삭제할 EmojiType
@@ -135,9 +180,9 @@ class CoinliveChat(
     }
 
     /**
-     * 채팅 메세지 발신 요청.
+     * 채팅 메세지를 전송합니다.
      * AMA가 진행 중이거나 [message]가 500자 이상일 경우 [SendMessageException]가 발생합니다.
-     * 발신을 실패할 경우 [MessageListener.failSendMessage]로 해당 메세지([Chat])를 전달합니다.
+     * 발신을 실패할 경우 [MessageListener.failSendMessage]로 해당 메세지([Chat])룰 전달합니다.
      * @param[message] 메세지
      * @param[myInfo] 사용자 자신의 정보
      */
