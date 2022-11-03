@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">chat_solution_demo</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="login_fragment_label">Login</string>
+    <string name="channel_list_fragment_label">Channel List</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="login_title">coinlive\nCHAT solution\nSample</string>
 </resources>
