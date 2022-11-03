@@ -11,7 +11,7 @@ import com.coinlive.chat.firebase.model.Emoji
 import com.google.firebase.Timestamp
 import com.google.gson.Gson
 
-@Database(entities = [Chat::class], version = 1)
+@Database(entities = [Chat::class], version = 1,exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ChatDatabase : RoomDatabase() {
     abstract fun chatDao(): ChatDao
