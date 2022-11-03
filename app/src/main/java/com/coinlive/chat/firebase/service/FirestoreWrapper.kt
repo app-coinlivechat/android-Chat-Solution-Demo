@@ -3,7 +3,7 @@ package com.coinlive.chat.firebase.service
 import com.coinlive.chat.Coinlive
 import com.coinlive.chat.api.model.enum.CoinNotiType
 import com.coinlive.chat.exception.Error
-import com.coinlive.chat.firebase.`interface`.MessageListener
+import com.coinlive.chat.firebase.listener.MessageListener
 import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.chat.firebase.model.enum.MessageType
 import com.coinlive.chat.util.CalendarHelper

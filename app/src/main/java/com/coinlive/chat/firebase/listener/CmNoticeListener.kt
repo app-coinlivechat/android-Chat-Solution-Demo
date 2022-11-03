@@ -1,4 +1,4 @@
-package com.coinlive.chat.firebase.`interface`
+package com.coinlive.chat.firebase.listener
 
 import com.coinlive.chat.firebase.CoinliveChat
 

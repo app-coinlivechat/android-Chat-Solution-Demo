@@ -8,9 +8,9 @@ import com.coinlive.chat.api.model.Customer
 import com.coinlive.chat.api.CoinliveRestApi
 import com.coinlive.chat.exception.FetchMessageException
 import com.coinlive.chat.exception.SendMessageException
-import com.coinlive.chat.firebase.`interface`.AmaListener
-import com.coinlive.chat.firebase.`interface`.CmNoticeListener
-import com.coinlive.chat.firebase.`interface`.MessageListener
+import com.coinlive.chat.firebase.listener.AmaListener
+import com.coinlive.chat.firebase.listener.CmNoticeListener
+import com.coinlive.chat.firebase.listener.MessageListener
 import com.coinlive.chat.firebase.model.Ama
 import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.chat.firebase.model.Emoji
@@ -57,7 +57,6 @@ class CoinliveChat(
     private val realtimeDatabaseWrapper: RealtimeDatabaseWrapper =
         RealtimeDatabaseWrapper(coinId, cmNoticeListener, amaListener)
     private val firestoreWrapper: FirestoreWrapper = FirestoreWrapper(coinId, listener)
-    private var isLoading: Boolean = false
     private val db by lazy {
         Room.databaseBuilder(
             context,
@@ -275,7 +274,7 @@ class CoinliveChat(
      * @return[ArrayList] 전송에 실패한 [Chat] 메세지 리스트 입니다.
      */
     fun getFailedMessages() : ArrayList<Chat>? {
-        return chatDao.getAllMessage()
+        return chatDao.getAllMessage()?.let { ArrayList(it) }
     }
 
     /**

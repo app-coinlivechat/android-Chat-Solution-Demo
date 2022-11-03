@@ -1,8 +1,8 @@
 package com.coinlive.chat.firebase.service
 
 import com.coinlive.chat.Coinlive
-import com.coinlive.chat.firebase.`interface`.AmaListener
-import com.coinlive.chat.firebase.`interface`.CmNoticeListener
+import com.coinlive.chat.firebase.listener.AmaListener
+import com.coinlive.chat.firebase.listener.CmNoticeListener
 import com.coinlive.chat.firebase.model.Ama
 import com.coinlive.chat.firebase.model.Cm
 import com.google.firebase.database.*
