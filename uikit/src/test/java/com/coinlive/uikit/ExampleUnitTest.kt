@@ -1,4 +1,4 @@
-package com.coinlive.chat
+package com.coinlive.uikit
 
 import org.junit.Test
 

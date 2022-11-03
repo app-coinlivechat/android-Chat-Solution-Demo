@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.coinlive.demo'
+    namespace 'com.coinlive.uikit'
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.coinlive.demo"
+        applicationId "com.coinlive.uikit"
         minSdk 26
         targetSdk 32
         versionCode 1
