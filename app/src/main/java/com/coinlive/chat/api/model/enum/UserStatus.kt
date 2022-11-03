@@ -1,5 +1,30 @@
 package com.coinlive.chat.api.model.enum
-
+/**
+ * 코인라이브 채팅 사용자의 상태를 표시하는 enum class입니다.
+ */
 enum class UserStatus {
-    ACTIVE, BLOCK, DORMANT, INACTIVE, NONE
+    /**
+     * 활성화된 사용자입니다.
+     */
+    ACTIVE,
+
+    /**
+     * 정지 대상인 사용자입니다.
+     */
+    BLOCK,
+
+    /**
+     * 휴면 사용자입니다.
+     */
+    DORMANT,
+
+    /**
+     * 비활성화된 사용자입니다.
+     */
+    INACTIVE,
+
+    /**
+     * none or etc
+     */
+    NONE
 }
