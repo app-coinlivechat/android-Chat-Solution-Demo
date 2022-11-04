@@ -1,6 +1,8 @@
 package com.coinlive.chat.api.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 /**
  * 코인라이브 채팅의 필터링 정보 리스트를 관리하는 data class 입니다.
@@ -15,6 +17,7 @@ data class NotificationTypeList(
 /**
  * 코인라이브 채팅의 필터링 정보를 관리하는 data class 입니다.
  */
+@Parcelize
 data class NotificationType(
     /**
      * 필터의 이름입니다.
@@ -32,7 +35,7 @@ data class NotificationType(
      * 필터의 id입니다.
      */
     @SerializedName("ntid") val id: String,
-)
+):Parcelable
 
 data class NotificationMap(
     @SerializedName("noti") val notiMap: HashMap<String, Boolean>,
