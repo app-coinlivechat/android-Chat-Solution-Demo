@@ -9,58 +9,78 @@ import com.coinlive.chat.exception.RequestFailException
 class ChattingMemberRepository {
     private val service: ChattingMemberService = RestApiClient.chattingMemberService
 
-    fun getChannelList(apiKey: String): List<Channel> {
-        val response = service.getChannelList(apiKey).execute().body()
-            ?: throw NetworkException("getChannelList error!")
-
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException("getChannelList fail. please check apiKey", response.code, response.msg)
+    suspend fun getChannelList(apiKey: String): List<Channel> {
+        try {
+            val response = service.getChannelList(apiKey)
+            if (!response.isSuccess() && response.d == null) {
+                throw RequestFailException("getChannelList fail. please check apiKey", response.code, response.msg)
+            }
+            return response.d!!.list
+        } catch (exception: Exception) {
+            throw NetworkException("getCustomerInfo error!")
         }
-        return response.d!!.list
     }
 
-    fun getCustomerInfo(apiKey: String): Customer {
-        val response = service.getCustomerInfo(apiKey).execute().body()
-            ?: throw NetworkException("getCustomerInfo error!")
-
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException("getCustomerInfo fail. please check apiKey", response.code, response.msg)
+    suspend fun getCustomerInfo(apiKey: String): Customer {
+        try {
+            val response = service.getCustomerInfo(apiKey)
+            if (!response.isSuccess() && response.d == null) {
+                throw RequestFailException("getCustomerInfo fail. please check apiKey", response.code, response.msg)
+            }
+            return response.d!!
+        } catch (exception: Exception) {
+            throw NetworkException("getCustomerInfo error!")
         }
-        return response.d!!
     }
 
-    fun getCustomerMemberInfo(auth: String): CustomerUser {
-        val response = service.getCustomerMemberInfo(auth).execute().body()
-            ?: throw NetworkException("getCustomerMemberInfo error!")
+    suspend fun getCustomerMemberInfo(auth: String): CustomerUser {
+        try {
+            val response = service.getCustomerMemberInfo(auth)
 
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException("getCustomerMemberInfo fail. please check token", response.code, response.msg)
+            if (!response.isSuccess() && response.d == null) {
+                throw RequestFailException("getCustomerMemberInfo fail. please check token",
+                    response.code,
+                    response.msg)
+            }
+            return response.d!!
+        } catch (exception: Exception) {
+            throw NetworkException("getCustomerMemberInfo error!")
         }
-        return response.d!!
     }
 
-    fun customerUserSignUp(auth: String, user: CustomerUserSignUpBody): CustomerUserSignUp {
-        val response = service.customerUserSignUp(auth, user).execute().body()
-            ?: throw NetworkException("customerUserSingUp error!")
+    //    suspend fun customerUserSignUp(auth: String, user: CustomerUserSignUpBody): CustomerUserSignUp {
+    suspend fun customerUserSignUp(auth: String, user: CustomerUserSignUpBody): RestApiResponse<CustomerUserSignUp> {
+        try {
+            return service.customerUserSignUp(auth, user)
 
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException(
-                "customerUserSingUp fail. please check customToken or customerUserSignUpBody",
-                response.code,
-                response.msg
-            )
+//            return when {
+//                response.isSuccess() -> {
+//                    true
+//                }
+//                else -> {
+//                    LoggerHelper.de(
+//                        "customerUserSingUp fail. please check customToken or customerUserSignUpBody ${response.code}, ${response.msg}")
+//                    false
+//                }
+//            }
+        } catch (exception: Exception) {
+            throw NetworkException("customerUserSingUp error!")
         }
-        return response.d!!
     }
 
-    fun getCustomToken(apiKey: String, uuid: String): CustomerUserSignUp {
-        val response = service.getCustomToken(apiKey, CustomTokenBody(uuid)).execute().body()
-            ?: throw NetworkException("getCustomToken error!")
-
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException("getCustomToken fail. please check apiKey or uuid", response.code, response.msg)
+    suspend fun getCustomToken(apiKey: String, uuid: String): CustomerUserSignUp {
+        try {
+            val response = service.getCustomToken(apiKey, CustomTokenBody(uuid))
+            if (!response.isSuccess() && response.d == null) {
+                throw RequestFailException("getCustomToken fail. please check apiKey or uuid",
+                    response.code,
+                    response.msg)
+            }
+            return response.d!!
+        } catch (exception: Exception) {
+            throw NetworkException("getCustomToken error!")
         }
-        return response.d!!
+
     }
 
 
