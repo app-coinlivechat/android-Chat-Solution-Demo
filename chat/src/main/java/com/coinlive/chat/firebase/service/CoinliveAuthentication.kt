@@ -30,6 +30,20 @@ object CoinliveAuthentication {
     }
 
     /**
+     * Coinlive Firebase Authentication에 익명 로그인을 합니다.
+     * 대게 사용자가 비회원일 경우 사용됩니다.
+     * @return[FirebaseUser] 사용자의 User[FirebaseUser] object를 리턴합니다.
+     */
+    suspend fun signInAnonymously() : FirebaseUser{
+        try {
+            Firebase.auth.signInAnonymously().await()
+            return Firebase.auth.currentUser ?: throw FirebaseIdTokenException("CoinliveAuthentication.signInAnonymously error")
+        } catch (e: Exception) {
+            throw UnknwonExecption("CoinliveAuthentication.signInAnonymously error")
+        }
+    }
+
+    /**
      * Coinlive Firebase Authentication에 로그아웃 합니다.
      */
     fun signOut() {
