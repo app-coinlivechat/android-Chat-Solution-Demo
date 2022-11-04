@@ -7,6 +7,10 @@
 <!--    <color name="black">#FF000000</color>-->
 <!--    <color name="white">#FFFFFFFF</color>-->
 
+    <color name="background">#1E1E1E</color>
+    <color name="dialog_background">#2B2B33</color>
+
+
     <color name="grey_005">#101010</color>
     <color name="grey_010">#16161A</color>
     <color name="grey_015">#202025</color>

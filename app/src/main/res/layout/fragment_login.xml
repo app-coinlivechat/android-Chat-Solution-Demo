@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="16dp"
-        tools:context=".fragment.LoginFragment">
+        tools:context=".fragments.LoginFragment">
 
         <TextView
             android:id="@+id/tv_title"
@@ -59,6 +59,7 @@
                     android:background="@drawable/login_editext_outline"
                     android:gravity="center_vertical"
                     android:hint="Email"
+                    android:text="testsite.com"
                     android:inputType="text"
                     android:maxLines="1"
                     android:paddingHorizontal="16dp"
@@ -93,6 +94,7 @@
                     android:background="@drawable/login_editext_outline"
                     android:gravity="center_vertical"
                     android:hint="Email"
+                    android:text="etgkqo"
                     android:maxLines="1"
                     android:inputType="text"
                     android:paddingHorizontal="16dp"
@@ -126,6 +128,7 @@
                     android:background="@drawable/login_editext_outline"
                     android:gravity="center_vertical"
                     android:hint="최대 10자, 중복불가"
+                    android:text="etgkqo"
                     android:maxLines="1"
                     android:inputType="text"
                     android:paddingHorizontal="16dp"

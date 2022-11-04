@@ -22,7 +22,6 @@
     <style name="Theme.Chat_solution_demo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Chat_solution_demo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-    
 
     <style name="header1">
         <item name="android:fontFamily">@font/spoqahansans</item>

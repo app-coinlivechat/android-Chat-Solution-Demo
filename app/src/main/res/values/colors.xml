@@ -7,6 +7,9 @@
 <!--    <color name="black">#FF000000</color>-->
 <!--    <color name="white">#FFFFFFFF</color>-->
 
+    <color name="background">#FFFFFF</color>
+    <color name="dialog_background">#FFFFFF</color>
+
 
     // grey
     <color name="grey_005">#FFFFFF</color>
