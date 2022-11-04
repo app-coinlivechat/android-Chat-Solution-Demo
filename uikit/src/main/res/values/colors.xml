@@ -7,4 +7,31 @@
 <!--    <color name="teal_700">#FF018786</color>-->
 <!--    <color name="black">#FF000000</color>-->
 <!--    <color name="white">#FFFFFFFF</color>-->
+
+    <color name="bacground">#FFFFFF</color>
+    <color name="line_color">#1F000000</color>
+    
+    <color name="button_add_on_color">#32A4B3</color>
+
+    // grey
+    <color name="grey_005">#FFFFFF</color>
+    <color name="grey_010">#F2F4F6</color>
+    <color name="grey_015">#202025</color>
+    <color name="grey_020">#DADEE2</color>
+    <color name="grey_030">#AEB7C1</color>
+    <color name="grey_040">#8D94A1</color>
+    <color name="grey_050">#6D7583</color>
+    <color name="grey_060">#4F5866</color>
+    <color name="grey_070">#353C4A</color>
+    <color name="grey_080">#191E27</color>
+    <color name="grey_090">#000000</color>
+
+
+    // sub
+    <color name="blue_050">#4880EE</color>
+    <color name="red_050">#E64E3C</color>
+    <color name="yellow_050">#FFF028</color>
+    <color name="yellow_060">#FFD324</color>
+    <color name="green_050">#27AB86</color>
+    <color name="green_060">#137B5E</color>
 </resources>
