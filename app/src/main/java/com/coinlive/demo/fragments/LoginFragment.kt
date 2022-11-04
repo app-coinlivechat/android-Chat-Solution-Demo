@@ -14,11 +14,15 @@ import com.coinlive.demo.databinding.FragmentLoginBinding
 import com.coinlive.demo.dialogs.LoginResultDialog
 import com.coinlive.demo.dialogs.OkCallback
 import com.coinlive.demo.viewmodels.LoginFragmentViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class LoginFragment : Fragment() ,OkCallback{
+class LoginFragment : Fragment(), OkCallback {
     private val TAG = LoginFragment::class.java.simpleName
 
 
@@ -37,13 +41,13 @@ class LoginFragment : Fragment() ,OkCallback{
         viewModel = ViewModelProvider(this)[LoginFragmentViewModel::class.java]
         viewModel.getCustomerInfo()
         viewModel.loginResultMsg.observe(viewLifecycleOwner) {
-            LoginResultDialog(requireContext(), this,it).show()
+            LoginResultDialog(requireContext(), this, it).show()
         }
         viewModel.memberCheckMsg.observe(viewLifecycleOwner) {
-            if(it == UserStatus.ACTIVE) {
-                findNavController().navigate(R.id.action_LoginFragment_to_ChannelListFragment)
+            if (it == UserStatus.ACTIVE) {
+                moveChannelListFragment()
             } else {
-                LoginResultDialog(requireContext(), this,it.name).show()
+                showLoginResultDialog(it.name)
             }
 
         }
@@ -59,6 +63,25 @@ class LoginFragment : Fragment() ,OkCallback{
         binding.bLogIn.setOnClickListener {
             viewModel.signUpCheck()
         }
+        binding.bAnonymouslyLogIn.setOnClickListener {
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    viewModel.signInAnonymously()
+                    moveChannelListFragment()
+                } catch (e: Exception) {
+                    showLoginResultDialog(e.message ?: "signInAnonymously 실패")
+                }
+            }
+
+        }
+    }
+
+    private fun showLoginResultDialog(message: String) {
+        LoginResultDialog(requireContext(), this, message).show()
+    }
+
+    private fun moveChannelListFragment() {
+        findNavController().navigate(R.id.action_LoginFragment_to_ChannelListFragment)
     }
 
     override fun onDestroyView() {
@@ -69,7 +92,7 @@ class LoginFragment : Fragment() ,OkCallback{
     override fun okClick(dialog: Dialog) {
         dialog.dismiss()
         if (viewModel.loginResultMsg.value == "가입완료") {
-            findNavController().navigate(R.id.action_LoginFragment_to_ChannelListFragment)
+            moveChannelListFragment()
         }
     }
 

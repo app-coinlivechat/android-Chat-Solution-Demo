@@ -13,6 +13,9 @@ import com.coinlive.chat.api.model.CustomerUserSignUpBody
 import com.coinlive.chat.api.model.enum.UserStatus
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.firebase.service.CoinliveAuthentication
+import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
@@ -21,7 +24,11 @@ class LoginFragmentViewModel : ViewModel() {
 
     private val apiKey = "testsite"
     private val clApi = CoinliveRestApi()
-    private var customer: Customer? = null
+    var customer: Customer? = null
+        get() = field
+        private set(value) {
+            field = value
+        }
     var loginResultMsg: MutableLiveData<String> = MutableLiveData()
     var memberCheckMsg: MutableLiveData<UserStatus> = MutableLiveData()
 //    var loginResultCode: MutableLiveData<String> = MutableLiveData()
@@ -44,12 +51,16 @@ class LoginFragmentViewModel : ViewModel() {
             Log.e(TAG, "customer 정보를 불러오지 못했습니다.")
         } else {
             getCustomToken(uuid, nickName)
-
         }
     }
 
+    suspend fun signInAnonymously() : FirebaseUser {
+        return CoinliveAuthentication.signInAnonymously()
+    }
+
+
     fun signUpCheck() = viewModelScope.launch {
-        clApi.getCustomerMemberInfo(object :ResponseCallback<CustomerUser>{
+        clApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
             override fun onSuccess(value: CustomerUser) {
                 memberCheckMsg.value = value.status
             }

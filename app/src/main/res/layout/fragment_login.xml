@@ -236,7 +236,7 @@
             app:layout_constraintTop_toBottomOf="@id/v"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/b_anymusLogIn"
+            android:id="@+id/b_anonymouslyLogIn"
             android:text="익명접속"
             style="@style/subtitle3"
             android:minHeight="0dp"
@@ -255,7 +255,7 @@
             android:textColor="@color/grey_090"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/b_anymusLogIn"
+            app:layout_constraintTop_toBottomOf="@id/b_anonymouslyLogIn"
             android:text="익명 접속 테스트를 원하신다면 위 버튼을 눌러주세요.
 문의사항은 메일로 발송해주세요. app@coinlive.net"
             android:layout_width="match_parent"
