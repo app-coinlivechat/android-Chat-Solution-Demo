@@ -3,7 +3,8 @@ package com.coinlive.chat.exception
 import com.coinlive.chat.api.model.enum.ResponseCode
 
 
-abstract class CoinliveException(message: String, val code: Int) : Exception(message)
+open class CoinliveException(message: String, val code: Int) : Exception(message)
+
 
 class FetchMessageException(message: String) : CoinliveException(
     "$message NetworkException : ${Error.FETCH_MESSAGE.msg}", Error
