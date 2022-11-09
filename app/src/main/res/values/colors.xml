@@ -9,6 +9,7 @@
 
     <color name="background">#FFFFFF</color>
     <color name="dialog_background">#FFFFFF</color>
+    <color name="blue_text">#32A4B3</color>
 
 
     // grey

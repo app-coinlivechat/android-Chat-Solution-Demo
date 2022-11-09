@@ -20,7 +20,7 @@ object CoinliveAuthentication {
      * @return[String] 사용자의 User[FirebaseUser]의 uid를 반환합니다.
      * @see ChattingMemberRepository.getCustomToken
      */
-    suspend fun sig강nIn(customToken: String): String{
+    suspend fun signIn(customToken: String): String{
         try {
             signOut()
             Firebase.auth.signInWithCustomToken(customToken).await()

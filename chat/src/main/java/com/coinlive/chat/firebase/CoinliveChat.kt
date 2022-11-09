@@ -19,6 +19,8 @@ import com.coinlive.chat.firebase.model.enum.MessageType
 import com.coinlive.chat.firebase.service.*
 import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.chat.util.LoggerHelper
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -340,8 +342,10 @@ class CoinliveChat(
     /**
      * 로컬 디비에서 오늘 자정 기준으로 부터 7일 이전 전송 실패 데이터를 삭제합니다.
      */
-    private fun deleteOldFailMessage() {
-        chatDao.deleteOldMessage(CalendarHelper.getTodayMidnightTimeStamp())
+    private fun deleteOldFailMessage(){
+//        GlobalScope.launch {
+//            chatDao.deleteOldMessage(CalendarHelper.getTodayMidnightTimeStamp())
+//        }
     }
 
 }
