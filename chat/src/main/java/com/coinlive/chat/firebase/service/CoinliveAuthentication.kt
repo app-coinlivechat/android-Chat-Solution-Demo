@@ -17,13 +17,15 @@ object CoinliveAuthentication {
     /**
      * Coinlive Firebase Authentication에 로그인을 합니다.
      * @param[customToken] [ChattingMemberRepository.getCustomToken] 을 이용해서 받은 값을 말합니다.
-     * @return[FirebaseUser] 사용자의 User[FirebaseUser] object를 리턴합니다.
+     * @return[String] 사용자의 User[FirebaseUser]의 uid를 반환합니다.
      * @see ChattingMemberRepository.getCustomToken
      */
-    suspend fun signIn(customToken: String): FirebaseUser{
+    suspend fun sig강nIn(customToken: String): String{
         try {
+            signOut()
             Firebase.auth.signInWithCustomToken(customToken).await()
-            return Firebase.auth.currentUser ?: throw FirebaseIdTokenException("CoinliveAuthentication.signIn error")
+            return Firebase.auth.currentUser?.uid ?: throw FirebaseIdTokenException("CoinliveAuthentication.signIn " +
+                    "error")
         } catch (e: Exception) {
             throw UnknwonExecption("CoinliveAuthentication.signIn error")
         }
@@ -32,12 +34,13 @@ object CoinliveAuthentication {
     /**
      * Coinlive Firebase Authentication에 익명 로그인을 합니다.
      * 대게 사용자가 비회원일 경우 사용됩니다.
-     * @return[FirebaseUser] 사용자의 User[FirebaseUser] object를 리턴합니다.
+     * @return[String] 사용자의 User[FirebaseUser] uid를 반환합니다.
      */
-    suspend fun signInAnonymously() : FirebaseUser{
+    suspend fun signInAnonymously() : String{
         try {
+            signOut()
             Firebase.auth.signInAnonymously().await()
-            return Firebase.auth.currentUser ?: throw FirebaseIdTokenException("CoinliveAuthentication.signInAnonymously error")
+            return Firebase.auth.currentUser?.uid ?: throw FirebaseIdTokenException("CoinliveAuthentication.signInAnonymously error")
         } catch (e: Exception) {
             throw UnknwonExecption("CoinliveAuthentication.signInAnonymously error")
         }
