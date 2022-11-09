@@ -12,6 +12,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import java.util.*
@@ -25,9 +26,8 @@ interface SendEventListener {
 class FirestoreWrapper(private val coinId: String, private val listener: MessageListener) :
     EventListener<QuerySnapshot> {
     companion object {
-        private val BASE_PATH = if (Coinlive.isDebug) "clc-dev" else "clc-prod"
+        private val BASE_PATH = if (Coinlive.isDebug) "msg-dev" else "msg-prod"
     }
-
 
     private var documentSnapshotList: ArrayList<DocumentSnapshot> = ArrayList()
     private var existCollectionSnapshot: ArrayList<String> = ArrayList()
@@ -39,6 +39,10 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
     init {
         initTimeStamp = CalendarHelper.getTodayMidnight()
+        Firebase.firestore.firestoreSettings = firestoreSettings {
+            isPersistenceEnabled = true
+            cacheSizeBytes = FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED
+        }
         startMidnightCheck()
     }
 
@@ -95,32 +99,47 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
         this.notificationMap = notificationMap
 
         val collectionPath = "$BASE_PATH/${standardTime.timeInMillis}/$coinId"
+
         val collection = Firebase.firestore.collection(collectionPath)
 
-        val query = collection.limitToLast(standardSize).orderBy("t", Query.Direction.DESCENDING).limit(standardSize)
+        val query = collection.limitToLast(standardSize).orderBy("t", Query.Direction.DESCENDING)
         if (documentSnapshotList.size > 0) {
-            query.startAfter(documentSnapshotList.last())
+            query.startAt(documentSnapshotList.last())
+        }
+        if(documentSnapshotList.size > 0) {
+            LoggerHelper.d("$collectionPath , startAt : ${documentSnapshotList.last().id}")
+        } else {
+            LoggerHelper.d(collectionPath)
         }
         query.get().addOnSuccessListener {
             val documents = it.documents
             if (documents.size == 0) {    // standardTime 에 더이상 불러올 데이터가 없으니 이전 날짜의 데이터를 불러온다.
                 standardTime.set(Calendar.DATE, standardTime.get(Calendar.DATE) - 1)
                 val now = CalendarHelper.nowCalendar()
-
-                if (now.get(Calendar.DATE) - standardTime.get(Calendar.DATE) <= 7) {
+                val result = now.get(Calendar.DATE) - standardTime.get(Calendar.DATE)
+                if ( result in 0..7) {
+                    LoggerHelper.d("$collectionPath documents.size == 0 call fetchMessage")
                     fetchMessage(standardSize, notificationMap, standardTime)
+                    return@addOnSuccessListener
+                } else {
+                    isLoading = false
                 }
             }
 
             documentSnapshotList.addAll(documents)
-            filter(documents)
-            val oldMessage = toChatList(documents)
+            val oldMessage = filterWithConvert(documents)
             sort(oldMessage)
 
             listener.oldMessages(oldMessage, false)
+            if (!existCollectionSnapshot.contains(collectionPath)) {
+                collection.addSnapshotListener(this)
+                existCollectionSnapshot.add(collectionPath)
+            }
 
             if (oldMessage.size < diffSize) {
                 fetchMessage(standardSize, notificationMap, standardTime, diffSize - oldMessage.size)
+            } else {
+                isLoading = false
             }
         }.addOnFailureListener {
             isLoading = false
@@ -128,32 +147,17 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
                     "${Error.QUERY_FETCH_MESSAGE.code}, ${Error.QUERY_FETCH_MESSAGE.msg}\n" +
                     "${it.message}")
         }
-
-        if (!existCollectionSnapshot.contains(collectionPath)) {
-            collection.addSnapshotListener(this)
-            existCollectionSnapshot.add(collectionPath)
-        }
-        isLoading = false
     }
 
     fun reload(notificationMap: Map<String, Boolean>) {
         this.notificationMap = notificationMap
 
         val documents = documentSnapshotList.toList()
-        filter(documents)
-        val oldMessage = toChatList(documents)
+        val oldMessage = filterWithConvert(documents)
         sort(oldMessage)
         listener.oldMessages(oldMessage, true)
     }
 
-    private fun toChatList(documents: List<DocumentSnapshot>): ArrayList<Chat> {
-        val oldMessage = ArrayList<Chat>()
-        documents.forEach { documentSnapshot ->
-            val chat = convertChat(documentSnapshot) ?: return@forEach
-            oldMessage.add(chat)
-        }
-        return oldMessage
-    }
 
     private fun convertChat(document: DocumentSnapshot): Chat? {
         val chat: Chat = document.toObject<Chat>() ?: return null
@@ -165,7 +169,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
         }
 
         if (chat.st != null) {
-            changeInsertTime = chat.st.toDate().time
+            changeInsertTime = chat.st!!.toDate().time
             LoggerHelper.d("t : ${chat.insertTime}, st : $changeInsertTime")
         }
 
@@ -177,15 +181,23 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
     }
 
     private fun sort(chat: List<Chat>) {
-        chat.sortedWith(compareBy<Chat> { it.insertTime }.thenBy { it.symbol })
+        chat.sortedWith(compareBy<Chat> { it.insertTime }.thenBy { it.symbol }).reversed()
     }
 
-    private fun filter(documents: List<DocumentSnapshot>) {
+    private fun filterWithConvert(documents: List<DocumentSnapshot>) : ArrayList<Chat>{
         val chatNotiMap = getChatNotiMap()
-        documents.filter { documentSnapshot ->
-            val chat: Chat = convertChat(documentSnapshot) ?: return@filter false
-            isShowMessage(chat, chatNotiMap)
+
+        val oldMessage = ArrayList<Chat>()
+
+        documents.forEach { documentSnapshot ->
+            val chat: Chat = convertChat(documentSnapshot) ?: return@forEach
+            val isShow = isShowMessage(chat, chatNotiMap)
+            if(isShow) {
+                oldMessage.add(chat)
+            }
+
         }
+        return oldMessage
     }
 
     private fun getChatNotiMap(): Map<String, Boolean>? {
@@ -244,6 +256,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
                 val document = dc.document
                 when (dc.type) {
                     DocumentChange.Type.ADDED -> {
+                        if(isExistDocument(document)) return
                         convertChat(document)?.let {
                             if (isShowMessage(it, getChatNotiMap())) {
                                 listener.newMessages(it)
@@ -252,7 +265,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
                         documentSnapshotList.add(document)
                     }
                     DocumentChange.Type.MODIFIED -> {
-                        if (documentSnapshotList.contains(document)) {
+                        if (isExistDocument(document)) {
                             convertChat(document)?.let {
                                 listener.modifyMessage(it)
                             }
@@ -260,7 +273,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
                         }
                     }
                     DocumentChange.Type.REMOVED -> {
-                        if (documentSnapshotList.contains(document)) {
+                        if (isExistDocument(document)) {
                             convertChat(document)?.let {
                                 listener.deletedMessage(it)
                                 documentSnapshotList.remove(document)
@@ -273,4 +286,16 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
             }
         }
     }
+
+    private fun isExistDocument(document:QueryDocumentSnapshot) :Boolean {
+        var isExist = false
+        documentSnapshotList.forEach {
+            if(it.id == document.id) {
+                isExist = true
+                return@forEach
+            }
+        }
+        return isExist
+    }
+
 }
