@@ -14,25 +14,37 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
--keepparameternames
--renamesourcefileattribute SourceFile
--keepattributes Signature,Exceptions,*Annotation*,
-                InnerClasses,PermittedSubclasses,EnclosingMethod,
-                Deprecated,SourceFile,LineNumberTable
+-keep class androidx.annotation.Keep
+-keep @androidx.annotation.Keep class * {*;}
+-keepclasseswithmembers class * {
+	@androidx.annotation.Keep <methods>;
+}
+-keepclasseswithmembers class * {
+	@androidx.annotation.Keep <fields>;
+}
+-keepclasseswithmembers class * {
+	@androidx.annotation.Keep <init>(...);
+}
 
-
--keepclassmembers class com.coinlive.chat.Coinlive {*;}
-
--keep class com.coinlive.chat.firebase.CoinliveChat {*;}
--keep class com.coinlive.chat.firebase.model.** {*;}
--keep interface com.coinlive.chat.firebase.listener.** {*;}
--keep class com.coinlive.chat.firebase.service.CoinliveAuthentication {*;}
-
--keep class com.coinlive.chat.exception.** {*;}
-
--keep class com.coinlive.chat.api.model.** {*;}
--keep class com.coinlive.chat.api.CoinliveRestApi {*;}
--keep class com.coinlive.chat.api.ResponseCallback {*;}
+#-keepparameternames
+#-renamesourcefileattribute SourceFile
+#-keepattributes Signature,Exceptions,*Annotation*,
+#                InnerClasses,PermittedSubclasses,EnclosingMethod,
+#                Deprecated,SourceFile,LineNumberTable
+#
+#
+#-keepclassmembers class com.coinlive.chat.Coinlive {*;}
+#
+#-keep class com.coinlive.chat.firebase.CoinliveChat {*;}
+#-keep class com.coinlive.chat.firebase.model.** {*;}
+#-keep interface com.coinlive.chat.firebase.listener.** {*;}
+#-keep class com.coinlive.chat.firebase.service.CoinliveAuthentication {*;}
+#
+#-keep class com.coinlive.chat.exception.** {*;}
+#
+#-keep class com.coinlive.chat.api.model.** {*;}
+#-keep class com.coinlive.chat.api.CoinliveRestApi {*;}
+#-keep class com.coinlive.chat.api.ResponseCallback {*;}
 
 
 # Room
