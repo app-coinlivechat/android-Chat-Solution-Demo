@@ -13,7 +13,16 @@
 
         <action
             android:id="@+id/action_LoginFragment_to_ChannelListFragment"
-            app:destination="@id/ChannelListFragment" />
+            app:destination="@id/ChannelListFragment" >
+            <argument
+                android:name="customerName"
+                app:argType="string" />
+            <argument
+                android:name="myInfo"
+                app:argType="com.coinlive.chat.api.model.CustomerUser" />
+
+        </action>
+
     </fragment>
     <fragment
         android:id="@+id/ChannelListFragment"
@@ -24,6 +33,36 @@
         <action
             android:id="@+id/action_ChannelListFragment_to_LoginFragment"
             app:destination="@id/LoginFragment" >
+
         </action>
+        <action
+            android:id="@+id/action_ChannelListFragment_to_ChattingFragment"
+            app:destination="@id/chattingFragment">
+            <argument
+                android:name="customerName"
+                app:argType="string" />
+            <argument
+                android:name="myInfo"
+                app:argType="com.coinlive.chat.api.model.CustomerUser" />
+
+            <argument
+                android:name="channel"
+                app:argType="com.coinlive.chat.api.model.Channel" />
+
+        </action>
+
     </fragment>
+    <fragment
+        android:id="@+id/chattingFragment"
+        android:name="com.coinlive.uikit.framents.ChattingFragment"
+        tools:layout="@layout/fragment_coin"
+        android:label="ChattingFragment" >
+        <action
+            android:id="@+id/action_chattingFragment_to_ChannelListFragment"
+            app:destination="@id/ChannelListFragment" >
+        </action>
+
+    </fragment>
+
+
 </navigation>

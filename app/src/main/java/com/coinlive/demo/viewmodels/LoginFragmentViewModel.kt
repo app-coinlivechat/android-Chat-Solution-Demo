@@ -13,9 +13,6 @@ import com.coinlive.chat.api.model.CustomerUserSignUpBody
 import com.coinlive.chat.api.model.enum.UserStatus
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.firebase.service.CoinliveAuthentication
-import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
@@ -29,6 +26,14 @@ class LoginFragmentViewModel : ViewModel() {
         private set(value) {
             field = value
         }
+
+    var myInfo: CustomerUser? = null
+        get() = field
+        private set(value) {
+            field = value
+        }
+    var customToken: String? = null
+
     var loginResultMsg: MutableLiveData<String> = MutableLiveData()
     var memberCheckMsg: MutableLiveData<UserStatus> = MutableLiveData()
 //    var loginResultCode: MutableLiveData<String> = MutableLiveData()
@@ -50,22 +55,25 @@ class LoginFragmentViewModel : ViewModel() {
             loginResultMsg.value = "customer 정보를 불러오지 못했습니다."
             Log.e(TAG, "customer 정보를 불러오지 못했습니다.")
         } else {
-            getCustomToken(uuid, nickName)
+            getCustomToken(uuid, nickName,continueSignUp = true)
         }
     }
 
-    suspend fun signInAnonymously() : FirebaseUser {
-        return CoinliveAuthentication.signInAnonymously()
+    suspend fun signInAnonymously() {
+        CoinliveAuthentication.signInAnonymously()
     }
 
 
     fun signUpCheck() = viewModelScope.launch {
         clApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
             override fun onSuccess(value: CustomerUser) {
+                myInfo = value
                 memberCheckMsg.value = value.status
+
             }
 
             override fun onFail(exception: CoinliveException) {
+                Log.e(TAG,"${exception.message}\n${exception.stackTrace}")
                 memberCheckMsg.value = UserStatus.NONE
             }
 
@@ -73,7 +81,26 @@ class LoginFragmentViewModel : ViewModel() {
     }
 
 
+    fun loginCheck() : Boolean {
+        try {
+            CoinliveAuthentication.getFirebaseUuid()
+            return true
+        }catch (e:Exception) {
+            return false
+        }
+    }
+
+    fun firebaseSignInWithCustomToken() = viewModelScope.launch{
+        customToken?.let {
+                CoinliveAuthentication.signIn(it)
+        } ?: run {
+            Log.e(TAG, "customToken is null. please before call getCustomToken fun")
+        }
+    }
+
+
     private suspend fun signUpCustomerUser(nickName: String) = viewModelScope.launch {
+
         clApi.customerUserSignUp(CustomerUserSignUpBody(customer!!.id, customer!!.defaultImageUrl, nickName), object
             : ResponseCallback<Boolean> {
             override fun onSuccess(value: Boolean) {
@@ -94,10 +121,11 @@ class LoginFragmentViewModel : ViewModel() {
         signUpCustomerUser(nickName)
     }
 
-    private suspend fun getCustomToken(uuid: String, nickName: String) {
+    private suspend fun getCustomToken(uuid: String, nickName: String, continueSignUp : Boolean = false) {
         clApi.getCustomToken(apiKey, uuid, object : ResponseCallback<CustomerUserSignUp> {
             override fun onSuccess(value: CustomerUserSignUp) {
                 Log.d(TAG, "customToken : ${value.customToken}")
+                customToken = value.customToken
                 viewModelScope.launch { clSignUp(customToken = value.customToken, nickName = nickName) }
             }
 

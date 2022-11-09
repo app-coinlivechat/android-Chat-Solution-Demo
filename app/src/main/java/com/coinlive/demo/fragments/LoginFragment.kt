@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.coinlive.chat.api.model.enum.UserStatus
 import com.coinlive.demo.R
@@ -61,10 +62,16 @@ class LoginFragment : Fragment(), OkCallback {
             viewModel.signUp(binding.etUuId.text.toString(), binding.etNickname.text.toString())
         }
         binding.bLogIn.setOnClickListener {
+            val result = viewModel.loginCheck()
+            if (!result) {
+                viewModel.firebaseSignInWithCustomToken()
+            }
             viewModel.signUpCheck()
+
+
         }
         binding.bAnonymouslyLogIn.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Main) {
+            lifecycleScope.launch(Dispatchers.Main) {
                 try {
                     viewModel.signInAnonymously()
                     moveChannelListFragment()
@@ -81,7 +88,16 @@ class LoginFragment : Fragment(), OkCallback {
     }
 
     private fun moveChannelListFragment() {
-        findNavController().navigate(R.id.action_LoginFragment_to_ChannelListFragment)
+
+        val bundle = Bundle()
+        viewModel.customer?.let {
+            bundle.putString("customerName",it.name)
+        }
+        viewModel.myInfo?.let {
+            bundle.putParcelable("myInfo",it)
+        }
+
+        findNavController().navigate(R.id.action_LoginFragment_to_ChannelListFragment,bundle)
     }
 
     override fun onDestroyView() {
