@@ -1,3 +1,11 @@
 <resources>
     <string name="input_hint">채팅을 입력하세요</string>
+    <string name="asset_description">Coinlive에서 자산인증을 검증한 메시지입니다.</string>
+    <string name="twitter_chat_title">%1$s(%2$s) 트위터</string>
+    <string name="medium_chat_title">%1$s(%2$s) 미디움</string>
+    <string name="price_jump_chat_title">급등알림</string>
+    <string name="price_drop_chat_title">급락알림</string>
+    <string name="buy_futures_chat_title">롱 청산(BINANCE FUTURES)</string>
+    <string name="sell_futures_chat_title">숏 청산(BINANCE FUTURES)</string>
+
 </resources>

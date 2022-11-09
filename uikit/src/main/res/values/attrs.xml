@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="InputView">
+        <attr name="viewBackground" format="reference|color"/>
+        <attr name="dividerColor" format="reference|color"/>
+        <attr name="addOnImage" format="reference|color"/>
+        <attr name="sendImage" format="reference|color"/>
+        <attr name="hitText" format="string"/>
+        <attr name="hitTextColor" format="reference|color"/>
+        <attr name="inputBackground" format="reference|color"/>
+    </declare-styleable>
+
+    <declare-styleable name="NormalChatMessage">
+        <attr name="isMe" format="boolean"/>
+        <attr name="textColor" format="reference|color"/>
+        <attr name="text" format="string"/>
+    </declare-styleable>
+</resources>

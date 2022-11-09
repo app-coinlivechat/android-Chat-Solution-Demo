@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bacground">#1E1E1E</color>
-    <color name="line_color">#FFFFFF</color>
 
-    <color name="button_add_on_color">#32A4B3</color>
 
     <color name="grey_005">#101010</color>
     <color name="grey_010">#16161A</color>
@@ -24,5 +21,23 @@
     <color name="yellow_060">#FFF028</color>
     <color name="green_050">#137B5E</color>
     <color name="green_060">#27AB86</color>
+
+    <color name="bacground">#1E1E1E</color>
+    <color name="normal_text">#000000</color>
+    <color name="line_color">#FFFFFF</color>
+
+
+    <color name="chat_other_msg_background">@color/grey_030</color>
+    <color name="chat_me_msg_background">#32A4B3</color>
+    <color name="chat_msg_text">@color/bacground</color>
+    <color name="chat_msg_time_text">@color/grey_050</color>
+    <color name="asset_chat_stroke">@color/grey_040</color>
+    <color name="asset_chat_background">@color/grey_015</color>
+    <color name="asset_chat_description">@color/grey_030</color>
+    <color name="server_chat_background">@color/grey_030</color>
+    <color name="server_chat_time">@color/grey_050</color>
+
+
+
 
 </resources>
