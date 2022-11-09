@@ -141,11 +141,14 @@ class CoinliveChat(
     fun retrySendMessage(messageId: String) {
         val chat = chatDao.getMessage(messageId) ?: throw SendMessageException("$messageId 는 실패 메세지 DB에 존재하지 않습니다.")
 
-        if (chat.images != null && chat.images.size > 10) {
-            throw SendMessageException("이미지 10개 이상 보낼수 없습니다.")
-        }
-        if (chat.images == null && (chat.koMessage.trim().isEmpty() || chat.enMessage.trim().isEmpty())) {
-            throw SendMessageException("메세지는 1자 보다 크고 500자 보다 적어야 합니다.")
+        chat.images?.let {
+            if (it.size > 10) {
+                throw SendMessageException("이미지 10개 이상 보낼수 없습니다.")
+            }
+        } ?: run {
+            if (chat.koMessage.trim().isEmpty() || chat.enMessage.trim().isEmpty()) {
+                throw SendMessageException("메세지는 1자 보다 크고 500자 보다 적어야 합니다.")
+            }
         }
 
         if (checkAmaProceeding()) { // ama 진행 체크
@@ -198,24 +201,27 @@ class CoinliveChat(
             return
         }
 
-        if (chat.emoji == null) {    // 메세지에 이모지가 아예 추가되어 있지 않을 경우
-            firestoreWrapper.updateEmoji(chat.copy(emoji = hashMapOf(emojiType.key to Emoji(1, arrayListOf(memberId)))))
-        } else {    // 메세지에 이모지가 있는 경우
-            var emoji: Emoji? = chat.emoji[emojiType.key]
+        chat.emoji?.let {
+            // 메세지에 이모지가 아예 추가되어 있지 않을 경우
+            var emoji: Emoji? = it[emojiType.key]
             if (emoji == null) { // emojiType이 추가되어 있지 않을 경우
                 emoji = Emoji(1, arrayListOf(memberId))
-            } else if (!emoji.mIds.contains(memberId)) { // emojiType이 추가되어 있지만 memberId가 추가 안되어 있을 경우
+            } else if (emoji.mIds != null && !emoji.mIds!!.contains(memberId)) { // emojiType이 추가되어 있지만 memberId가 추가
+                // 안되어 있을 경우
                 val mIdList = emoji.mIds
-                mIdList.add(memberId)
+                mIdList!!.add(memberId)
                 emoji = Emoji(count = emoji.count + 1, mIds = mIdList)
             }
 
-            if (chat.emoji[emojiType.key] != emoji) {  // 이전 chat.emoji 모델과 데이터가 다를 경우
+            if (it[emojiType.key] != emoji) {  // 이전 chat.emoji 모델과 데이터가 다를 경우
                 val copyEmoji: HashMap<String, Emoji> = HashMap()
-                copyEmoji.putAll(chat.emoji)
+                copyEmoji.putAll(it)
                 copyEmoji[emojiType.key] = emoji
                 firestoreWrapper.updateEmoji(chat.copy(emoji = copyEmoji))
             }
+        } ?: run {
+            // 메세지에 이모지가 있는 경우
+            firestoreWrapper.updateEmoji(chat.copy(emoji = hashMapOf(emojiType.key to Emoji(1, arrayListOf(memberId)))))
         }
     }
 
@@ -240,23 +246,25 @@ class CoinliveChat(
             return
         }
 
-        var emoji: Emoji? = chat.emoji[emojiType.key]
+        var emoji: Emoji? = chat.emoji!![emojiType.key]
 
         if(emoji == null) {
             LoggerHelper.de("삭제할 이모지가 존재하지 않습니다.")
             return
         }
-
-        if (emoji.mIds.contains(memberId)) { // emojiType의 이모지가 존재하고 emoji.mIds에 memberId가 존재할 경우
-            val mIdList = emoji.mIds
-            mIdList.remove(memberId)
-            emoji = Emoji(emoji.count - 1, mIdList)
+        emoji.mIds?.let {
+            if (it.contains(memberId)) { // emojiType의 이모지가 존재하고 emoji.mIds에 memberId가
+                // 존재할 경우
+                val mIdList = it
+                mIdList.remove(memberId)
+                emoji = Emoji(emoji!!.count - 1, mIdList)
+            }
         }
 
-        if (chat.emoji[emojiType.key] != emoji) {  // 이전 chat.emoji 모델과 데이터가 다를 경우
+        if (chat.emoji!![emojiType.key] != emoji) {  // 이전 chat.emoji 모델과 데이터가 다를 경우
             val copyEmoji: HashMap<String, Emoji> = HashMap()
-            copyEmoji.putAll(chat.emoji)
-            copyEmoji[emojiType.key] = emoji
+            copyEmoji.putAll(chat.emoji!!)
+            copyEmoji[emojiType.key] = emoji!!
             firestoreWrapper.updateEmoji(chat.copy(emoji = copyEmoji))
         }
     }
