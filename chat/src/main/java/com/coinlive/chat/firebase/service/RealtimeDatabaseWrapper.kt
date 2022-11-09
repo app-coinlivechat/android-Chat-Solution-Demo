@@ -21,6 +21,26 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
 
     var ama: Ama? = null
 
+    private val cmValueEventListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            val cm = snapshot.getValue<Cm>() ?: return
+            cmListener.getCmNotice(cm.message)
+        }
+
+        override fun onCancelled(error: DatabaseError) {}
+    }
+
+    private val amaValueEventListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            val ama = snapshot.getValue<Ama>() ?: return
+            this@RealtimeDatabaseWrapper.ama = ama
+            amaListener.getAma(ama)
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+        }
+    }
+
     init {
         initCm()
         initAma()
@@ -45,15 +65,6 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
         query.addValueEventListener(cmValueEventListener)
     }
 
-    private val cmValueEventListener = object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val cm = snapshot.getValue<Cm>() ?: return
-            cmListener.getCmNotice(cm.message)
-        }
-
-        override fun onCancelled(error: DatabaseError) {}
-    }
-
     /**
      * AMA 상태를 로드하고 데이터를 [AmaListener.getAma] 를 통해 전달합니다.
      *
@@ -68,16 +79,4 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
 
         query.addValueEventListener(amaValueEventListener)
     }
-
-    private val amaValueEventListener = object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            val ama = snapshot.getValue<Ama>() ?: return
-            this@RealtimeDatabaseWrapper.ama = ama
-            amaListener.getAma(ama)
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-        }
-    }
-
 }
