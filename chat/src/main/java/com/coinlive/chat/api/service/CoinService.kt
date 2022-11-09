@@ -9,5 +9,5 @@ import retrofit2.http.Path
 
 interface CoinService {
     @GET("v1/coin/{cid}")
-    fun getCoin(@Path("cid") coinId: String, @Header("Authorization") auth: String): Call<RestApiResponse<Coin>>
+    suspend fun getCoin(@Path("cid") coinId: String, @Header("Authorization") auth: String): RestApiResponse<Coin>
 }

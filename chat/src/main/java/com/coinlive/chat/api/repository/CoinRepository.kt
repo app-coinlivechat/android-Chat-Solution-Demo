@@ -10,17 +10,20 @@ import com.coinlive.chat.exception.RequestFailException
 class CoinRepository {
     private val service: CoinService = RestApiClient.coinService
 
-    fun getCoin(coinId: String, auth: String): Coin {
-        val response = service.getCoin(coinId, auth).execute().body()
-            ?: throw NetworkException("CoinRepository.getCoin error!")
+    suspend fun getCoin(coinId: String, auth: String): Coin {
+        try{
+            val response = service.getCoin(coinId, auth)
 
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException(
-                "CoinRepository.getCoin fail. please check coinId or token",
-                response.code,
-                response.msg
-            )
+            if (!response.isSuccess() && response.d == null) {
+                throw RequestFailException(
+                    "CoinRepository.getCoin fail. please check coinId or token",
+                    response.code,
+                    response.msg
+                )
+            }
+            return response.d!!
+        }catch (exception:Exception) {
+            throw NetworkException("CoinRepository.getCoin error!")
         }
-        return response.d!!
     }
 }

@@ -27,6 +27,6 @@ interface NotificationService {
             Call<RestApiResponse<NotificationTypeList>>
 
     @GET("v1/notification/{cid}/setting")
-    fun getNotificationSetting(@Path("cid") coinId: String, @Header("Authorization") auth: String):
-            Call<RestApiResponse<NotificationMap>>
+    suspend fun getNotificationSetting(@Path("cid") coinId: String, @Header("Authorization") auth: String):
+            RestApiResponse<NotificationMap>
 }

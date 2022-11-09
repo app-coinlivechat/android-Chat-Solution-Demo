@@ -85,9 +85,9 @@ class MemberRepository {
                 true
             }
             else -> {
-                LoggerHelper.de("MemberRepository.setReport fail. please check reportMid,reportTypeId or auth " +
-                        "${response.code}, ${response.msg}")
-                false
+                throw RequestFailException("MemberRepository.setReport fail. please check reportMid,reportTypeId or auth",
+                    response.code,
+                    response.msg)
             }
         }
     }

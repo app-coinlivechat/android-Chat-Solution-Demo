@@ -58,16 +58,19 @@ class NotificationRepository {
         return response.d!!.typeList
     }
 
-    fun getNotificationSetting(auth: String, coinId: String): Map<String,Boolean> {
-        val response = service.getNotificationSetting(coinId, auth).execute().body()
-            ?: throw NetworkException("NotificationRepository.getNotificationSetting error!")
+    suspend fun getNotificationSetting(auth: String, coinId: String): Map<String,Boolean> {
+        try{
+            val response = service.getNotificationSetting(coinId, auth)
 
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException(
-                "NotificationRepository.getNotificationSetting fail. please check auth or coinId ",
-                response.code, response.msg
-            )
+            if (!response.isSuccess() && response.d == null) {
+                throw RequestFailException(
+                    "NotificationRepository.getNotificationSetting fail. please check auth or coinId ",
+                    response.code, response.msg
+                )
+            }
+            return response.d!!.notiMap
+        }catch (exception : Exception) {
+            throw NetworkException("NotificationRepository.getNotificationSetting error!")
         }
-        return response.d!!.notiMap
     }
 }
