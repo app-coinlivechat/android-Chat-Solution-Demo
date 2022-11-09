@@ -1,9 +1,13 @@
 package com.coinlive.chat.firebase.model.enum
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
  * [Chat] 메세지 타입.
  */
-enum class MessageType {
+@Parcelize
+enum class MessageType : Parcelable {
     /**
      * 일반 사용자
      */
@@ -71,5 +75,4 @@ enum class MessageType {
     fun toLowName() : String {
         return name.lowercase()
     }
-
 }

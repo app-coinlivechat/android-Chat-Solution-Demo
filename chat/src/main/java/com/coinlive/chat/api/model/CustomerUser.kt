@@ -1,6 +1,7 @@
 package com.coinlive.chat.api.model
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import com.coinlive.chat.api.model.enum.UserStatus
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
@@ -8,6 +9,7 @@ import kotlinx.parcelize.Parcelize
 /**
  * 코인라이브 채팅의 일반 사용자 정보를 관리하는 struct입니다.
  */
+@Keep
 @Parcelize
 data class CustomerUser(
     /**
