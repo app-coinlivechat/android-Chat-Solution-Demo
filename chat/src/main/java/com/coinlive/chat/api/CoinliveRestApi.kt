@@ -6,46 +6,15 @@ import com.coinlive.chat.exception.*
 import com.coinlive.chat.firebase.service.CoinliveAuthentication
 
 class CoinliveRestApi {
-    private val coinRepo = CoinRepository();
     private val channelRepo = ChannelRepository();
     private val chattingMemberRepo = ChattingMemberRepository();
     private val memberRepo = MemberRepository();
     private val notificationRepo = NotificationRepository();
     private val uploadRepo = UploadRepository();
 
-
-    /**
-     * @param[coinId] 코인라이브에서 받아온 코인 uuid
-     * @param[callback] 성공,실패 callback,
-     */
-    suspend fun getCoin(coinId: String, callback: ResponseCallback<Coin>) {
-        try {
-            val coin = coinRepo.getCoin(coinId, getAuth())
-            callback.onSuccess(coin)
-        } catch (e: CoinliveException) {
-            callback.onFail(e)
-        }
-    }
-
     suspend fun getUserCount(coinId: String,callback: ResponseCallback<UserCount>) {
         try {
             callback.onSuccess(channelRepo.getUserCount(coinId, getAuth()))
-        } catch (e: CoinliveException) {
-            callback.onFail(e)
-        }
-    }
-
-    suspend fun userJoin(coinId: String, callback: ResponseCallback<UserCount>) {
-        try {
-            callback.onSuccess(channelRepo.userJoin(coinId, getAuth()))
-        } catch (e: CoinliveException) {
-            callback.onFail(e)
-        }
-    }
-
-    suspend fun userLeave(coinId: String, callback: ResponseCallback<UserCount>) {
-        try {
-            callback.onSuccess(channelRepo.userLeave(coinId, getAuth()))
         } catch (e: CoinliveException) {
             callback.onFail(e)
         }

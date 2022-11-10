@@ -13,7 +13,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RestApiClient {
     private val baseUrl = if (Coinlive.isDebug) "https://dev.coinlivechat.com/" else "https://api.coinlivechat.com/"
-    val coinService: CoinService
     val channelService: ChannelService
     val chattingMemberService: ChattingMemberService
     val memberService: MemberService
@@ -38,7 +37,6 @@ object RestApiClient {
             Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).client(client)
                 .build()
 
-        coinService = retrofit.create(CoinService::class.java)
         channelService = retrofit.create(ChannelService::class.java)
         chattingMemberService = retrofit.create(ChattingMemberService::class.java)
         memberService = retrofit.create(MemberService::class.java)
