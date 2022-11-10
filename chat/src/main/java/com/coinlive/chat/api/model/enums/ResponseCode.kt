@@ -1,4 +1,4 @@
-package com.coinlive.chat.api.model.enum
+package com.coinlive.chat.api.model.enums
 
 enum class ResponseCode {
     SUCCESS,

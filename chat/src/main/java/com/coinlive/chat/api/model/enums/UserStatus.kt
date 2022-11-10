@@ -1,4 +1,4 @@
-package com.coinlive.chat.api.model.enum
+package com.coinlive.chat.api.model.enums
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

@@ -1,4 +1,4 @@
-package com.coinlive.chat.api.model.enum
+package com.coinlive.chat.api.model.enums
 
 /**
  * 코인라이브 채팅의 메세지를 필터링 하기 위한 enum class입니다.

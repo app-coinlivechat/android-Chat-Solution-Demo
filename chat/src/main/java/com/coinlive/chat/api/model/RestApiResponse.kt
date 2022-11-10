@@ -1,6 +1,6 @@
 package com.coinlive.chat.api.model
 
-import com.coinlive.chat.api.model.enum.ResponseCode
+import com.coinlive.chat.api.model.enums.ResponseCode
 
 data class RestApiResponse<T>(
     val code: ResponseCode,

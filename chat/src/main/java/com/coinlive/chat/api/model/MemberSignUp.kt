@@ -1,6 +1,6 @@
 package com.coinlive.chat.api.model
 
-import com.coinlive.chat.api.model.enum.UserStatus
+import com.coinlive.chat.api.model.enums.UserStatus
 import com.google.gson.annotations.SerializedName
 
 /**

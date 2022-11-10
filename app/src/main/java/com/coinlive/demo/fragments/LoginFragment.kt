@@ -9,13 +9,12 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.coinlive.chat.api.model.UserStatus
+import com.coinlive.chat.api.model.enums.UserStatus
 import com.coinlive.demo.R
 import com.coinlive.demo.databinding.FragmentLoginBinding
 import com.coinlive.demo.dialogs.LoginResultDialog
 import com.coinlive.demo.dialogs.OkCallback
 import com.coinlive.demo.viewmodels.LoginFragmentViewModel
-import com.coinlive.uikit.framents.ChattingFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

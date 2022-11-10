@@ -2,7 +2,7 @@ package com.coinlive.chat.api.model
 
 import android.os.Parcelable
 import androidx.annotation.Keep
-import com.coinlive.chat.api.model.enum.UserStatus
+import com.coinlive.chat.api.model.enums.UserStatus
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 

@@ -10,7 +10,7 @@ import com.coinlive.chat.api.model.Customer
 import com.coinlive.chat.api.model.CustomerUser
 import com.coinlive.chat.api.model.CustomerUserSignUp
 import com.coinlive.chat.api.model.CustomerUserSignUpBody
-import com.coinlive.chat.api.model.UserStatus
+import com.coinlive.chat.api.model.enums.UserStatus
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.firebase.service.CoinliveAuthentication
 import kotlinx.coroutines.launch

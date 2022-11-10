@@ -1,6 +1,6 @@
 package com.coinlive.chat.exception
 
-import com.coinlive.chat.api.model.enum.ResponseCode
+import com.coinlive.chat.api.model.enums.ResponseCode
 
 
 open class CoinliveException(message: String, val code: Int) : Exception(message)

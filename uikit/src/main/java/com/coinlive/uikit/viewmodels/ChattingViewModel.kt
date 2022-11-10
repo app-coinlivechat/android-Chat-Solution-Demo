@@ -10,7 +10,7 @@ import com.coinlive.chat.api.ResponseCallback
 import com.coinlive.chat.api.model.Channel
 import com.coinlive.chat.api.model.CustomerUser
 import com.coinlive.chat.api.model.UserCount
-import com.coinlive.chat.api.model.UserStatus
+import com.coinlive.chat.api.model.enums.UserStatus
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.firebase.CoinliveChat
 import com.coinlive.chat.firebase.listener.AmaListener

@@ -1,7 +1,7 @@
 package com.coinlive.chat.firebase.service
 
 import com.coinlive.chat.Coinlive
-import com.coinlive.chat.api.model.enum.CoinNotiType
+import com.coinlive.chat.api.model.enums.CoinNotiType
 import com.coinlive.chat.exception.Error
 import com.coinlive.chat.firebase.listener.MessageListener
 import com.coinlive.chat.firebase.model.Chat
@@ -66,7 +66,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
                     existCollectionSnapshot.add(collectionPath)
                 }
             }
-        }, 100 * 60, 100 * 60)
+        }, 1000 * 60, 1000 * 60)
     }
 
 
