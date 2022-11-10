@@ -198,6 +198,8 @@ data class Chat(
     @set:PropertyName("st")
     @get:PropertyName("st")
     var st: Timestamp? = null,
+
+    var link: String? = null,
 ): Parcelable {
     constructor() : this("", "", "", "", "", "", "", 0, "", "", "", "")
 }
