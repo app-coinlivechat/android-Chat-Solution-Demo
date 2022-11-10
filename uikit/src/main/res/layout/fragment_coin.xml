@@ -1,20 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout>
+    <data>
+        <variable
+            name="chattingViewModel"
+            type="com.coinlive.uikit.viewmodels.ChattingViewModel" />
+    </data>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bacground">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_appbar"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        app:layout_constraintBottom_toTopOf="@id/rv_list"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_appbar"
+            android:layout_width="match_parent"
+            app:layout_constraintBottom_toTopOf="@id/rv_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:minHeight="?attr/actionBarSize"
+            android:layout_height="wrap_content">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/i_icon"
+                loadImage="@{chattingViewModel.channel.coinUrl}"
+                android:layout_marginStart="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+            <TextView
+                android:id="@+id/t_symbol"
+                android:text="@{chattingViewModel.channel.coinSymbol}"
+                style="@style/subtitle2"
+                android:textColor="@color/normal_text"
+                app:layout_constraintStart_toEndOf="@id/i_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="6dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageButton
+                android:id="@+id/ibtn_down"
+                android:background="@android:color/transparent"
+                android:src="@drawable/icon_fold_light"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="12dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"/>
+
+            <ImageButton
+                android:id="@+id/ibtn_more"
+                android:background="@android:color/transparent"
+                android:src="@drawable/icon_more_light"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/ibtn_down"
+                android:layout_marginEnd="16dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"/>
+
+            <TextView
+                android:id="@+id/t_count"
+                app:userCont="@{chattingViewModel.userCount}"
+                android:textColor="@color/normal_text"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/spoqahansans"
+                android:textFontWeight="600"
+                android:textSize="14dp"
+                app:layout_constraintEnd_toStartOf="@id/ibtn_more"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:src="@drawable/icon_user_light"
+                app:layout_constraintEnd_toStartOf="@id/t_count"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="6dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.coinlive.uikit.views.InputView
         android:id="@+id/cl_input"
@@ -36,3 +120,5 @@
         app:layout_constraintTop_toBottomOf="@id/cl_appbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

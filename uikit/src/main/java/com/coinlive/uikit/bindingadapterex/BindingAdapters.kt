@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.coinlive.chat.firebase.model.enum.MessageType
 import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.uikit.R
+import java.text.DecimalFormat
 import java.util.*
 
 object BindingAdapters {
@@ -73,6 +74,12 @@ object BindingAdapters {
             MessageType.DROP.name -> view.text = view.context.getString(R.string.price_drop_chat_title)
             MessageType.JUMP.name -> view.text = view.context.getString(R.string.price_jump_chat_title)
         }
+    }
+
+    @BindingAdapter("userCont")
+    @JvmStatic
+    fun userCont(view:TextView,userCont:Int) {
+        view.text = DecimalFormat("#,###,###").format(userCont).toString()
     }
 
 }

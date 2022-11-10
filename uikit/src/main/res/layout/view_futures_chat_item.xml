@@ -21,8 +21,10 @@
 
         <ImageView
             android:id="@+id/iv_con"
+            android:src="@drawable/icon_binance"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_title"
             android:layout_width="18dp"
             android:layout_height="18dp"/>
 
