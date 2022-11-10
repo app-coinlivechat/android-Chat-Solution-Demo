@@ -9,15 +9,14 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.coinlive.chat.api.model.enum.UserStatus
+import com.coinlive.chat.api.model.UserStatus
 import com.coinlive.demo.R
 import com.coinlive.demo.databinding.FragmentLoginBinding
 import com.coinlive.demo.dialogs.LoginResultDialog
 import com.coinlive.demo.dialogs.OkCallback
 import com.coinlive.demo.viewmodels.LoginFragmentViewModel
+import com.coinlive.uikit.framents.ChattingFragment
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 /**
@@ -91,12 +90,16 @@ class LoginFragment : Fragment(), OkCallback {
 
         val bundle = Bundle()
         viewModel.customer?.let {
-            bundle.putString("customerName",it.name)
+            bundle.putString("customerName", it.name)
         }
         viewModel.myInfo?.let {
-            bundle.putParcelable("myInfo",it)
+            bundle.putParcelable("myInfo", it)
         }
-
+        // use FragmentManager
+//        requireActivity().supportFragmentManager.beginTransaction()
+//            .add(R.id.nav_host_fragment_content_main, ChannelListFragment::class.java, bundle)
+//            .addToBackStack(null)
+//            .commit()
         findNavController().navigate(R.id.action_LoginFragment_to_ChannelListFragment,bundle)
     }
 

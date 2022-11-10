@@ -1,7 +1,9 @@
 package com.coinlive.demo.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -35,42 +37,52 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
         ChannelListAdapter()
     }
 
+    private val menuProvider = object : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menuInflater.inflate(R.menu.channel_list_menu, menu)
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            return when (menuItem.itemId) {
+                R.id.m_confirm -> {
+                    selectItem?.let {
+                        val bundle = Bundle()
+                        customerName?.let {
+                            bundle.putString("customerName", it)
+                        }
+                        myInfo?.let {
+                            bundle.putParcelable("myInfo", it)
+                        }
+                        bundle.putParcelable("channel", selectItem)
+
+                        // use FragmentManager
+//                        val manager = requireActivity().supportFragmentManager
+//                        manager.beginTransaction()
+//                            .add(R.id.nav_host_fragment_content_main, ChattingFragment::class.java, bundle)
+//                            .addToBackStack(null)
+//                            .commit()
+
+                        findNavController().navigate(R.id.action_ChannelListFragment_to_ChattingFragment, bundle)
+                    }
+
+                    true
+                }
+                else -> false
+
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.channel_list_menu, menu)
-            }
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.m_confirm -> {
-                        selectItem?.let {
-                            val bundle = Bundle()
-                            customerName?.let {
-                                bundle.putString("customerName", it)
-                            }
-                            myInfo?.let {
-                                bundle.putParcelable("myInfo", it)
-                            }
-                            bundle.putParcelable("channel", selectItem)
-
-                            findNavController().navigate(R.id.action_ChannelListFragment_to_ChattingFragment, bundle)
-                        }
-
-                        true
-                    }
-                    else -> false
-
-                }
-            }
-        })
+        Log.d(TAG,"onCreate")
 
         arguments?.let {
             customerName = it.getString("customerName")
             myInfo = it.getParcelable("myInfo")
         }
         viewModel = ViewModelProvider(this)[ChannelListFragmentViewModel::class.java]
+        //TODO myInfo load api 추가 필요
         viewModel.getChannelList()
     }
 
@@ -78,12 +90,19 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+
+        Log.d(TAG,"onCreateView")
         _binding = FragmentChannelListBinding.inflate(inflater, container, false)
+        (requireActivity() as AppCompatActivity).supportActionBar?.show()
+
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(menuProvider)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG,"onViewCreated")
 
         binding.list.adapter = adapter
         binding.list.layoutManager = LinearLayoutManager(requireContext()) //레이아웃 매니저 연결
@@ -98,8 +117,12 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
     }
 
     override fun onDestroyView() {
+        Log.d(TAG, "onDestroyView")
+
         super.onDestroyView()
         _binding = null
+        val menuHost: MenuHost = requireActivity()
+        menuHost.removeMenuProvider(menuProvider)
     }
 
     override fun onClick(item: Channel) {

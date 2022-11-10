@@ -7,9 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.coinlive.chat.api.CoinliveRestApi
 import com.coinlive.chat.api.ResponseCallback
 import com.coinlive.chat.api.model.*
-import com.coinlive.chat.api.model.enum.UserStatus
 import com.coinlive.chat.exception.CoinliveException
-import com.coinlive.chat.firebase.service.CoinliveAuthentication
 import kotlinx.coroutines.launch
 
 

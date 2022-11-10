@@ -30,12 +30,10 @@
         android:label="@string/channel_list_fragment_label"
         tools:layout="@layout/fragment_channel_list">
 
-        <action
-            android:id="@+id/action_ChannelListFragment_to_LoginFragment"
-            app:destination="@id/LoginFragment" >
 
-        </action>
         <action
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"
             android:id="@+id/action_ChannelListFragment_to_ChattingFragment"
             app:destination="@id/chattingFragment">
             <argument
@@ -50,6 +48,9 @@
                 app:argType="com.coinlive.chat.api.model.Channel" />
 
         </action>
+        <action
+            android:id="@+id/action_ChannelListFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
 
     </fragment>
     <fragment
@@ -59,8 +60,7 @@
         android:label="ChattingFragment" >
         <action
             android:id="@+id/action_chattingFragment_to_ChannelListFragment"
-            app:destination="@id/ChannelListFragment" >
-        </action>
+            app:destination="@id/ChannelListFragment"/>
 
     </fragment>
 

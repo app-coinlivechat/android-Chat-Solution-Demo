@@ -10,7 +10,7 @@ import com.coinlive.chat.api.model.Customer
 import com.coinlive.chat.api.model.CustomerUser
 import com.coinlive.chat.api.model.CustomerUserSignUp
 import com.coinlive.chat.api.model.CustomerUserSignUpBody
-import com.coinlive.chat.api.model.enum.UserStatus
+import com.coinlive.chat.api.model.UserStatus
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.firebase.service.CoinliveAuthentication
 import kotlinx.coroutines.launch
@@ -65,6 +65,8 @@ class LoginFragmentViewModel : ViewModel() {
 
 
     fun signUpCheck() = viewModelScope.launch {
+        //TODO member chech api 로 변경 필요
+
         clApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
             override fun onSuccess(value: CustomerUser) {
                 myInfo = value
