@@ -6,6 +6,7 @@ import com.coinlive.chat.api.model.CustomerUser
 import com.coinlive.chat.api.model.Channel
 import com.coinlive.chat.api.model.Customer
 import com.coinlive.chat.api.CoinliveRestApi
+import com.coinlive.chat.api.model.enums.UserStatus
 import com.coinlive.chat.exception.FetchMessageException
 import com.coinlive.chat.exception.SendMessageException
 import com.coinlive.chat.firebase.listener.AmaListener
@@ -296,6 +297,11 @@ class CoinliveChat(
     }
 
     private fun sendMessage(message: String, myInfo: CustomerUser, urlList: ArrayList<String>?) {
+
+        if(myInfo.status != UserStatus.ACTIVE) {
+            throw SendMessageException("UserStatus가 ACTIVE 상태일 때만 가능합니다.")
+        }
+
         if (urlList != null && urlList.size > 10) {
             throw SendMessageException("이미지 10개 이상 보낼수 없습니다.")
         }
