@@ -5,7 +5,6 @@
         <attr name="dividerColor" format="reference|color"/>
         <attr name="addOnImage" format="reference|color"/>
         <attr name="sendImage" format="reference|color"/>
-        <attr name="hitText" format="string"/>
         <attr name="hitTextColor" format="reference|color"/>
         <attr name="inputBackground" format="reference|color"/>
     </declare-styleable>

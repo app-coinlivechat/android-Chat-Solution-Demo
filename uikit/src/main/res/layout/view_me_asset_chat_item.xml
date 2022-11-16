@@ -29,7 +29,7 @@
             style="@style/body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/normal_me_msg_background"
+            android:background="@drawable/shape_me_msg_background"
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp"
             app:layout_constraintEnd_toEndOf="parent"

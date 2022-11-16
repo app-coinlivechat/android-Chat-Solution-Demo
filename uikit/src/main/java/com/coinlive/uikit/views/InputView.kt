@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import androidx.annotation.ColorRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.coinlive.chat.api.model.enums.UserStatus
 import com.coinlive.uikit.R
 import com.coinlive.uikit.databinding.ViewInputBinding
 
@@ -18,7 +19,7 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         context.theme.obtainStyledAttributes(attrs, R.styleable.InputView, 0, 0).apply {
             if (!isInEditMode) {
                 binding.root.setBackgroundColor(getColor(R.styleable.InputView_viewBackground,
-                    getColor(R.color.bacground)))
+                    getColor(R.color.background)))
                 binding.vDivider.apply {
                     setBackgroundColor(getColor(R.styleable.InputView_dividerColor, getColor(R.color.line_color)))
                 }
@@ -29,14 +30,31 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     setImageResource(getResourceId(R.styleable.InputView_sendImage, R.drawable.icon_send))
                 }
                 binding.etInput.apply {
-                    hint = getString(R.styleable.InputView_hitText) ?: context.getString(R.string.input_hint)
                     setHintTextColor(getColor(R.styleable.InputView_hitTextColor, getColor(R.color.grey_040)))
                     background = getDrawable(R.styleable.InputView_inputBackground)
-                        ?: ContextCompat.getDrawable(context,R.drawable.input_background)
+                        ?: ContextCompat.getDrawable(context, R.drawable.shape_input_background)
                 }
             }
             recycle()
         }
+    }
+
+    fun setAma(isAma:Boolean) {
+        binding.isAMA = isAma
+    }
+
+    fun setLoginUser(isLoginUser:Boolean) {
+        binding.isLoginUser = isLoginUser
+    }
+
+    fun setActiveUser(userStatus: UserStatus?) {
+        userStatus?.let {
+            binding.isActiveUser = it == UserStatus.ACTIVE
+        } ?: run {
+            binding.isActiveUser = false
+        }
+
+
     }
 
     private fun getColor(@ColorRes id: Int): Int {
