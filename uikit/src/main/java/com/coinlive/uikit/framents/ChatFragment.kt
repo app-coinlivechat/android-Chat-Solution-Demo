@@ -48,6 +48,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             }
             viewModel.initCoinLiveChat(myInfo, 50, channel, customerName, this, this, this, requireContext())
         }
+        adapter = MessageListAdapter(coinName = viewModel.channel!!.name!!, myInfo = viewModel.myInfo!!)
+
     }
 
 
@@ -76,12 +78,10 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             newList?.let {
                 viewModel.setNotification(it)
             }
-
         }
 
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         if (viewModel.myInfo != null && viewModel.channel != null) {
-            adapter = MessageListAdapter(coinName = viewModel.channel!!.name!!, myInfo = viewModel.myInfo!!)
             binding!!.rvList.adapter = adapter
             val layoutManager = LinearLayoutManager(requireContext())
             layoutManager.reverseLayout = true
@@ -120,8 +120,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         adapter.notifyDataSetChanged()
     }
 
-
     override fun modifyMessage(chat: Chat) {
+
     }
 
     override fun oldMessages(chatList: ArrayList<Chat>, isReload: Boolean) {
