@@ -45,6 +45,9 @@ class NotificationSettingFragment : BaseFragment() {
             adapter.items.addAll(it)
             adapter.notifyDataSetChanged()
         }
+        binding!!.sAll.setOnCheckedChangeListener { _, isChecked ->
+            adapter.allChangeEnable(isChecked)
+        }
         binding!!.ibtnBack.setOnClickListener {
             setFragmentResult("notification", bundleOf("newList" to adapter.items))
             popFragment()

@@ -29,4 +29,11 @@ class NotificationListAdapter : RecyclerView.Adapter<NotificationListAdapter.Vie
 
     override fun getItemCount(): Int = items.size
 
+    fun allChangeEnable(enable : Boolean) {
+        items.forEach {
+            it.enable = enable
+        }
+        notifyDataSetChanged()
+    }
+
 }
