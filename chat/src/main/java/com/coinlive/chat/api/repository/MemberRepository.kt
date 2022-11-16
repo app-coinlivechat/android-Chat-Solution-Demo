@@ -36,17 +36,19 @@ class MemberRepository {
         return response.d!!.word
     }
 
-    fun signupCheck(firebaseUuid: String): MemberSignupCheck {
-        val response = service.signupCheck(MemberSignupCheckBody(firebaseUuid)).execute().body()
-            ?: throw NetworkException("MemberRepository.signupCheck error!")
-
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException(
-                "MemberRepository.signupCheck fail. please check firebaseUuid",
-                response.code, response.msg
-            )
+    suspend fun signupCheck(firebaseUuid: String): MemberSignupCheck {
+        try {
+            val response = service.signupCheck(MemberSignupCheckBody(firebaseUuid))
+            if (!response.isSuccess() && response.d == null) {
+                throw RequestFailException(
+                    "MemberRepository.signupCheck fail. please check firebaseUuid",
+                    response.code, response.msg
+                )
+            }
+            return response.d!!
+        } catch (exception: Exception) {
+            throw NetworkException("MemberRepository.signupCheck error!")
         }
-        return response.d!!
     }
 
 

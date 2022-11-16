@@ -48,21 +48,9 @@ class ChattingMemberRepository {
         }
     }
 
-    //    suspend fun customerUserSignUp(auth: String, user: CustomerUserSignUpBody): CustomerUserSignUp {
     suspend fun customerUserSignUp(auth: String, user: CustomerUserSignUpBody): RestApiResponse<CustomerUserSignUp> {
         try {
             return service.customerUserSignUp(auth, user)
-
-//            return when {
-//                response.isSuccess() -> {
-//                    true
-//                }
-//                else -> {
-//                    LoggerHelper.de(
-//                        "customerUserSingUp fail. please check customToken or customerUserSignUpBody ${response.code}, ${response.msg}")
-//                    false
-//                }
-//            }
         } catch (exception: Exception) {
             throw NetworkException("customerUserSingUp error!")
         }

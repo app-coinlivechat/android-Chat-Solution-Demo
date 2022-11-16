@@ -15,7 +15,7 @@ interface MemberService {
     ): Call<RestApiResponse<NickName>>
 
     @POST("v1/member/check")
-    fun signupCheck(@Body firebaseUuid: MemberSignupCheckBody): Call<RestApiResponse<MemberSignupCheck>>
+    suspend fun signupCheck(@Body firebaseUuid: MemberSignupCheckBody): RestApiResponse<MemberSignupCheck>
 
     @PUT("v1/member/profile/basic")
     fun setBasicProfile(@Header("Authorization") auth: String): Call<RestApiResponse<Upload>>
