@@ -1,6 +1,5 @@
 package com.coinlive.chat.api
 
-import com.coinlive.chat.BuildConfig
 import com.coinlive.chat.Coinlive
 import com.coinlive.chat.api.service.*
 import okhttp3.Interceptor
@@ -23,7 +22,7 @@ object RestApiClient {
         val client: OkHttpClient = OkHttpClient.Builder()
             .addNetworkInterceptor(
                 HttpLoggingInterceptor().setLevel(
-                    if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else
+                    if (Coinlive.isDebug) HttpLoggingInterceptor.Level.BODY else
                         HttpLoggingInterceptor.Level.NONE
                 )
             )
