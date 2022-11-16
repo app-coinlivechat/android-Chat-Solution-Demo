@@ -95,7 +95,8 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
         standardTime: Calendar = CalendarHelper.getTodayMidnight(),
         diffSize: Long = 50,
     ) {
-        if (isLoading) return else isLoading = true
+        if (isLoading) return
+        isLoading = true
         this.notificationMap = notificationMap
 
         val collectionPath = "$BASE_PATH/${standardTime.timeInMillis}/$coinId"
@@ -119,6 +120,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
                 val result = now.get(Calendar.DATE) - standardTime.get(Calendar.DATE)
                 if ( result in 0..7) {
                     LoggerHelper.d("$collectionPath documents.size == 0 call fetchMessage")
+                    isLoading = false
                     fetchMessage(standardSize, notificationMap, standardTime)
                     return@addOnSuccessListener
                 } else {
@@ -137,6 +139,8 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
             }
 
             if (oldMessage.size < diffSize) {
+                standardTime.set(Calendar.DATE, standardTime.get(Calendar.DATE) - 1)
+                isLoading = false
                 fetchMessage(standardSize, notificationMap, standardTime, diffSize - oldMessage.size)
             } else {
                 isLoading = false
