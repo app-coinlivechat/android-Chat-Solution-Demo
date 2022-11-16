@@ -6,11 +6,11 @@ import com.coinlive.chat.exception.*
 import com.coinlive.chat.firebase.service.CoinliveAuthentication
 
 class CoinliveRestApi {
-    private val channelRepo = ChannelRepository();
-    private val chattingMemberRepo = ChattingMemberRepository();
-    private val memberRepo = MemberRepository();
-    private val notificationRepo = NotificationRepository();
-    private val uploadRepo = UploadRepository();
+    private val channelRepo = ChannelRepository()
+    private val chattingMemberRepo = ChattingMemberRepository()
+    private val memberRepo = MemberRepository()
+    private val notificationRepo = NotificationRepository()
+    private val uploadRepo = UploadRepository()
 
     suspend fun getUserCount(coinId: String,callback: ResponseCallback<UserCount>) {
         try {
@@ -155,9 +155,9 @@ class CoinliveRestApi {
         }
     }
 
-    suspend fun getNotificationType(coinId: String, callback: ResponseCallback<List<NotificationType>>) {
+    suspend fun getNotificationType(callback: ResponseCallback<List<NotificationType>>) {
         try {
-            callback.onSuccess(notificationRepo.getNotificationType(getAuth(),coinId))
+            callback.onSuccess(notificationRepo.getNotificationType(getAuth()))
         } catch (e: CoinliveException) {
             callback.onFail(e)
         }
