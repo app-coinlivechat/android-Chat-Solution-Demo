@@ -32,18 +32,22 @@
     <color name="green_060">#137B5E</color>
 
 
-    <color name="bacground">#FFFFFF</color>
+    <color name="background">#FFFFFF</color>
     <color name="line_color">#1F000000</color>
+    <color name="menu_line_color">#1F000000</color>
     <color name="normal_text">#000000</color>
+    <color name="primary">#32A4B3</color>
 
     <color name="chat_other_msg_background">@color/grey_030</color>
-    <color name="chat_me_msg_background">#32A4B3</color>
-    <color name="chat_msg_text">@color/bacground</color>
+    <color name="chat_me_msg_background">@color/primary</color>
+    <color name="chat_msg_text">@color/background</color>
     <color name="chat_msg_time_text">@color/grey_050</color>
     <color name="asset_chat_stroke">@color/grey_030</color>
-    <color name="asset_chat_background">@color/bacground</color>
+    <color name="asset_chat_background">@color/background</color>
     <color name="asset_chat_description">@color/grey_030</color>
     <color name="server_chat_background">@color/grey_030</color>
     <color name="server_chat_time">@color/grey_050</color>
+    <color name="switch_track_off">@color/grey_020</color>
+
 
 </resources>

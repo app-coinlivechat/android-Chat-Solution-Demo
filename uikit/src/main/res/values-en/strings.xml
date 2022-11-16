@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="input_hint">채팅을 입력하세요</string>
+    <string name="input_block_hint">다수의 신고로 채팅 사용이 제한됩니다.</string>
+    <string name="input_anonymously_hint">채팅을 하려면 로그인을 해주세요</string>
+    <string name="input_ama_hint">AMA 진행 시 채팅이 불가합니다.</string>
     <string name="asset_description">Coinlive에서 자산인증을 검증한 메시지입니다.</string>
     <string name="twitter_chat_title">%1$s(%2$s) 트위터</string>
     <string name="medium_chat_title">%1$s(%2$s) 미디움</string>
@@ -8,5 +11,12 @@
     <string name="price_drop_chat_title">급락알림</string>
     <string name="buy_futures_chat_title">숏 청산(BINANCE FUTURES)</string>
     <string name="sell_futures_chat_title">롱 청산(BINANCE FUTURES)</string>
+
+    <string name="translator_setting_title">번역 설정</string>
+    <string name="translator">번역</string>
+    <string name="translator_result_language">결과 언어</string>
+
+
+
 
 </resources>
