@@ -4,12 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="selectLanguage"
-            type="String" />
-    </data>
+    <data></data>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +38,7 @@
                 style="@style/body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/translator_setting_title"
+                android:text="@string/notification_setting_title"
                 android:textColor="@color/normal_text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +65,7 @@
             app:layout_constraintTop_toBottomOf="@id/cl_appbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_enable"
+                android:id="@+id/cl_all"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:paddingHorizontal="16dp"
@@ -81,7 +76,7 @@
                     style="@style/body1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/translator"
+                    android:text="@string/notification_all"
                     android:textColor="@color/normal_text"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -89,7 +84,7 @@
 
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/s_translator"
+                    android:id="@+id/s_all"
                     android:layout_width="52dp"
                     android:layout_height="32dp"
                     android:checked="true"
@@ -111,48 +106,35 @@
                 android:layout_height="12dp"
                 android:background="@color/grey_030"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_enable" />
+                app:layout_constraintTop_toBottomOf="@id/cl_all" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_list"
+                android:visibility="invisible"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:paddingHorizontal="16dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/v_divider">
+                app:layout_constraintTop_toBottomOf="@id/v_divider" />
 
-                <TextView
-                    style="@style/body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/translator_result_language"
-                    android:textColor="@color/normal_text"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:indeterminateTint="@color/primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/v_divider" />
 
-
-                <ImageView
-                    android:id="@+id/iv_chevron"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/icon_chevron_right"
-                    tools:ignore="contentDescription"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    style="@style/body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{selectLanguage}"
-                    android:textColor="@color/normal_text"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/iv_chevron"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--            <com.google.android.material.progressindicator.CircularProgressIndicator-->
+<!--                android:id="@+id/c_progress"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:indeterminate="true"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/v_divider" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

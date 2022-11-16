@@ -4,12 +4,16 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="android:listDivider">@color/menu_line_color</item>
-        <item name="android:popupMenuStyle">@style/PopupMenu</item>
     </style>
 
-    <style name="PopupMenu" parent="android:Widget.Material.PopupMenu">
-        <item name="android:popupBackground">@drawable/shape_menu_chat_background</item>
-        <item name="android:popupElevation">4dp</item>
+    <style name="PopupMenu" parent="@android:style/Widget.Holo.ListView.DropDown">
+        <item name="android:background">@drawable/shape_menu_chat_background</item>
+        <item name="android:divider">#FF0000</item>
+        <item name="android:dividerHeight">2dp</item>
+    </style>
+
+    <style name="circleProgress">
+        <item name="colorAccent">@color/primary</item>
     </style>
 
     <style name="header1">

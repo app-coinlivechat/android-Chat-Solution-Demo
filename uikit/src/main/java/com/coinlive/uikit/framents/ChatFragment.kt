@@ -23,7 +23,6 @@ import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.R
 import com.coinlive.uikit.adapters.MessageListAdapter
 import com.coinlive.uikit.databinding.FragmentCoinBinding
-import com.coinlive.uikit.utils.NavigationUtils.navigateSafe
 import com.coinlive.uikit.viewmodels.ChatViewModel
 
 
@@ -44,17 +43,17 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 LoggerHelper.de("please check channel or myInfo or customerName")
                 return@let
             }
-            viewModel.loadCustomerUser()
             viewModel.initCoinLiveChat(myInfo, channel, customerName, this, this, this, requireContext())
         }
     }
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 //        registerForActivityResult()
 
         binding = FragmentCoinBinding.inflate(inflater, container, false)
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding!!.apply {
             lifecycleOwner = this@ChatFragment
             chattingViewModel = viewModel
@@ -139,6 +138,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 popFragment()
             }
             R.id.ibtn_more -> {
+//                val wrapper = ContextThemeWrapper(v.context, R.style.PopupMenu)
+//                val popupMenu = PopupMenu(wrapper,v)
                 val popupMenu = PopupMenu(v.context,v)
                 popupMenu.inflate(R.menu.menu_chat)
                 popupMenu.setOnMenuItemClickListener {
@@ -147,7 +148,11 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
                         }
                         R.id.m_notification -> {
-
+                            viewModel.channel?.let { channel->
+                                val bundle = Bundle()
+                                bundle.putString("coinId",channel.coinId)
+                                v.findNavController().navigate(R.id.action_chatFragment_to_notificationSettingFragment,bundle)
+                            }
                         }
                         R.id.m_tranlator -> {
                             v.findNavController().navigate(R.id.action_chatFragment_to_translatorSettingFragment)

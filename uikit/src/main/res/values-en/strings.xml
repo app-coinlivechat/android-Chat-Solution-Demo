@@ -16,7 +16,11 @@
     <string name="translator">번역</string>
     <string name="translator_result_language">결과 언어</string>
 
-
+    <string name="notification_setting_title">알림 설정</string>
+    <string name="notification_all">전체 알림</string>
+    <string name="notification_twitter">트위터 알림</string>
+    <string name="notification_futures">청산 알림</string>
+    <string name="notification_medium">미디움 알림</string>
 
 
 </resources>

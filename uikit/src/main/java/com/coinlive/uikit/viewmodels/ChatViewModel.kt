@@ -49,7 +49,7 @@ class ChatViewModel : ViewModel() {
     ) {
         this.channel = channel
         this.myInfo = myInfo
-        //TODO 1. myInfo 2. notification 3. fetchMessage
+        //TODO notification 3. fetchMessage
         loadNotification()
 
         coinliveChat =
@@ -80,7 +80,7 @@ class ChatViewModel : ViewModel() {
 
     }
 
-    fun loadNotification() = viewModelScope.launch {
+    private fun loadNotification() = viewModelScope.launch {
         coinliveApi.getNotificationSetting(coinId = channel!!.coinId, callback = object : ResponseCallback<Map<String,
                 Boolean>> {
             override fun onSuccess(value: Map<String, Boolean>) {
