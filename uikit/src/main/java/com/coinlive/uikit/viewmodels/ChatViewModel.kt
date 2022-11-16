@@ -1,6 +1,7 @@
 package com.coinlive.uikit.viewmodels
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.coinlive.chat.api.CoinliveRestApi
 import com.coinlive.chat.api.ResponseCallback
 import com.coinlive.chat.api.model.Channel
 import com.coinlive.chat.api.model.CustomerUser
+import com.coinlive.chat.api.model.NotificationType
 import com.coinlive.chat.api.model.UserCount
 import com.coinlive.chat.api.model.enums.UserStatus
 import com.coinlive.chat.exception.CoinliveException
@@ -17,8 +19,10 @@ import com.coinlive.chat.firebase.listener.AmaListener
 import com.coinlive.chat.firebase.listener.CmNoticeListener
 import com.coinlive.chat.firebase.listener.MessageListener
 import com.coinlive.chat.util.LoggerHelper
+import com.coinlive.uikit.models.Notification
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.HashMap
 
 class ChatViewModel : ViewModel() {
     private val TAG = ChatViewModel::class.java.simpleName
@@ -26,6 +30,8 @@ class ChatViewModel : ViewModel() {
     private val coinliveApi = CoinliveRestApi()
     val userCount: MutableLiveData<Int> = MutableLiveData(0)
     val userStatus: MutableLiveData<UserStatus> = MutableLiveData(UserStatus.NONE)
+    val originNotiList = ArrayList<Notification>()
+    var standardSize = 50
     var timer: Timer? = null
 
     var channel: Channel? = null
@@ -40,6 +46,7 @@ class ChatViewModel : ViewModel() {
 
     fun initCoinLiveChat(
         myInfo: CustomerUser?,
+        standardSize: Int?,
         channel: Channel,
         customerName: String,
         listener: MessageListener,
@@ -49,26 +56,16 @@ class ChatViewModel : ViewModel() {
     ) {
         this.channel = channel
         this.myInfo = myInfo
-        //TODO notification 3. fetchMessage
-        loadNotification()
+        this.userStatus.value = myInfo!!.status
+        standardSize?.let {
+            this.standardSize = standardSize
+        }
+        loadNotificationType()
+        startTimer()
 
         coinliveChat =
             CoinliveChat(channel.coinId, channel.coinSymbol, customerName, listener, cmNoticeListener, amaListener,
                 context)
-    }
-
-    fun loadCustomerUser() = viewModelScope.launch {
-        coinliveApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
-            override fun onSuccess(value: CustomerUser) {
-                this@ChatViewModel.myInfo = value
-                this@ChatViewModel.userStatus.value = value.status
-            }
-
-            override fun onFail(exception: CoinliveException) {
-                this@ChatViewModel.userStatus.value = UserStatus.NONE
-            }
-
-        })
     }
 
     fun fetchMessage() = viewModelScope.launch {
@@ -77,21 +74,44 @@ class ChatViewModel : ViewModel() {
             return@launch
         }
 
-
+        coinliveChat!!.fetchMessage(standardSize = standardSize.toLong(), notificationMap = getNotificationMap())
     }
 
-    private fun loadNotification() = viewModelScope.launch {
-        coinliveApi.getNotificationSetting(coinId = channel!!.coinId, callback = object : ResponseCallback<Map<String,
+    private fun loadNotification(list: List<NotificationType>) = viewModelScope.launch {
+        if (channel == null) return@launch
+
+        coinliveApi.getNotificationSetting(channel!!.coinId, callback = object : ResponseCallback<Map<String,
                 Boolean>> {
             override fun onSuccess(value: Map<String, Boolean>) {
-                startTimer()
-                coinliveChat!!.fetchMessage(notificationMap = value)
+                val result = ArrayList<Notification>()
+                list.forEach {
+                    val enable: Boolean? = value[it.type]
+                    enable?.let { enable ->
+                        result.add(Notification(it.type, it.name, enable))
+                    }
+                }
+                if (result.isNotEmpty()) {
+                    originNotiList.addAll(result)
+                }
+                fetchMessage()
+
             }
 
             override fun onFail(exception: CoinliveException) {
                 LoggerHelper.de("${exception.message}")
             }
+        })
+    }
 
+    private fun loadNotificationType() = viewModelScope.launch {
+        coinliveApi.getNotificationType(callback = object : ResponseCallback<List<NotificationType>> {
+            override fun onSuccess(value: List<NotificationType>) {
+                loadNotification(value)
+            }
+
+            override fun onFail(exception: CoinliveException) {
+                LoggerHelper.de("${exception.message}")
+            }
         })
     }
 
@@ -115,12 +135,70 @@ class ChatViewModel : ViewModel() {
                 } ?: run {
                     userStatus.value = UserStatus.NONE
                 }
-
             }
 
             override fun onFail(exception: CoinliveException) {
                 userStatus.value = UserStatus.NONE
                 LoggerHelper.de("${exception.message}")
+            }
+
+        })
+    }
+
+    private fun getNotificationMap(): Map<String, Boolean> {
+        val map = HashMap<String, Boolean>()
+
+        originNotiList.forEach {
+            map[it.id] = it.enable
+        }
+
+        return map
+    }
+
+    fun setNotification(list: ArrayList<Notification>) = viewModelScope.launch {
+        if (channel == null) return@launch
+        list.forEach { noti ->
+            val origin: Notification? = originNotiList.find { it.id == noti.id }
+            origin?.let {
+                if (origin.enable != noti.enable) {
+                    Log.d(TAG,"new : $noti, origin : $origin")
+
+                    if (noti.enable) {
+                        setNotification(noti.id)
+                    } else {
+                        deleteNotification(noti.id)
+                    }
+                }
+            }
+        }
+        originNotiList.clear()
+        originNotiList.addAll(list)
+    }
+
+    private fun deleteNotification(type: String) = viewModelScope.launch {
+        coinliveApi.deleteNotification(this@ChatViewModel.channel!!.coinId, notiType = type, object :
+            ResponseCallback<Boolean> {
+            override fun onSuccess(value: Boolean) {
+//                LoggerHelper.di("$type Notification change success")
+            }
+
+            override fun onFail(exception: CoinliveException) {
+                LoggerHelper.de("$type deleteNotification fail\n ${exception.message}")
+            }
+
+        })
+    }
+
+
+    private fun setNotification(type: String) = viewModelScope.launch {
+        coinliveApi.setNotification(this@ChatViewModel.channel!!.coinId, notiType = type, object :
+            ResponseCallback<Boolean> {
+            override fun onSuccess(value: Boolean) {
+//                LoggerHelper.di("$type Notification change success")
+            }
+
+            override fun onFail(exception: CoinliveException) {
+                LoggerHelper.de("$type setNotification fail\n ${exception.message}")
             }
 
         })

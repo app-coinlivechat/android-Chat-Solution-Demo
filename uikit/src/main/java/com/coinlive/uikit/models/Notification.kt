@@ -8,4 +8,8 @@ data class Notification(
     val id:String,
     val name : String,
     var enable : Boolean
-):Parcelable
+):Parcelable {
+    fun copy() : Notification {
+        return Notification(id,name,enable)
+    }
+}

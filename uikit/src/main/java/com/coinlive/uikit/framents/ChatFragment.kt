@@ -8,7 +8,9 @@ import android.view.*
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.coinlive.chat.api.model.Channel
@@ -23,6 +25,7 @@ import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.R
 import com.coinlive.uikit.adapters.MessageListAdapter
 import com.coinlive.uikit.databinding.FragmentCoinBinding
+import com.coinlive.uikit.models.Notification
 import com.coinlive.uikit.viewmodels.ChatViewModel
 
 
@@ -43,7 +46,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 LoggerHelper.de("please check channel or myInfo or customerName")
                 return@let
             }
-            viewModel.initCoinLiveChat(myInfo, channel, customerName, this, this, this, requireContext())
+            viewModel.initCoinLiveChat(myInfo, 50, channel, customerName, this, this, this, requireContext())
         }
     }
 
@@ -55,7 +58,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         binding = FragmentCoinBinding.inflate(inflater, container, false)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding!!.apply {
-            lifecycleOwner = this@ChatFragment
+            lifecycleOwner = viewLifecycleOwner
             chattingViewModel = viewModel
             clInput.setLoginUser(viewModel.myInfo != null)
         }
@@ -67,6 +70,15 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setFragmentResultListener("notification") { requestKey, bundle ->
+            val newList = bundle.getParcelableArrayList<Notification>("newList")
+            newList?.let {
+                viewModel.setNotification(it)
+            }
+
+        }
+
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         if (viewModel.myInfo != null && viewModel.channel != null) {
             adapter = MessageListAdapter(coinName = viewModel.channel!!.name!!, myInfo = viewModel.myInfo!!)
@@ -82,7 +94,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.i(TAG,"onDestroyView")
+        Log.i(TAG, "onDestroyView")
     }
 
     override fun onDestroy() {
@@ -140,18 +152,23 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             R.id.ibtn_more -> {
 //                val wrapper = ContextThemeWrapper(v.context, R.style.PopupMenu)
 //                val popupMenu = PopupMenu(wrapper,v)
-                val popupMenu = PopupMenu(v.context,v)
+                val popupMenu = PopupMenu(v.context, v)
                 popupMenu.inflate(R.menu.menu_chat)
                 popupMenu.setOnMenuItemClickListener {
-                    when(it.itemId) {
+                    when (it.itemId) {
                         R.id.m_shared -> {
 
                         }
                         R.id.m_notification -> {
-                            viewModel.channel?.let { channel->
+                            if (viewModel.originNotiList.isNotEmpty()) {
                                 val bundle = Bundle()
-                                bundle.putString("coinId",channel.coinId)
-                                v.findNavController().navigate(R.id.action_chatFragment_to_notificationSettingFragment,bundle)
+
+                                bundle.putParcelableArrayList("list",
+                                    ArrayList(viewModel.originNotiList.map { notification ->
+                                        notification.copy()
+                                    }))
+                                v.findNavController()
+                                    .navigate(R.id.action_chatFragment_to_notificationSettingFragment, bundle)
                             }
                         }
                         R.id.m_tranlator -> {
