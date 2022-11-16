@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/LoginFragment">
+    <include app:graph="@navigation/chat_navigation" />
 
     <fragment
         android:id="@+id/LoginFragment"
@@ -13,13 +14,10 @@
 
         <action
             android:id="@+id/action_LoginFragment_to_ChannelListFragment"
-            app:destination="@id/ChannelListFragment" >
+            app:destination="@id/ChannelListFragment">
             <argument
                 android:name="customerName"
                 app:argType="string" />
-            <argument
-                android:name="myInfo"
-                app:argType="com.coinlive.chat.api.model.CustomerUser" />
 
         </action>
 
@@ -30,15 +28,15 @@
         android:label="@string/channel_list_fragment_label"
         tools:layout="@layout/fragment_channel_list">
 
-
         <action
+            android:id="@+id/action_ChannelListFragment_to_ChatFragment"
+            app:destination="@id/chatGraph"
             app:enterAnim="@anim/slide_in"
-            app:popExitAnim="@anim/slide_out"
-            android:id="@+id/action_ChannelListFragment_to_ChattingFragment"
-            app:destination="@id/chattingFragment">
+            app:popExitAnim="@anim/slide_out">
             <argument
                 android:name="customerName"
                 app:argType="string" />
+
             <argument
                 android:name="myInfo"
                 app:argType="com.coinlive.chat.api.model.CustomerUser" />
@@ -48,21 +46,7 @@
                 app:argType="com.coinlive.chat.api.model.Channel" />
 
         </action>
-        <action
-            android:id="@+id/action_ChannelListFragment_to_LoginFragment"
-            app:destination="@id/LoginFragment" />
 
     </fragment>
-    <fragment
-        android:id="@+id/chattingFragment"
-        android:name="com.coinlive.uikit.framents.ChattingFragment"
-        tools:layout="@layout/fragment_coin"
-        android:label="ChattingFragment" >
-        <action
-            android:id="@+id/action_chattingFragment_to_ChannelListFragment"
-            app:destination="@id/ChannelListFragment"/>
-
-    </fragment>
-
 
 </navigation>

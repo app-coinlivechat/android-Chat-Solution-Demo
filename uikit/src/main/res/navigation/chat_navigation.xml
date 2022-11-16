@@ -20,7 +20,7 @@
                 app:argType="string" />
         </action>
         <action
-            android:id="@+id/action_chattingFragment_to_translatorSettingFragment"
+            android:id="@+id/action_chatFragment_to_translatorSettingFragment"
             app:destination="@id/translatorSettingFragment" />
 
     </fragment>

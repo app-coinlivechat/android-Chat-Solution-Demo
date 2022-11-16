@@ -26,9 +26,9 @@ class NormalChatMessage @JvmOverloads constructor(
                     setTextColor(getColor(R.styleable.NormalChatMessage_textColor, ContextCompat.getColor(context, R
                         .color.chat_msg_text)))
                     background = if(isMe) {
-                        ContextCompat.getDrawable(context,R.drawable.normal_me_msg_background)
+                        ContextCompat.getDrawable(context,R.drawable.shape_me_msg_background)
                     } else {
-                        ContextCompat.getDrawable(context,R.drawable.normal_other_msg_background)
+                        ContextCompat.getDrawable(context,R.drawable.shape_other_msg_background)
                     }
                     text = getString(R.styleable.NormalChatMessage_text)
                 }

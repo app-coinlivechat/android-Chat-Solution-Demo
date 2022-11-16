@@ -20,13 +20,13 @@ import com.coinlive.chat.util.LoggerHelper
 import kotlinx.coroutines.launch
 import java.util.*
 
-class ChattingViewModel : ViewModel() {
-    private val TAG = ChattingViewModel::class.java.simpleName
+class ChatViewModel : ViewModel() {
+    private val TAG = ChatViewModel::class.java.simpleName
     private var coinliveChat: CoinliveChat? = null
     private val coinliveApi = CoinliveRestApi()
-    val userCount : MutableLiveData<Int> = MutableLiveData()
-    val userStatus : MutableLiveData<UserStatus> = MutableLiveData()
-    var timer : Timer? = null
+    val userCount: MutableLiveData<Int> = MutableLiveData(0)
+    val userStatus: MutableLiveData<UserStatus> = MutableLiveData(UserStatus.NONE)
+    var timer: Timer? = null
 
     var channel: Channel? = null
         private set(value) {
@@ -39,7 +39,7 @@ class ChattingViewModel : ViewModel() {
         }
 
     fun initCoinLiveChat(
-        myInfo: CustomerUser,
+        myInfo: CustomerUser?,
         channel: Channel,
         customerName: String,
         listener: MessageListener,
@@ -47,11 +47,28 @@ class ChattingViewModel : ViewModel() {
         amaListener: AmaListener,
         context: Context,
     ) {
-        this.myInfo = myInfo
         this.channel = channel
+        this.myInfo = myInfo
+        //TODO 1. myInfo 2. notification 3. fetchMessage
+        loadNotification()
+
         coinliveChat =
             CoinliveChat(channel.coinId, channel.coinSymbol, customerName, listener, cmNoticeListener, amaListener,
                 context)
+    }
+
+    fun loadCustomerUser() = viewModelScope.launch {
+        coinliveApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
+            override fun onSuccess(value: CustomerUser) {
+                this@ChatViewModel.myInfo = value
+                this@ChatViewModel.userStatus.value = value.status
+            }
+
+            override fun onFail(exception: CoinliveException) {
+                this@ChatViewModel.userStatus.value = UserStatus.NONE
+            }
+
+        })
     }
 
     fun fetchMessage() = viewModelScope.launch {
@@ -59,6 +76,11 @@ class ChattingViewModel : ViewModel() {
             LoggerHelper.de("channel is null")
             return@launch
         }
+
+
+    }
+
+    fun loadNotification() = viewModelScope.launch {
         coinliveApi.getNotificationSetting(coinId = channel!!.coinId, callback = object : ResponseCallback<Map<String,
                 Boolean>> {
             override fun onSuccess(value: Map<String, Boolean>) {
@@ -74,7 +96,7 @@ class ChattingViewModel : ViewModel() {
     }
 
     private fun startTimer() {
-        if(channel == null) return
+        if (channel == null) return
 
         timer = Timer()
         timer?.schedule(object : TimerTask() {
@@ -84,17 +106,20 @@ class ChattingViewModel : ViewModel() {
         }, 0, 1000 * 60)
     }
 
-    private fun getUserCount() = viewModelScope.launch{
-        coinliveApi.getUserCount(channel!!.coinId,object : ResponseCallback<UserCount> {
+    private fun getUserCount() = viewModelScope.launch {
+        coinliveApi.getUserCount(channel!!.coinId, object : ResponseCallback<UserCount> {
             override fun onSuccess(value: UserCount) {
                 userCount.value = value.count
                 value.status?.let {
                     userStatus.value = it
+                } ?: run {
+                    userStatus.value = UserStatus.NONE
                 }
 
             }
 
             override fun onFail(exception: CoinliveException) {
+                userStatus.value = UserStatus.NONE
                 LoggerHelper.de("${exception.message}")
             }
 

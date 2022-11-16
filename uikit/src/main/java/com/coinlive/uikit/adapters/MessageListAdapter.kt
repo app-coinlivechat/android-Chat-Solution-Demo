@@ -13,7 +13,7 @@ import com.coinlive.uikit.databinding.*
 import com.coinlive.uikit.utils.ViewUtils.margin
 import kotlin.collections.ArrayList
 
-class MessageListAdapter(private val myInfo: CustomerUser, private val coinName:String) : RecyclerView
+class MessageListAdapter(private val myInfo: CustomerUser?, private val coinName:String) : RecyclerView
 .Adapter<MessageListAdapter.BaseViewHolder>() {
     val items = ArrayList<Chat>()
 
@@ -127,6 +127,7 @@ class MessageListAdapter(private val myInfo: CustomerUser, private val coinName:
             MessageType.JUMP.name, MessageType.DROP.name -> 4
             MessageType.MEDIUM.name -> 5
             else -> {
+                if(myInfo == null) return 1
                 if (myInfo.id == chat.memberId) 0 else 1
             }
         }
