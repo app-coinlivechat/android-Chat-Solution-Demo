@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.coinlive.chat.api.model.Channel
-import com.coinlive.chat.api.model.CustomerUser
 import com.coinlive.demo.R
 import com.coinlive.demo.adapters.ChannelItemOnClick
 import com.coinlive.demo.adapters.ChannelListAdapter
@@ -27,7 +26,6 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
     private var _binding: FragmentChannelListBinding? = null
     private lateinit var viewModel: ChannelListFragmentViewModel
     private var customerName: String? = null
-    private var myInfo: CustomerUser? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -50,10 +48,8 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
                         customerName?.let {
                             bundle.putString("customerName", it)
                         }
-                        myInfo?.let {
-                            bundle.putParcelable("myInfo", it)
-                        }
                         bundle.putParcelable("channel", selectItem)
+                        bundle.putParcelable("myInfo", viewModel.myInfo)
 
                         // use FragmentManager
 //                        val manager = requireActivity().supportFragmentManager
@@ -62,7 +58,7 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
 //                            .addToBackStack(null)
 //                            .commit()
 
-                        findNavController().navigate(R.id.action_ChannelListFragment_to_ChattingFragment, bundle)
+                        findNavController().navigate(R.id.action_ChannelListFragment_to_ChatFragment, bundle)
                     }
 
                     true
@@ -76,14 +72,10 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG,"onCreate")
-
         arguments?.let {
             customerName = it.getString("customerName")
-            myInfo = it.getParcelable("myInfo")
         }
         viewModel = ViewModelProvider(this)[ChannelListFragmentViewModel::class.java]
-        //TODO myInfo load api 추가 필요
-        viewModel.getChannelList()
     }
 
     override fun onCreateView(

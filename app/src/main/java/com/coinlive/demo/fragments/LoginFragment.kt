@@ -91,9 +91,6 @@ class LoginFragment : Fragment(), OkCallback {
         viewModel.customer?.let {
             bundle.putString("customerName", it.name)
         }
-        viewModel.myInfo?.let {
-            bundle.putParcelable("myInfo", it)
-        }
         // use FragmentManager
 //        requireActivity().supportFragmentManager.beginTransaction()
 //            .add(R.id.nav_host_fragment_content_main, ChannelListFragment::class.java, bundle)

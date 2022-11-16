@@ -7,8 +7,8 @@
 <!--    <color name="black">#FF000000</color>-->
 <!--    <color name="white">#FFFFFFFF</color>-->
 
-    <color name="background">#1E1E1E</color>
-    <color name="dialog_background">#2B2B33</color>
+
+
 
 
     <color name="grey_005">#101010</color>
@@ -30,4 +30,9 @@
     <color name="yellow_060">#FFF028</color>
     <color name="green_050">#137B5E</color>
     <color name="green_060">#27AB86</color>
+
+    <color name="background">#1E1E1E</color>
+    <color name="dialog_background">#2B2B33</color>
+    <color name="channel_item_background">@color/grey_030</color>
+
 </resources>

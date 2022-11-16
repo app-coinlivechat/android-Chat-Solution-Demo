@@ -6,10 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.coinlive.chat.api.CoinliveRestApi
 import com.coinlive.chat.api.ResponseCallback
-import com.coinlive.chat.api.model.Customer
-import com.coinlive.chat.api.model.CustomerUser
-import com.coinlive.chat.api.model.CustomerUserSignUp
-import com.coinlive.chat.api.model.CustomerUserSignUpBody
+import com.coinlive.chat.api.model.*
 import com.coinlive.chat.api.model.enums.UserStatus
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.firebase.service.CoinliveAuthentication
@@ -27,11 +24,6 @@ class LoginFragmentViewModel : ViewModel() {
             field = value
         }
 
-    var myInfo: CustomerUser? = null
-        get() = field
-        private set(value) {
-            field = value
-        }
     var customToken: String? = null
 
     var loginResultMsg: MutableLiveData<String> = MutableLiveData()
@@ -65,30 +57,33 @@ class LoginFragmentViewModel : ViewModel() {
 
 
     fun signUpCheck() = viewModelScope.launch {
-        //TODO member chech api 로 변경 필요
 
-        clApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
-            override fun onSuccess(value: CustomerUser) {
-                myInfo = value
-                memberCheckMsg.value = value.status
+        try{
+            val fId = CoinliveAuthentication.getFirebaseUuid()
+            clApi.signupCheck(fId, object : ResponseCallback<MemberSignupCheck> {
+                override fun onSuccess(value: MemberSignupCheck) {
+                    memberCheckMsg.value = value.status
+                }
 
-            }
+                override fun onFail(exception: CoinliveException) {
+                    Log.e(TAG, "${exception.message}\n${exception.stackTrace}")
+                    memberCheckMsg.value = UserStatus.NONE
+                }
 
-            override fun onFail(exception: CoinliveException) {
-                Log.e(TAG,"${exception.message}\n${exception.stackTrace}")
-                memberCheckMsg.value = UserStatus.NONE
-            }
-
-        })
+            })
+        }catch (exception : Exception) {
+            Log.e(TAG, "${exception.message}\n${exception.stackTrace}")
+            memberCheckMsg.value = UserStatus.NONE
+        }
     }
 
 
     fun loginCheck() : Boolean {
-        try {
+        return try {
             CoinliveAuthentication.getFirebaseUuid()
-            return true
+            true
         }catch (e:Exception) {
-            return false
+            false
         }
     }
 

@@ -17,6 +17,24 @@ class ChannelListFragmentViewModel : ViewModel() {
     private val apiKey = "testsite"
     private val clApi = CoinliveRestApi()
     val itemList = MutableLiveData<List<Channel>>()
+    var myInfo:CustomerUser? = null
+
+    init {
+        loadMyInfo()
+        getChannelList()
+    }
+
+    private fun loadMyInfo() = viewModelScope.launch {
+        clApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
+            override fun onSuccess(value: CustomerUser) {
+                myInfo = value
+            }
+
+            override fun onFail(exception: CoinliveException) {
+                myInfo = null
+            }
+        })
+    }
 
     fun getChannelList() = viewModelScope.launch {
         clApi.getChannelList(apiKey,object : ResponseCallback<List<Channel>>{

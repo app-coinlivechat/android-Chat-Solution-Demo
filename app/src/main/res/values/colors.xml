@@ -7,9 +7,7 @@
 <!--    <color name="black">#FF000000</color>-->
 <!--    <color name="white">#FFFFFFFF</color>-->
 
-    <color name="background">#FFFFFF</color>
-    <color name="dialog_background">#FFFFFF</color>
-    <color name="blue_text">#32A4B3</color>
+
 
 
     // grey
@@ -22,7 +20,7 @@
     <color name="grey_050">#6D7583</color>
     <color name="grey_060">#4F5866</color>
     <color name="grey_070">#353C4A</color>
-    <color name="grey_080">#191E27</color>
+    <color name="grey_080">#E4E4E6</color>
     <color name="grey_090">#000000</color>
 
 
@@ -33,5 +31,10 @@
     <color name="yellow_060">#FFD324</color>
     <color name="green_050">#27AB86</color>
     <color name="green_060">#137B5E</color>
+
+    <color name="background">#FFFFFF</color>
+    <color name="dialog_background">#FFFFFF</color>
+    <color name="blue_text">#32A4B3</color>
+    <color name="channel_item_background">@color/grey_080</color>
 
 </resources>

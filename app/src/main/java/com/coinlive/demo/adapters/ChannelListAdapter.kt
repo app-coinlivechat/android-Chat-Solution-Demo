@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.coinlive.chat.api.model.Channel
+import com.coinlive.demo.R
 import com.coinlive.demo.databinding.ItemChannelBinding
 
 interface ChannelItemOnClick {
@@ -23,16 +24,24 @@ class ChannelListAdapter :
             binding.tvSymbol.text = item.coinSymbol
             Glide.with(itemView).load(item.coinUrl).into(binding.ivImage)
             binding.rbtn.isChecked = selectPosition == adapterPosition
-            clickListener?.let { listener ->
+            binding.root.setBackgroundColor(if (selectPosition == adapterPosition) binding.root.context.getColor(R.color
+                .channel_item_background) else binding.root.context.getColor(R.color.background))
+            clickListener?.let {
                 binding.rbtn.setOnClickListener {
-                    val copyLastPosition = selectPosition
-                    selectPosition = adapterPosition
-                    listener.onClick(item)
-                    notifyItemChanged(copyLastPosition)
-                    notifyItemChanged(selectPosition)
+                    clickItem(item)
+                }
+                binding.root.setOnClickListener {
+                    clickItem(item)
                 }
             }
+        }
 
+        private fun clickItem(item: Channel) {
+            val copyLastPosition = selectPosition
+            selectPosition = adapterPosition
+            clickListener!!.onClick(item)
+            notifyItemChanged(copyLastPosition)
+            notifyItemChanged(selectPosition)
         }
     }
 
