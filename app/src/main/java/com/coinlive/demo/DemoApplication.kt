@@ -2,6 +2,7 @@ package com.coinlive.demo
 
 import android.app.Application
 import com.coinlive.chat.Coinlive
+import java.util.*
 
 class DemoApplication : Application() {
 
@@ -10,5 +11,6 @@ class DemoApplication : Application() {
 
         // coinlive
         Coinlive.isDebug = BuildConfig.DEBUG
+        Coinlive.locale = Locale.getDefault()
     }
 }

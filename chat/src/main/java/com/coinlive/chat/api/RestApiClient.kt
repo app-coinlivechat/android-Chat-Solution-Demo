@@ -2,12 +2,14 @@ package com.coinlive.chat.api
 
 import com.coinlive.chat.Coinlive
 import com.coinlive.chat.api.service.*
+import com.coinlive.chat.util.LoggerHelper
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 
 object RestApiClient {
@@ -27,7 +29,8 @@ object RestApiClient {
                 )
             )
             .addInterceptor(Interceptor {
-                val request: Request = it.request().newBuilder().addHeader("Accept-Language", "ko").build()
+                val request: Request =
+                    it.request().newBuilder().addHeader("Accept-Language", Coinlive.locale.language).build()
                 it.proceed(request)
             })
             .build()
