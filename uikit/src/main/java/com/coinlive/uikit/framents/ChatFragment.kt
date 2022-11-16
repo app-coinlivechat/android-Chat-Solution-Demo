@@ -1,16 +1,15 @@
 package com.coinlive.uikit.framents
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.coinlive.chat.api.model.Channel
 import com.coinlive.chat.api.model.CustomerUser
@@ -28,7 +27,7 @@ import com.coinlive.uikit.utils.NavigationUtils.navigateSafe
 import com.coinlive.uikit.viewmodels.ChatViewModel
 
 
-class ChatFragment : Fragment(), MessageListener, CmNoticeListener, AmaListener, OnClickListener {
+class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListener, OnClickListener {
     private val TAG = ChatFragment::class.java.simpleName
     private var binding: FragmentCoinBinding? = null
     private lateinit var viewModel: ChatViewModel
@@ -80,12 +79,11 @@ class ChatFragment : Fragment(), MessageListener, CmNoticeListener, AmaListener,
         }
         binding!!.ibtnDown.setOnClickListener(this)
         binding!!.ibtnMore.setOnClickListener(this)
-        viewModel.fetchMessage()
     }
 
     override fun onDestroyView() {
-        (requireActivity() as AppCompatActivity).supportActionBar?.show()
         super.onDestroyView()
+        Log.i(TAG,"onDestroyView")
     }
 
     override fun onDestroy() {
@@ -134,23 +132,11 @@ class ChatFragment : Fragment(), MessageListener, CmNoticeListener, AmaListener,
 //        TODO("Not yet implemented")
     }
 
-    private fun removeFragment() {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .remove(this)
-            .commit()
-    }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.ibtn_down -> {
-                try {
-                    val result = findNavController().popBackStack()
-                    if (!result) {
-                        removeFragment()
-                    }
-                } catch (exception: Exception) {
-                    removeFragment()
-                }
+                popFragment()
             }
             R.id.ibtn_more -> {
                 val popupMenu = PopupMenu(v.context,v)

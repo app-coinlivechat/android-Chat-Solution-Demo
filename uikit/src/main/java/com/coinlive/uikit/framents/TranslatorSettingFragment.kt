@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.coinlive.uikit.databinding.FragmentTranslatorSettingBinding
 
-class TranslatorSettingFragment : Fragment() {
+class TranslatorSettingFragment : BaseFragment() {
     private val TAG = TranslatorSettingFragment::class.java.simpleName
 
     private var binding: FragmentTranslatorSettingBinding? = null
@@ -22,5 +21,8 @@ class TranslatorSettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding!!.ibtnBack.setOnClickListener {
+            popFragment()
+        }
     }
 }
