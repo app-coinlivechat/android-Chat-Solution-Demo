@@ -87,7 +87,6 @@
     </style>
 
     <style name="appbar_live_count">
-        //android:textFontWeight="600"
         <item name="android:textSize">14dp</item>
         <item name="android:textStyle">normal</item>
     </style>
