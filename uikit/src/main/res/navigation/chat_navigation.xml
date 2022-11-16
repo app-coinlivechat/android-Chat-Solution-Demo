@@ -6,54 +6,43 @@
     app:startDestination="@id/chatFragment">
     <fragment
         android:id="@+id/chatFragment"
-        tools:layout="@layout/fragment_coin"
         android:name="com.coinlive.uikit.framents.ChatFragment"
-        android:label="ChatFragment" >
+        android:label="ChatFragment"
+        tools:layout="@layout/fragment_coin">
         <action
             android:id="@+id/action_chatFragment_to_textFragment"
-            app:destination="@id/textFragment" >
-            <argument
-                android:name="title"
-                app:argType="string" />
-            <argument
-                android:name="description"
-                app:argType="string" />
-        </action>
+            app:destination="@id/textFragment" />
         <action
             android:id="@+id/action_chatFragment_to_translatorSettingFragment"
             app:destination="@id/translatorSettingFragment" />
         <action
             android:id="@+id/action_chatFragment_to_notificationSettingFragment"
-            app:destination="@id/notificationSettingFragment" >
-            <argument
-                android:name="coinId"
-                app:argType="string" />
-        </action>
+            app:destination="@id/notificationSettingFragment" />
 
     </fragment>
     <fragment
         android:id="@+id/textFragment"
-        tools:layout="@layout/fragment_text"
         android:name="com.coinlive.uikit.framents.TextFragment"
-        android:label="TextFragment" >
+        android:label="TextFragment"
+        tools:layout="@layout/fragment_text">
         <action
             android:id="@+id/action_textFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragment_translator_setting"
         android:id="@+id/translatorSettingFragment"
         android:name="com.coinlive.uikit.framents.TranslatorSettingFragment"
-        android:label="TranslatorSettingFragment" >
+        android:label="TranslatorSettingFragment"
+        tools:layout="@layout/fragment_translator_setting">
         <action
             android:id="@+id/action_translatorSettingFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationSettingFragment"
-        tools:layout="@layout/fragment_notification_setting"
         android:name="com.coinlive.uikit.framents.NotificationSettingFragment"
-        android:label="NotificationSettingFragment" >
+        android:label="NotificationSettingFragment"
+        tools:layout="@layout/fragment_notification_setting">
         <action
             android:id="@+id/action_notificationSettingFragment_to_chatFragment"
             app:destination="@id/chatFragment" />

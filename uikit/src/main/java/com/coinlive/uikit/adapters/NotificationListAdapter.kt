@@ -6,8 +6,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.coinlive.uikit.databinding.ItemNotificationBinding
 import com.coinlive.uikit.models.Notification
 
-class NotificationListAdapter : RecyclerView.Adapter<NotificationListAdapter.ViewHolder>() {
+
+interface AllItemChangeListener{
+    fun allItemChange(enable: Boolean)
+}
+
+class NotificationListAdapter(private val listener: AllItemChangeListener) : RecyclerView.Adapter<NotificationListAdapter.ViewHolder>() {
     var items = ArrayList<Notification>()
+
+    private val enablesId = arrayListOf<String>()
 
     inner class ViewHolder(private val binding: ItemNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item : Notification) {
@@ -15,6 +22,17 @@ class NotificationListAdapter : RecyclerView.Adapter<NotificationListAdapter.Vie
             binding.sValue.isChecked = item.enable
             binding.sValue.setOnCheckedChangeListener { _, isChecked ->
                 items[adapterPosition].enable = isChecked
+                if(isChecked) {
+                    enablesId.add(item.id)
+                } else {
+                    enablesId.remove(item.id)
+                }
+
+                if(enablesId.size == 3) {
+                    listener.allItemChange(true)
+                } else if(enablesId.size == 0) {
+                    listener.allItemChange(false)
+                }
             }
         }
     }
@@ -35,5 +53,7 @@ class NotificationListAdapter : RecyclerView.Adapter<NotificationListAdapter.Vie
         }
         notifyDataSetChanged()
     }
+
+
 
 }

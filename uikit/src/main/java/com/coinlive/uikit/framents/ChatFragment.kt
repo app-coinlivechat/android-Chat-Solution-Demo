@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.coinlive.chat.api.model.Channel
@@ -26,6 +25,7 @@ import com.coinlive.uikit.R
 import com.coinlive.uikit.adapters.MessageListAdapter
 import com.coinlive.uikit.databinding.FragmentCoinBinding
 import com.coinlive.uikit.models.Notification
+import com.coinlive.uikit.utils.Constants
 import com.coinlive.uikit.viewmodels.ChatViewModel
 
 
@@ -39,9 +39,9 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
         arguments?.let { it ->
-            val customerName = it.getString("customerName")
-            val channel = it.getParcelable<Channel>("channel")
-            val myInfo = it.getParcelable<CustomerUser>("myInfo")
+            val customerName = it.getString(Constants.argKeyCustomerName)
+            val channel = it.getParcelable<Channel>(Constants.argKeyChannel)
+            val myInfo = it.getParcelable<CustomerUser>(Constants.argKeyMyInfo)
             if (customerName == null || channel == null) {
                 LoggerHelper.de("please check channel or myInfo or customerName")
                 return@let
@@ -71,8 +71,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setFragmentResultListener("notification") { requestKey, bundle ->
-            val newList = bundle.getParcelableArrayList<Notification>("newList")
+        setFragmentResultListener(Constants.reqKeyNotification) { requestKey, bundle ->
+            val newList = bundle.getParcelableArrayList<Notification>(Constants.argKeyList)
             newList?.let {
                 viewModel.setNotification(it)
             }
@@ -163,7 +163,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                             if (viewModel.originNotiList.isNotEmpty()) {
                                 val bundle = Bundle()
 
-                                bundle.putParcelableArrayList("list",
+                                bundle.putParcelableArrayList(Constants.argKeyList,
                                     ArrayList(viewModel.originNotiList.map { notification ->
                                         notification.copy()
                                     }))
