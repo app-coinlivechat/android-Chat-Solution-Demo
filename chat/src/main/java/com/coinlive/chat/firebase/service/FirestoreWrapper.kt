@@ -95,61 +95,73 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
         standardTime: Calendar = CalendarHelper.getTodayMidnight(),
         diffSize: Long = 50,
     ) {
-        if (isLoading) return
-        isLoading = true
         this.notificationMap = notificationMap
 
-        val collectionPath = "$BASE_PATH/${standardTime.timeInMillis}/$coinId"
+        if (isLoading) return
+        isLoading = true
 
-        val collection = Firebase.firestore.collection(collectionPath)
+        val now = CalendarHelper.nowCalendar()
+        val result = now.get(Calendar.DATE) - standardTime.get(Calendar.DATE)
+        if(result in 0 .. 7) {
+            LoggerHelper.d("day diff : $result")
+            var queryCalendar : Calendar = standardTime.clone() as Calendar
+            var collectionPath = "$BASE_PATH/${standardTime.timeInMillis}/$coinId"
+            var collection : CollectionReference = Firebase.firestore.collection(collectionPath)
+            var query : Query = collection.limitToLast(standardSize).orderBy("t", Query.Direction.DESCENDING)
 
-        val query = collection.limitToLast(standardSize).orderBy("t", Query.Direction.DESCENDING)
-        if (documentSnapshotList.size > 0) {
-            query.startAt(documentSnapshotList.last())
-        }
-        if(documentSnapshotList.size > 0) {
-            LoggerHelper.d("$collectionPath , startAt : ${documentSnapshotList.last().id}")
-        } else {
-            LoggerHelper.d(collectionPath)
-        }
-        query.get().addOnSuccessListener {
-            val documents = it.documents
-            if (documents.size == 0) {    // standardTime 에 더이상 불러올 데이터가 없으니 이전 날짜의 데이터를 불러온다.
-                standardTime.set(Calendar.DATE, standardTime.get(Calendar.DATE) - 1)
-                val now = CalendarHelper.nowCalendar()
-                val result = now.get(Calendar.DATE) - standardTime.get(Calendar.DATE)
-                if ( result in 0..7) {
-                    LoggerHelper.d("$collectionPath documents.size == 0 call fetchMessage")
+            if(documentSnapshotList.size > 0) {
+                val lastDocument = documentSnapshotList.last()
+                val lastChat = convertChat(lastDocument)
+                val lastChatCalendar = CalendarHelper.getMidnightCalendarByMillis(lastChat!!.insertTime)
+
+                if(lastChatCalendar.timeInMillis < standardTime.timeInMillis) {
+                    queryCalendar = lastChatCalendar.clone() as Calendar
+                    collectionPath  = "$BASE_PATH/${lastChatCalendar.timeInMillis}/$coinId"
+                    collection = Firebase.firestore.collection(collectionPath)
+                    query = collection.limitToLast(standardSize).orderBy("t", Query.Direction.DESCENDING).startAfter(lastDocument)
+                }
+            }
+
+            LoggerHelper.d("path : $collectionPath")
+
+            query.get().addOnSuccessListener {
+                val documents = it.documents
+                if (documents.size == 0) {    // standardTime 에 더이상 불러올 데이터가 없으니 이전 날짜의 데이터를 불러온다.
+                    queryCalendar.set(Calendar.DATE, queryCalendar.get(Calendar.DATE) - 1)
                     isLoading = false
-                    fetchMessage(standardSize, notificationMap, standardTime)
+                    fetchMessage(standardSize, notificationMap, queryCalendar)
+                    return@addOnSuccessListener
+                }
+
+                documentSnapshotList.addAll(documents)
+                val oldMessage = filterWithConvert(documents)
+                sort(oldMessage)
+
+                listener.oldMessages(oldMessage, false)
+
+
+                if (!existCollectionSnapshot.contains(collectionPath)) {
+                    collection.addSnapshotListener(this)
+                    existCollectionSnapshot.add(collectionPath)
+                }
+
+                if (oldMessage.size < diffSize) {
+                    queryCalendar.set(Calendar.DATE, queryCalendar.get(Calendar.DATE) - 1)
+                    isLoading = false
+                    fetchMessage(standardSize, notificationMap, queryCalendar, diffSize - oldMessage.size)
                     return@addOnSuccessListener
                 } else {
                     isLoading = false
                 }
-            }
-
-            documentSnapshotList.addAll(documents)
-            val oldMessage = filterWithConvert(documents)
-            sort(oldMessage)
-
-            listener.oldMessages(oldMessage, false)
-            if (!existCollectionSnapshot.contains(collectionPath)) {
-                collection.addSnapshotListener(this)
-                existCollectionSnapshot.add(collectionPath)
-            }
-
-            if (oldMessage.size < diffSize) {
-                standardTime.set(Calendar.DATE, standardTime.get(Calendar.DATE) - 1)
+            }.addOnFailureListener {
                 isLoading = false
-                fetchMessage(standardSize, notificationMap, standardTime, diffSize - oldMessage.size)
-            } else {
-                isLoading = false
+                LoggerHelper.de("FirestoreWrapper.fetchMessage error!!\n" +
+                        "${Error.QUERY_FETCH_MESSAGE.code}, ${Error.QUERY_FETCH_MESSAGE.msg}\n" +
+                        "${it.message}")
             }
-        }.addOnFailureListener {
+        } else {
+            listener.oldMessages(arrayListOf(), false)
             isLoading = false
-            LoggerHelper.de("FirestoreWrapper.fetchMessage error!!\n" +
-                    "${Error.QUERY_FETCH_MESSAGE.code}, ${Error.QUERY_FETCH_MESSAGE.msg}\n" +
-                    "${it.message}")
         }
     }
 
@@ -174,7 +186,6 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
         if (chat.st != null) {
             changeInsertTime = chat.st!!.toDate().time
-            LoggerHelper.d("t : ${chat.insertTime}, st : $changeInsertTime")
         }
 
         if (changeId != null || changeInsertTime != null) {
@@ -188,7 +199,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
         chat.sortedWith(compareBy<Chat> { it.insertTime }.thenBy { it.symbol }).reversed()
     }
 
-    private fun filterWithConvert(documents: List<DocumentSnapshot>) : ArrayList<Chat>{
+    private fun filterWithConvert(documents: List<DocumentSnapshot>): ArrayList<Chat> {
         val chatNotiMap = getChatNotiMap()
 
         val oldMessage = ArrayList<Chat>()
@@ -196,7 +207,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
         documents.forEach { documentSnapshot ->
             val chat: Chat = convertChat(documentSnapshot) ?: return@forEach
             val isShow = isShowMessage(chat, chatNotiMap)
-            if(isShow) {
+            if (isShow) {
                 oldMessage.add(chat)
             }
 
@@ -260,7 +271,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
                 val document = dc.document
                 when (dc.type) {
                     DocumentChange.Type.ADDED -> {
-                        if(isExistDocument(document)) return
+                        if (isExistDocument(document)) return
                         convertChat(document)?.let {
                             if (isShowMessage(it, getChatNotiMap())) {
                                 listener.newMessages(it)
@@ -291,10 +302,10 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
         }
     }
 
-    private fun isExistDocument(document:QueryDocumentSnapshot) :Boolean {
+    private fun isExistDocument(document: QueryDocumentSnapshot): Boolean {
         var isExist = false
         documentSnapshotList.forEach {
-            if(it.id == document.id) {
+            if (it.id == document.id) {
                 isExist = true
                 return@forEach
             }
