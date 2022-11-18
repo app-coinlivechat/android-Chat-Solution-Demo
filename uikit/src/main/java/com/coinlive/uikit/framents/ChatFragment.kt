@@ -2,12 +2,14 @@ package com.coinlive.uikit.framents
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -20,6 +22,7 @@ import com.coinlive.chat.firebase.listener.CmNoticeListener
 import com.coinlive.chat.firebase.listener.MessageListener
 import com.coinlive.chat.firebase.model.Ama
 import com.coinlive.chat.firebase.model.Chat
+import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.R
 import com.coinlive.uikit.adapters.MessageListAdapter
@@ -37,6 +40,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LoggerHelper.d("onCreate")
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
         arguments?.let { it ->
             val customerName = it.getString(Constants.argKeyCustomerName)
@@ -56,6 +60,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 //        registerForActivityResult()
+        LoggerHelper.d("onCreateView")
 
         binding = FragmentCoinBinding.inflate(inflater, container, false)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -72,6 +77,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        LoggerHelper.d("onViewCreated")
 
         setFragmentResultListener(Constants.reqKeyNotification) { requestKey, bundle ->
             val newList = bundle.getParcelableArrayList<Notification>(Constants.argKeyList)
@@ -90,6 +96,13 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         }
         binding!!.ibtnDown.setOnClickListener(this)
         binding!!.ibtnMore.setOnClickListener(this)
+        binding!!.refresh.setColorSchemeColors(ContextCompat.getColor(binding!!.refresh.context,
+            R.color.swipe_progress))
+
+        binding!!.refresh.setOnRefreshListener {
+
+            viewModel.fetchMessage()
+        }
     }
 
     override fun onDestroyView() {
@@ -125,8 +138,10 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     }
 
     override fun oldMessages(chatList: ArrayList<Chat>, isReload: Boolean) {
-        adapter.items.addAll(chatList)
-        adapter.notifyItemRangeInserted(0, chatList.size)
+        binding?.refresh?.isRefreshing = false
+        val pushIndex = adapter.items.size
+        adapter.items.addAll(pushIndex, chatList)
+        adapter.notifyItemRangeInserted(pushIndex, chatList.size)
     }
 
     override fun newMessages(chat: Chat) {

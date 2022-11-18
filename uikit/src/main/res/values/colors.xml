@@ -49,5 +49,9 @@
     <color name="server_chat_time">@color/grey_050</color>
     <color name="switch_track_off">@color/grey_020</color>
 
+    <color name="ama_label">#FA5B4A</color>
+    <color name="swipe_background">#FFFFFF</color>
+    <color name="swipe_progress">@color/grey_070</color>
+
 
 </resources>

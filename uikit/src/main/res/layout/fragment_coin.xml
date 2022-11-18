@@ -18,7 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_appbar"
             android:layout_width="match_parent"
-            app:layout_constraintBottom_toTopOf="@id/rv_list"
+            app:layout_constraintBottom_toTopOf="@id/refresh"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -109,17 +109,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv_list" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_list"
+        app:layout_constraintTop_toBottomOf="@id/refresh" />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:swipeRefreshLayoutProgressSpinnerBackgroundColor="@color/swipe_background"
         app:layout_constraintBottom_toTopOf="@id/cl_input"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_appbar" />
+        app:layout_constraintTop_toBottomOf="@id/cl_appbar">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
