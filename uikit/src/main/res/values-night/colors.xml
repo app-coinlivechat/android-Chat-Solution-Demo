@@ -15,19 +15,17 @@
     <color name="grey_090">#FFFFFF</color>
 
     // sub
-    <color name="blue_050">#4880EE</color>
-    <color name="red_050">#E64E3C</color>
-    <color name="yellow_050">#FFD324</color>
-    <color name="yellow_060">#FFF028</color>
-    <color name="green_050">#137B5E</color>
-    <color name="green_060">#27AB86</color>
+    <color name="sub_blue_500">#4880EE</color>
+    <color name="sub_red_400">#E64E3C</color>
+    <color name="sub_red_500">#FA5B4A</color>
+    <color name="primary">#32A4B3</color>
+    <color name="main_action_light">#71C0CB</color>
+    <color name="main_action_dark">#267F8B</color>
 
     <color name="background">#1E1E1E</color>
     <color name="normal_text">#000000</color>
     <color name="line_color">#FFFFFF</color>
     <color name="menu_line_color">#E4E4E6</color>
-    <color name="primary">#32A4B3</color>
-
 
 
     <color name="chat_other_msg_background">@color/grey_030</color>
