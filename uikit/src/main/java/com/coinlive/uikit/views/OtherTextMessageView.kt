@@ -33,4 +33,5 @@ class OtherTextMessageView @JvmOverloads constructor(
         binding.isSameDate = isSameDate
     }
 
+
 }

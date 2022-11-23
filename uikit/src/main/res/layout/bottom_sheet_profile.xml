@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="nickName"
+            type="String" />
+
+        <variable
+            name="url"
+            type="String" />
+
+        <variable
+            name="appName"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/shape_round_bottom_sheet_background"
+        android:layout_width="match_parent"
+        android:paddingBottom="72dp"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/ibtn_close"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/btn_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            loadProfile="@{url}"
+            android:layout_width="82dp"
+            android:layout_height="82dp"
+            android:layout_marginTop="31dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/icon_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_nickName"
+            style="@style/header3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:text="@{nickName}"
+            android:textColor="@color/profile_nickname"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_profile" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:text="@{appName}"
+            android:textColor="#FFC14F"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_nickName" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+

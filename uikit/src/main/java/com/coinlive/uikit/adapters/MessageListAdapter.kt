@@ -25,6 +25,7 @@ import java.util.*
 interface MessageEventListener {
     fun onClick(item: Chat, view: View)
     fun onLongClick(item: Chat, view: View)
+    fun onProfileClick(item:Chat, view: View)
 }
 
 class MessageListAdapter(
@@ -148,11 +149,13 @@ class MessageListAdapter(
     inner class OtherTextMessageViewHolder(private val binding: ViewOtherTextMessageBinding) : BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
-
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
             binding.isSameDate = isSameDate
+            binding.ibtnProfile.setOnClickListener {
+                eventListener?.onProfileClick(item,it)
+            }
         }
     }
 
@@ -160,7 +163,6 @@ class MessageListAdapter(
         BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
-
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
@@ -177,7 +179,9 @@ class MessageListAdapter(
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
             binding.isSameDate = isSameDate
-
+            binding.ibtnProfile.setOnClickListener {
+                eventListener?.onProfileClick(item,it)
+            }
             val constraintSet = ConstraintSet()
             constraintSet.clone(binding.clRoot)
 

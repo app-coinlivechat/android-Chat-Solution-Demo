@@ -282,6 +282,16 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     }
 
+    override fun onProfileClick(item: Chat, view: View) {
+        val bundle = Bundle()
+        bundle.putString(Constants.argKeyNickName, item.userNickname)
+        bundle.putString(Constants.argKeyUrl, item.profileUrl)
+        bundle.putString(Constants.argKeyAppName, item.appName)
+
+        view.findNavController().navigate(R.id.action_chatFragment_to_profileBottomSheet,bundle)
+
+    }
+
     private var isShowKeyboard = false
     override fun onGlobalLayout() {
         val rootView = requireActivity().window.decorView.rootView
@@ -298,7 +308,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             val linearLayoutManager: LinearLayoutManager = this.binding?.rvList?.layoutManager!! as LinearLayoutManager
             val visibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
             Log.e(TAG, "visible position : $visibleItemPosition")
-            if (visibleItemPosition <= 5) {
+            if (visibleItemPosition <= 7) {
                 binding?.rvList?.scrollToPosition(0)
             }
         } else {

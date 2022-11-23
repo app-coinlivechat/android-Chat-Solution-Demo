@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_chatFragment_to_notificationSettingFragment"
             app:destination="@id/notificationSettingFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_profileBottomSheet"
+            app:destination="@id/profileBottomSheet" />
 
     </fragment>
     <fragment
@@ -47,4 +50,9 @@
             android:id="@+id/action_notificationSettingFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
     </fragment>
+    <dialog
+        tools:layout="@layout/bottom_sheet_profile"
+        android:id="@+id/profileBottomSheet"
+        android:name="com.coinlive.uikit.framents.ProfileBottomSheet"
+        android:label="ProfileBottomSheet" />
 </navigation>

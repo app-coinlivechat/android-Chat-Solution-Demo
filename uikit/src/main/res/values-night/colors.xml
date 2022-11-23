@@ -43,6 +43,9 @@
     <color name="swipe_background">@color/grey_020</color>
     <color name="swipe_progress">#FFFFFF</color>
     <color name="new_message_background">@color/grey_020</color>
+    <color name="profile_nickname">#E0FFFFFF</color>
+    <color name="profile_background">#101010</color>
+
 
 
 

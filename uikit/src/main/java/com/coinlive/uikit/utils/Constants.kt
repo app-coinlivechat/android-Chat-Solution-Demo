@@ -9,6 +9,10 @@ object Constants {
     const val argKeyList = "list"
     const val argKeyTitle = "title"
     const val argKeyDescription = "description"
+    const val argKeyNickName  = "nickName"
+    const val argKeyAppName  = "appName"
+    const val argKeyUrl  = "url"
+
 
     // fragment request key
     const val reqKeyNotification = "notification"
