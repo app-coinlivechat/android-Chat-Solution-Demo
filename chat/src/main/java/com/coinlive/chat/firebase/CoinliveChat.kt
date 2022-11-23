@@ -149,7 +149,11 @@ class CoinliveChat(
                 throw SendMessageException("이미지 10개 이상 보낼수 없습니다.")
             }
         } ?: run {
-            if (chat.koMessage.trim().isEmpty() || chat.enMessage.trim().isEmpty()) {
+            if(chat.koMessage == null || chat.enMessage == null) {
+                throw SendMessageException("메세지는 1자 보다 크고 500자 보다 적어야 합니다.")
+            }
+
+            if (chat.koMessage!!.trim().isEmpty() || chat.enMessage!!.trim().isEmpty()) {
                 throw SendMessageException("메세지는 1자 보다 크고 500자 보다 적어야 합니다.")
             }
         }
@@ -157,7 +161,7 @@ class CoinliveChat(
         if (checkAmaProceeding()) { // ama 진행 체크
             throw SendMessageException("ama 상태에서는 메세지를 보낼수 없습니다.", isAma = true)
         }
-        if (chat.koMessage.length > 500 || chat.enMessage.length > 500) {
+        if (chat.koMessage!!.length > 500 || chat.enMessage!!.length > 500) {
             throw SendMessageException("메세지는 1자 보다 크고 500자 보다 적어야 합니다.")
         }
 

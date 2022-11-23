@@ -80,13 +80,13 @@ data class Chat(
      */
     @set:PropertyName("mko")
     @get:PropertyName("mko")
-    var koMessage: String,
+    var koMessage: String?,
     /**
      * 영문 메세지
      */
     @set:PropertyName("men")
     @get:PropertyName("men")
-    var enMessage: String,
+    var enMessage: String?,
     /**
      * 메세지 locale 정보
      */
