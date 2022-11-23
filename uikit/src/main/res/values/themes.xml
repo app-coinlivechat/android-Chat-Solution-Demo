@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
@@ -94,6 +94,12 @@
     <style name="ama_lable">
         <item name="android:textColor">@color/ama_label</item>
         <item name="android:textSize">9dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="new_msg_nickname">
+        <item name="android:textColor">@color/grey_050</item>
+        <item name="android:textSize">12dp</item>
         <item name="android:textStyle">normal</item>
     </style>
 

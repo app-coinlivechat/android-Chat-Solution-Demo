@@ -11,9 +11,15 @@ import com.coinlive.uikit.R
 import com.coinlive.uikit.databinding.ViewInputBinding
 
 
+interface SendMessageListener {
+    fun sendMessage(text: String)
+}
+
+
 class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     ConstraintLayout(context, attrs, defStyleAttr) {
     private val binding: ViewInputBinding by lazy { ViewInputBinding.inflate(LayoutInflater.from(context), this, true) }
+    private var listener: SendMessageListener? = null
 
     init {
         context.theme.obtainStyledAttributes(attrs, R.styleable.InputView, 0, 0).apply {
@@ -34,16 +40,23 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     background = getDrawable(R.styleable.InputView_inputBackground)
                         ?: ContextCompat.getDrawable(context, R.drawable.shape_input_background)
                 }
+                binding.ibtnSend.setOnClickListener {
+                    listener?.sendMessage(binding.etInput.text.toString())
+                    binding.etInput.text.clear()
+                }
+
             }
+
+
             recycle()
         }
     }
 
-    fun setAma(isAma:Boolean) {
+    fun setAma(isAma: Boolean) {
         binding.isAMA = isAma
     }
 
-    fun setLoginUser(isLoginUser:Boolean) {
+    fun setLoginUser(isLoginUser: Boolean) {
         binding.isLoginUser = isLoginUser
     }
 
@@ -53,9 +66,16 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         } ?: run {
             binding.isActiveUser = false
         }
-
-
     }
+
+    fun setSendMessageListener(listener: SendMessageListener) {
+        this.listener = listener
+    }
+
+    fun clearFocusEditeText() {
+        binding.etInput.clearFocus()
+    }
+
 
     private fun getColor(@ColorRes id: Int): Int {
         return ContextCompat.getColor(context, id)

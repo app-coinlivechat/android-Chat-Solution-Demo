@@ -86,10 +86,10 @@ class ChatViewModel : ViewModel() {
                 Boolean>> {
             override fun onSuccess(value: Map<String, Boolean>) {
                 val result = ArrayList<Notification>()
-                list.forEach {
-                    val enable: Boolean? = value[it.type]
-                    enable?.let { enable ->
-                        result.add(Notification(it.type, it.name, enable))
+                list.forEach { type ->
+                    val enable: Boolean? = value[type.type]
+                    enable?.let {
+                        result.add(Notification(type.type, type.name, enable))
                     }
                 }
                 if (result.isNotEmpty()) {
@@ -203,6 +203,18 @@ class ChatViewModel : ViewModel() {
             }
 
         })
+    }
+
+    fun sendMessage(text: String) {
+        if (myInfo == null) {
+            return
+        }
+
+        coinliveChat?.sendMessage(text, myInfo!!)
+    }
+
+    fun sendImage() {
+
     }
 
     fun destroy() {

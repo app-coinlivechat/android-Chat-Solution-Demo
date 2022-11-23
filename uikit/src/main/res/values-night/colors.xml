@@ -42,6 +42,8 @@
     <color name="ama_label">#FA5B4A</color>
     <color name="swipe_background">@color/grey_020</color>
     <color name="swipe_progress">#FFFFFF</color>
+    <color name="new_message_background">@color/grey_020</color>
+
 
 
 

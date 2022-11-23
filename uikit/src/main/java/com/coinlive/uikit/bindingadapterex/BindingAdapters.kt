@@ -1,8 +1,6 @@
 package com.coinlive.uikit.bindingadapterex
 
 import android.text.format.DateFormat
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -60,7 +58,10 @@ object BindingAdapters {
 
     @BindingAdapter("loadProfile")
     @JvmStatic
-    fun loadProfile(view: ImageView, url: String) {
+    fun loadProfile(view: ImageView, url: String?) {
+
+        if(url == null) return
+
         Glide.with(view.context).load(url)
             .error(R.drawable.icon_profile)
             .placeholder(R.drawable.icon_profile)

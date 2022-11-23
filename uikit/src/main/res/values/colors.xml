@@ -13,7 +13,7 @@
     <color name="grey_060">#4F5866</color>
     <color name="grey_070">#353C4A</color>
     <color name="grey_080">#191E27</color>
-    <color name="grey_090">#000000</color>
+    <color name="grey_090">#FFFFFF</color>
 
 
     // sub
@@ -45,6 +45,7 @@
     <color name="ama_label">#FA5B4A</color>
     <color name="swipe_background">#FFFFFF</color>
     <color name="swipe_progress">@color/grey_070</color>
+    <color name="new_message_background">@color/grey_030</color>
 
 
 </resources>

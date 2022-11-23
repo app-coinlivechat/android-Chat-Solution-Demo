@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -29,6 +29,7 @@
         android:id="@+id/cl_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="30dp">
 
 
@@ -62,7 +63,8 @@
                 android:layout_height="24dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:loadIcon="@{chat.asset.iconUrl}" />
+                app:loadIcon="@{chat.asset.iconUrl}"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/tv_symbol"
@@ -95,7 +97,8 @@
                 app:layout_constraintBottom_toBottomOf="@id/tv_price"
                 app:layout_constraintStart_toEndOf="@id/tv_price"
                 app:layout_constraintTop_toTopOf="@id/tv_price"
-                app:loadExchangeImage="@{chat.asset.exchange ?? `noDat`}" />
+                app:loadExchangeImage="@{chat.asset.exchange ?? `noDat`}"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/tv_description"

@@ -1,7 +1,7 @@
 package com.coinlive.uikit.adapters
 
-import android.graphics.Color
 import android.graphics.Rect
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +9,8 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.setPadding
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.coinlive.chat.Coinlive
 import com.coinlive.chat.api.model.CustomerUser
 import com.coinlive.chat.firebase.model.Chat
@@ -21,32 +19,39 @@ import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.uikit.R
 import com.coinlive.uikit.bindingadapterex.BindingAdapters
 import com.coinlive.uikit.databinding.*
-import com.coinlive.uikit.utils.ViewUtils.dpToPx
 import java.util.*
 
-class SpaceItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-        outRect.left = space
-        outRect.bottom = space
-        //       3 ，       3   ，      0
-        if (parent.getChildLayoutPosition(view) % 3 == 0) {
-            outRect.left = 0
-        }
-    }
+
+interface MessageEventListener {
+    fun onClick(item: Chat, view: View)
+    fun onLongClick(item: Chat, view: View)
 }
 
-
-class MessageListAdapter(private val myInfo: CustomerUser?, private val coinName: String) :
+class MessageListAdapter(
+    private val myInfo: CustomerUser?,
+    private val coinName: String,
+    private val eventListener: MessageEventListener? = null,
+) :
     RecyclerView.Adapter<MessageListAdapter.BaseViewHolder>() {
     val items = ArrayList<Chat>()
 
-    open inner class BaseViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
+    open inner class BaseViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         open fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
+            binding.root.setOnClickListener {
+                eventListener?.onClick(item, binding.root)
+                Log.e("ETGKQO", "item click!!!")
+            }
+            binding.root.setOnLongClickListener {
+                Log.e("ETGKQO", "item long click!!!")
+                eventListener?.onLongClick(item, binding.root)
+                true
+            }
         }
     }
 
     inner class ServerViewHolder(private val binding: ViewServerChatItemBinding) : BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
+            super.bind(item, viewType, isSameDate, isRoundMessage)
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.coinName = coinName
@@ -80,6 +85,7 @@ class MessageListAdapter(private val myInfo: CustomerUser?, private val coinName
 
     inner class MyTextMessageViewHolder(private val binding: ViewMyTextMessageBinding) : BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
+            super.bind(item, viewType, isSameDate, isRoundMessage)
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
@@ -89,6 +95,8 @@ class MessageListAdapter(private val myInfo: CustomerUser?, private val coinName
 
     inner class MyAssetMessageViewHolder(private val binding: ViewMyAssetChatItemBinding) : BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
+            super.bind(item, viewType, isSameDate, isRoundMessage)
+
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
@@ -98,6 +106,8 @@ class MessageListAdapter(private val myInfo: CustomerUser?, private val coinName
 
     inner class MyImageMessageViewHolder(private val binding: ViewMyImageChatItemBinding) : BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
+            super.bind(item, viewType, isSameDate, isRoundMessage)
+
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
@@ -137,6 +147,8 @@ class MessageListAdapter(private val myInfo: CustomerUser?, private val coinName
 
     inner class OtherTextMessageViewHolder(private val binding: ViewOtherTextMessageBinding) : BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
+            super.bind(item, viewType, isSameDate, isRoundMessage)
+
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
@@ -147,6 +159,8 @@ class MessageListAdapter(private val myInfo: CustomerUser?, private val coinName
     inner class OtherAssetMessageViewHolder(private val binding: ViewOtherAssetChatItemBinding) :
         BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
+            super.bind(item, viewType, isSameDate, isRoundMessage)
+
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
@@ -157,6 +171,8 @@ class MessageListAdapter(private val myInfo: CustomerUser?, private val coinName
     inner class OtherImageMessageViewHolder(private val binding: ViewOtherImageChatItemBinding) :
         BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
+            super.bind(item, viewType, isSameDate, isRoundMessage)
+
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
@@ -304,12 +320,11 @@ class MessageListAdapter(private val myInfo: CustomerUser?, private val coinName
             previousChat.memberId == chat.memberId && chat.insertTime - previousChat.insertTime > 60000
         } else {
             val previousTimeDiff = chat.insertTime - previousChat!!.insertTime
-//            Log.d("ETGKQO", "chat : ${chat.insertTime}, previousChat : ${previousChat.insertTime}")
             previousTimeDiff < 60000
         }
     }
 
-    private fun isShowTime(chat: Chat, nextChat: Chat?, previousChat: Chat?) : Boolean {
+    private fun isShowTime(chat: Chat, nextChat: Chat?, previousChat: Chat?): Boolean {
         return if (nextChat == null && previousChat == null) {
             true
         } else if (nextChat != null && previousChat == null) {
@@ -318,7 +333,6 @@ class MessageListAdapter(private val myInfo: CustomerUser?, private val coinName
             previousChat.memberId == chat.memberId && chat.insertTime - previousChat.insertTime > 60000
         } else {
             val previousTimeDiff = chat.insertTime - previousChat!!.insertTime
-//            Log.d("ETGKQO", "chat : ${chat.insertTime}, previousChat : ${previousChat.insertTime}")
             previousTimeDiff < 60000
         }
     }

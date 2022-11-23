@@ -111,4 +111,12 @@
         <item name="android:textSize">9dp</item>
         <item name="android:textStyle">normal</item>
     </style>
+
+    <style name="new_msg_nickname">
+        <item name="android:textFontWeight">400</item>
+        <item name="android:lineHeight">18dp</item>
+        <item name="android:textColor">@color/grey_050</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
 </resources>

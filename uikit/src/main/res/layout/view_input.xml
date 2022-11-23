@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
             name="isLoginUser"
@@ -17,6 +17,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_height="56dp">
 
         <View
@@ -35,7 +37,8 @@
             android:minHeight="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/v_divider" />
+            app:layout_constraintTop_toTopOf="@id/v_divider"
+            tools:ignore="ContentDescription" />
 
         <EditText
             android:id="@+id/et_input"
@@ -49,7 +52,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/ibtn_send"
             app:layout_constraintStart_toEndOf="@id/ibtn_add_on"
-            app:layout_constraintTop_toTopOf="@id/v_divider" />
+            app:layout_constraintTop_toTopOf="@id/v_divider"
+            tools:ignore="Autofill,TextFields" />
 
         <ImageButton
             android:id="@+id/ibtn_send"

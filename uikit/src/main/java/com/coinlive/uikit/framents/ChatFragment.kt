@@ -2,7 +2,7 @@ package com.coinlive.uikit.framents
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
-import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -14,6 +14,8 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.coinlive.chat.Coinlive
 import com.coinlive.chat.api.model.Channel
 import com.coinlive.chat.api.model.CustomerUser
 import com.coinlive.chat.api.model.enums.UserStatus
@@ -22,21 +24,47 @@ import com.coinlive.chat.firebase.listener.CmNoticeListener
 import com.coinlive.chat.firebase.listener.MessageListener
 import com.coinlive.chat.firebase.model.Ama
 import com.coinlive.chat.firebase.model.Chat
-import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.R
+import com.coinlive.uikit.adapters.MessageEventListener
 import com.coinlive.uikit.adapters.MessageListAdapter
 import com.coinlive.uikit.databinding.FragmentCoinBinding
 import com.coinlive.uikit.models.Notification
 import com.coinlive.uikit.utils.Constants
+import com.coinlive.uikit.utils.KeyboardHelper
 import com.coinlive.uikit.viewmodels.ChatViewModel
+import com.coinlive.uikit.views.SendMessageListener
 
 
-class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListener, OnClickListener {
+class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListener, OnClickListener,
+    SendMessageListener, MessageEventListener, ViewTreeObserver.OnGlobalLayoutListener {
     private val TAG = ChatFragment::class.java.simpleName
     private var binding: FragmentCoinBinding? = null
     private lateinit var viewModel: ChatViewModel
     private lateinit var adapter: MessageListAdapter
+
+
+    private val scrollListener: RecyclerView.OnScrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+           if(newState != RecyclerView.SCROLL_STATE_DRAGGING) {
+               recyclerView.layoutManager?.let {
+                   val visibleItemPosition = (it as LinearLayoutManager).findFirstVisibleItemPosition()
+                   if (visibleItemPosition > 0 && binding?.btnBottom?.visibility == View.GONE) {
+                       binding?.btnBottom?.visibility = View.VISIBLE
+                   } else if(visibleItemPosition == 0 && binding?.btnBottom?.visibility == View.VISIBLE){
+                       binding?.btnBottom?.visibility = View.GONE
+                   }
+               }
+           }
+        }
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+
+
+
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +80,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             }
             viewModel.initCoinLiveChat(myInfo, 50, channel, customerName, this, this, this, requireContext())
         }
-        adapter = MessageListAdapter(coinName = viewModel.channel!!.name!!, myInfo = viewModel.myInfo!!)
+        adapter =
+            MessageListAdapter(coinName = viewModel.channel!!.name!!, myInfo = viewModel.myInfo, eventListener = this)
 
     }
 
@@ -67,7 +96,9 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         binding!!.apply {
             lifecycleOwner = viewLifecycleOwner
             chattingViewModel = viewModel
+            locale = Coinlive.locale.language
             clInput.setLoginUser(viewModel.myInfo != null)
+            root.viewTreeObserver.addOnGlobalLayoutListener(this@ChatFragment)
         }
         viewModel.userStatus.observe(viewLifecycleOwner) { status ->
             updateUserStatus(status)
@@ -79,7 +110,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         super.onViewCreated(view, savedInstanceState)
         LoggerHelper.d("onViewCreated")
 
-        setFragmentResultListener(Constants.reqKeyNotification) { requestKey, bundle ->
+        setFragmentResultListener(Constants.reqKeyNotification) { _, bundle ->
             val newList = bundle.getParcelableArrayList<Notification>(Constants.argKeyList)
             newList?.let {
                 viewModel.setNotification(it)
@@ -88,11 +119,15 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         if (viewModel.myInfo != null && viewModel.channel != null) {
-            binding!!.rvList.adapter = adapter
-            val layoutManager = LinearLayoutManager(requireContext())
-            layoutManager.reverseLayout = true
-            layoutManager.stackFromEnd = true
-            binding!!.rvList.layoutManager = layoutManager //레이아웃 매니저 연결
+
+            binding!!.rvList.apply {
+                this.adapter = this@ChatFragment.adapter
+                val layoutManager = LinearLayoutManager(requireContext())
+                layoutManager.reverseLayout = true
+                layoutManager.stackFromEnd = true
+                this.layoutManager = layoutManager //레이아웃 매니저 연결
+                addOnScrollListener(scrollListener)
+            }
         }
         binding!!.ibtnDown.setOnClickListener(this)
         binding!!.ibtnMore.setOnClickListener(this)
@@ -100,12 +135,18 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             R.color.swipe_progress))
 
         binding!!.refresh.setOnRefreshListener {
-
             viewModel.fetchMessage()
         }
+        binding!!.clInput.setSendMessageListener(this)
+        binding!!.clNew.setOnClickListener(this)
+        binding!!.btnBottom.setOnClickListener(this)
+
     }
 
     override fun onDestroyView() {
+        binding?.root?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+        binding?.rvList?.removeOnScrollListener(scrollListener)
+
         super.onDestroyView()
         Log.i(TAG, "onDestroyView")
     }
@@ -116,7 +157,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         viewModel.destroy()
     }
 
-    fun updateUserStatus(userStatus: UserStatus) {
+    private fun updateUserStatus(userStatus: UserStatus) {
         binding?.clInput?.setActiveUser(userStatus)
     }
 
@@ -139,24 +180,33 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun oldMessages(chatList: ArrayList<Chat>, isReload: Boolean) {
 
-        if(chatList.size > 0)  {
+        if (chatList.size > 0) {
             val pushIndex = adapter.items.size
 
             LoggerHelper.d("oldMessages!!!, message Size : ${chatList.size} pushIndex : $pushIndex")
             binding?.refresh?.isRefreshing = false
             adapter.items.addAll(pushIndex, chatList)
-            adapter.notifyItemRangeChanged(pushIndex -1, chatList.size + 1)
-            binding?.rvList?.scrollToPosition(pushIndex)
+            adapter.notifyItemRangeChanged(pushIndex - 1, chatList.size + 1)
+            if (binding?.rvList?.layoutManager != null) {
+                binding?.rvList?.scrollToPosition(pushIndex)
+            }
         }
-
-
     }
 
     override fun newMessages(chat: Chat) {
         LoggerHelper.d("newMessages!!!: ${chat.messageId}")
         adapter.items.add(0, chat)
+
+        binding?.rvList?.layoutManager?.let {
+            val visibleItemPosition = (it as LinearLayoutManager).findFirstVisibleItemPosition()
+            if (visibleItemPosition > 0) {
+                binding?.newMessage = chat
+                binding?.btnBottom?.visibility = View.GONE
+            }
+        }
+
         adapter.notifyItemInserted(0)
-        binding?.rvList?.scrollToPosition(0)
+
     }
 
     override fun failSendMessage(chat: Chat) {
@@ -170,6 +220,15 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.cl_new -> {
+                binding?.newMessage = null
+                binding?.rvList?.scrollToPosition(0)
+            }
+            R.id.btn_bottom -> {
+                binding?.btnBottom?.visibility = View.GONE
+                binding?.rvList?.scrollToPosition(0)
+            }
+
             R.id.ibtn_down -> {
                 popFragment()
             }
@@ -204,6 +263,47 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 }
                 popupMenu.show()
             }
+        }
+    }
+
+    override fun sendMessage(text: String) {
+        viewModel.sendMessage(text)
+        binding?.rvList?.scrollToPosition(0)
+    }
+
+    override fun onClick(item: Chat, view: View) {
+        binding?.clInput?.clearFocusEditeText()
+        KeyboardHelper.hideKeyboard(view)
+    }
+
+    override fun onLongClick(item: Chat, view: View) {
+        binding?.clInput?.clearFocusEditeText()
+        KeyboardHelper.hideKeyboard(view)
+
+    }
+
+    private var isShowKeyboard = false
+    override fun onGlobalLayout() {
+        val rootView = requireActivity().window.decorView.rootView
+
+        val rect = Rect()
+        rootView.getWindowVisibleDisplayFrame(rect)
+        val location = IntArray(2)
+        rootView.getLocationOnScreen(location)
+        val screenHeight = rootView.height
+        val keyboardHeight = screenHeight - rect.height() - location[1]
+        if (keyboardHeight > screenHeight * 0.15 && binding?.rvList?.layoutManager != null && !isShowKeyboard) {
+            isShowKeyboard = true
+            //show keyboard
+            val linearLayoutManager: LinearLayoutManager = this.binding?.rvList?.layoutManager!! as LinearLayoutManager
+            val visibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
+            Log.e(TAG, "visible position : $visibleItemPosition")
+            if (visibleItemPosition <= 5) {
+                binding?.rvList?.scrollToPosition(0)
+            }
+        } else {
+            // hide keyboard
+            isShowKeyboard = false
         }
     }
 
