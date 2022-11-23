@@ -55,17 +55,20 @@ class ChatViewModel : ViewModel() {
         context: Context,
     ) {
         this.channel = channel
-        this.myInfo = myInfo
-        this.userStatus.value = myInfo!!.status
+        myInfo?.let {
+            this.myInfo = it
+            this.userStatus.value = it.status
+        }
+
         standardSize?.let {
             this.standardSize = standardSize
         }
-        loadNotificationType()
-        startTimer()
-
         coinliveChat =
             CoinliveChat(channel.coinId, channel.coinSymbol, customerName, listener, cmNoticeListener, amaListener,
                 context)
+        loadNotificationType()
+        startTimer()
+
     }
 
     fun fetchMessage() = viewModelScope.launch {
@@ -73,7 +76,6 @@ class ChatViewModel : ViewModel() {
             LoggerHelper.de("channel is null")
             return@launch
         }
-
         coinliveChat!!.fetchMessage(standardSize = standardSize.toLong(), notificationMap = getNotificationMap())
     }
 
@@ -94,7 +96,6 @@ class ChatViewModel : ViewModel() {
                     originNotiList.addAll(result)
                 }
                 fetchMessage()
-
             }
 
             override fun onFail(exception: CoinliveException) {
@@ -161,7 +162,7 @@ class ChatViewModel : ViewModel() {
             val origin: Notification? = originNotiList.find { it.id == noti.id }
             origin?.let {
                 if (origin.enable != noti.enable) {
-                    Log.d(TAG,"new : $noti, origin : $origin")
+                    Log.d(TAG, "new : $noti, origin : $origin")
 
                     if (noti.enable) {
                         setNotification(noti.id)

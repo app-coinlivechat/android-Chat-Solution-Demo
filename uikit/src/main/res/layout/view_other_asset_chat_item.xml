@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,41 +15,56 @@
         <variable
             name="locale"
             type="String" />
+
+        <variable
+            name="isRoundMessage"
+            type="Boolean" />
+
+        <variable
+            name="isSameDate"
+            type="Boolean" />
+
     </data>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_root"
-        android:layout_marginEnd="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_msg"
-            style="@style/body2"
-            android:layout_width="wrap_content"
+
+
+<!--        <include layout="@layout/view_base_other_message"-->
+<!--            android:id="@+id/base"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"/>-->
+
+        <com.coinlive.uikit.views.OtherTextMessageView
+            android:id="@+id/base"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_other_msg_background"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:text="@{locale.equals(`ko`) ? chat.koMessage : chat.enMessage}" />
-
+            app:chat="@{chat}"
+            app:isSameDate="@{isSameDate}"
+            app:isRoundMessage="@{isRoundMessage}"
+            app:locale="@{locale}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_asset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="19dp"
             android:background="@drawable/asset_chatting_background"
             android:paddingHorizontal="12dp"
             android:paddingTop="6dp"
             android:paddingBottom="8dp"
-            android:visibility="@{chat.asset == null ? View.GONE : View.VISIBLE}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_msg">
+            app:layout_constraintStart_toStartOf="@id/base"
+            app:layout_constraintTop_toBottomOf="@id/base">
 
             <ImageView
                 android:id="@+id/iv_icon"
@@ -55,7 +72,8 @@
                 android:layout_height="24dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:loadImage="@{chat.asset.iconUrl}" />
+                app:loadIcon="@{chat.asset.iconUrl}"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/tv_symbol"
@@ -88,7 +106,8 @@
                 app:layout_constraintBottom_toBottomOf="@id/tv_price"
                 app:layout_constraintStart_toEndOf="@id/tv_price"
                 app:layout_constraintTop_toTopOf="@id/tv_price"
-                app:loadExchangeImage="@{chat.asset.exchange ?? `noDat`}" />
+                app:loadExchangeImage="@{chat.asset.exchange ?? `noDat`}"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/tv_description"
@@ -102,17 +121,12 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_price" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/tv_time"
-            style="@style/caption1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="testestes"
-            android:textColor="@color/chat_msg_time_text"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cl_asset"
-            app:setDate="@{chat.insertTime}" />
+        <View
+            android:id="@+id/v_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/normal_message_bottom_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_asset" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

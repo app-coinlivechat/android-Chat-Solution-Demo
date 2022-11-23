@@ -138,13 +138,22 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     }
 
     override fun oldMessages(chatList: ArrayList<Chat>, isReload: Boolean) {
-        binding?.refresh?.isRefreshing = false
-        val pushIndex = adapter.items.size
-        adapter.items.addAll(pushIndex, chatList)
-        adapter.notifyItemRangeInserted(pushIndex, chatList.size)
+
+        if(chatList.size > 0)  {
+            val pushIndex = adapter.items.size
+
+            LoggerHelper.d("oldMessages!!!, message Size : ${chatList.size} pushIndex : $pushIndex")
+            binding?.refresh?.isRefreshing = false
+            adapter.items.addAll(pushIndex, chatList)
+            adapter.notifyItemRangeChanged(pushIndex -1, chatList.size + 1)
+            binding?.rvList?.scrollToPosition(pushIndex)
+        }
+
+
     }
 
     override fun newMessages(chat: Chat) {
+        LoggerHelper.d("newMessages!!!: ${chat.messageId}")
         adapter.items.add(0, chat)
         adapter.notifyItemInserted(0)
         binding?.rvList?.scrollToPosition(0)

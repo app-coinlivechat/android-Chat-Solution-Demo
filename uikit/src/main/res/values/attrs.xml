@@ -9,9 +9,12 @@
         <attr name="inputBackground" format="reference|color"/>
     </declare-styleable>
 
-    <declare-styleable name="NormalChatMessage">
-        <attr name="isMe" format="boolean"/>
-        <attr name="textColor" format="reference|color"/>
-        <attr name="text" format="string"/>
+    <declare-styleable name="BaseOtherMessage">
+<!--        <attr name="chat" format="reference"/>-->
+<!--        <attr name="nextChat" format="reference"/>-->
+<!--        <attr name="previousChat" format="reference"/>-->
     </declare-styleable>
+
+
+
 </resources>

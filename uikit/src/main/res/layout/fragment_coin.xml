@@ -28,7 +28,7 @@
             <ImageView
                 android:id="@+id/i_icon"
                 tools:ignore="ContentDescription"
-                loadImage="@{chattingViewModel.channel.coinUrl}"
+                app:loadIcon="@{chattingViewModel.channel.coinUrl}"
                 android:layout_marginStart="12dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

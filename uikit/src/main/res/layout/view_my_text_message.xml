@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+        <variable
+            name="chat"
+            type="com.coinlive.chat.firebase.model.Chat" />
+
+        <variable
+            name="isRoundMessage"
+            type="Boolean" />
+
+        <variable
+            name="locale"
+            type="String" />
+        <variable
+            name="isSameDate"
+            type="Boolean" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/tv_date"
+            style="@style/body2"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:textColor="@color/normal_text"
+            android:visibility="@{isSameDate ? View.GONE : View.VISIBLE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setDate="@{chat.insertTime}" />
+
+        <TextView
+            android:id="@+id/tv_msg"
+            style="@style/body2"
+            android:gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:maxWidth="246dp"
+            android:text="@{locale.equals(`ko`)? chat.koMessage : chat.enMessage}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_date" />
+
+
+        <TextView
+            android:id="@+id/tv_time"
+            style="@style/caption1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="19dp"
+            android:visibility="@{isRoundMessage ? View.GONE : View.VISIBLE}"
+            android:textColor="@color/chat_msg_time_text"
+            app:layout_constraintBottom_toBottomOf="@id/tv_msg"
+            app:layout_constraintEnd_toStartOf="@id/tv_msg"
+            app:setTime="@{chat.insertTime}" />
+
+        <View
+            android:id="@+id/v_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/normal_message_bottom_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_msg" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

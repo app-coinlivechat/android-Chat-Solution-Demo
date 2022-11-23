@@ -1,3 +1,14 @@
 <resources>
     <dimen name="app_bar">54dp</dimen>
+    <dimen name="round_message_bottom_margin">16dp</dimen>
+    <dimen name="normal_message_bottom_margin">4dp</dimen>
+
+
+    <item name="match_parent" format="integer" type="dimen">-1</item>
+    <item name="wrap_content" format="integer" type="dimen">-2</item>
+
+
+
+    <dimen name="one_image_width">@dimen/wrap_content</dimen>
+    <dimen name="multi_image_width">0dp</dimen>
 </resources>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+        <variable
+            name="chat"
+            type="com.coinlive.chat.firebase.model.Chat" />
+
+        <variable
+            name="isRoundMessage"
+            type="Boolean" />
+
+        <variable
+            name="locale"
+            type="String" />
+        <variable
+            name="isSameDate"
+            type="Boolean" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_date"
+            style="@style/body2"
+            android:visibility="@{isSameDate ? View.GONE : View.VISIBLE}"
+            android:textColor="@color/normal_text"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:setDate ="@{chat.insertTime}"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"/>
+
+        <ImageButton
+            android:id="@+id/ibtn_profile"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:background="@android:color/transparent"
+            android:visibility="@{isRoundMessage ? View.INVISIBLE : View.VISIBLE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_date"
+            app:loadProfile="@{chat.profileUrl}"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/tv_nickName"
+            android:visibility="@{isRoundMessage ? View.GONE : View.VISIBLE}"
+            style="@style/caption1"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/normal_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{chat.userNickname}"
+            app:layout_constraintTop_toBottomOf="@id/tv_date"
+            app:layout_constraintStart_toEndOf="@id/ibtn_profile"/>
+        <TextView
+            android:id="@+id/tv_appName"
+            android:visibility="@{isRoundMessage ? View.GONE : View.VISIBLE}"
+            style="@style/caption1"
+            android:textColor="@color/grey_030"
+            android:layout_marginStart="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{chat.appName.toUpperCase()}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_nickName"
+            app:layout_constraintStart_toEndOf="@id/tv_nickName"
+            app:layout_constraintTop_toTopOf="@id/tv_nickName"/>
+
+        <TextView
+            android:id="@+id/tv_lable"
+            style="@style/ama_lable"
+            android:text="AMA"
+            android:visibility="@{isRoundMessage ? View.GONE : (chat.label == null ? View.GONE : View.VISIBLE)}"
+            android:background="@drawable/shape_ama_label"
+            android:layout_marginStart="4dp"
+            android:paddingHorizontal="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/tv_appName"
+            app:layout_constraintBottom_toBottomOf="@id/tv_appName"
+            app:layout_constraintTop_toTopOf="@id/tv_appName"/>
+
+        <TextView
+            android:id="@+id/tv_msg"
+            style="@style/body2"
+            android:gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:maxWidth="246dp"
+            android:text="@{locale.equals(`ko`)? chat.koMessage : chat.enMessage}"
+            app:layout_constraintStart_toEndOf="@id/ibtn_profile"
+            app:layout_constraintTop_toBottomOf="@id/tv_nickName" />
+
+
+        <TextView
+            android:id="@+id/tv_time"
+            style="@style/caption1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="19dp"
+            android:visibility="@{isRoundMessage ? View.GONE : View.VISIBLE}"
+            android:textColor="@color/chat_msg_time_text"
+            app:layout_constraintBottom_toBottomOf="@id/tv_msg"
+            app:layout_constraintStart_toEndOf="@id/tv_msg"
+            app:setTime="@{chat.insertTime}" />
+        <View
+            android:id="@+id/v_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/normal_message_bottom_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_msg" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

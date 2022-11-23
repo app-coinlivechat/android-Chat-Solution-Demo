@@ -6,7 +6,6 @@
 
         <import type="android.view.View" />
 
-
         <variable
             name="chat"
             type="com.coinlive.chat.firebase.model.Chat" />
@@ -14,27 +13,35 @@
         <variable
             name="locale"
             type="String" />
+
+        <variable
+            name="isRoundMessage"
+            type="Boolean" />
+
+        <variable
+            name="isSameDate"
+            type="Boolean" />
     </data>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cl_root"
-        android:layout_marginStart="30dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp">
 
-        <TextView
-            android:id="@+id/tv_msg"
-            style="@style/body2"
-            android:layout_width="wrap_content"
+
+        <com.coinlive.uikit.views.MyTextMessageView
+            android:id="@+id/base"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_me_msg_background"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:chat="@{chat}"
+            app:isRoundMessage="@{isRoundMessage}"
+            app:isSameDate="@{isSameDate}"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:text="@{locale.equals(`ko`) ? chat.koMessage : chat.enMessage}" />
+            app:locale="@{locale}" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,9 +53,8 @@
             android:paddingHorizontal="12dp"
             android:paddingTop="6dp"
             android:paddingBottom="8dp"
-            android:visibility="@{chat.asset == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_msg">
+            app:layout_constraintTop_toBottomOf="@id/base">
 
             <ImageView
                 android:id="@+id/iv_icon"
@@ -56,7 +62,7 @@
                 android:layout_height="24dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:loadImage="@{chat.asset.iconUrl}" />
+                app:loadIcon="@{chat.asset.iconUrl}" />
 
             <TextView
                 android:id="@+id/tv_symbol"
@@ -110,9 +116,16 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:textColor="@color/chat_msg_time_text"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/cl_asset"
             app:layout_constraintEnd_toStartOf="@id/cl_asset"
-            app:setDate="@{chat.insertTime}" />
+            app:setTime="@{chat.insertTime}" />
+
+        <View
+            android:id="@+id/v_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_asset" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
