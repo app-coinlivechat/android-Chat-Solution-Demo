@@ -99,6 +99,7 @@ class CoinliveChat(
     fun reloadMessages(notificationMap: Map<String, Boolean>) {
         firestoreWrapper.reload(notificationMap)
     }
+
     /**
      * 채팅 메세지를 전송합니다.
      *
@@ -149,7 +150,7 @@ class CoinliveChat(
                 throw SendMessageException("이미지 10개 이상 보낼수 없습니다.")
             }
         } ?: run {
-            if(chat.koMessage == null || chat.enMessage == null) {
+            if (chat.koMessage == null || chat.enMessage == null) {
                 throw SendMessageException("메세지는 1자 보다 크고 500자 보다 적어야 합니다.")
             }
 
@@ -248,14 +249,14 @@ class CoinliveChat(
             return
         }
 
-        if(chat.emoji == null) {
+        if (chat.emoji == null) {
             LoggerHelper.de("삭제할 이모지가 존재하지 않습니다.")
             return
         }
 
         var emoji: Emoji? = chat.emoji!![emojiType.key]
 
-        if(emoji == null) {
+        if (emoji == null) {
             LoggerHelper.de("삭제할 이모지가 존재하지 않습니다.")
             return
         }
@@ -280,7 +281,7 @@ class CoinliveChat(
      * 해당 채널의 AMA상태를 확인하기 위한 fuction입니다. 주로 메세지를 전송하기전에 사용합니다.
      * @return[Ama] 현재 채널의 AMA 상태를 가지고있는 object를 전달합니다.
      */
-    fun getAmaStatus() : Ama? {
+    fun getAmaStatus(): Ama? {
         return realtimeDatabaseWrapper.ama
     }
 
@@ -288,7 +289,7 @@ class CoinliveChat(
      * 전송에 실패한 메세지를 확인하기 위한 function입니다.
      * @return[ArrayList] 전송에 실패한 [Chat] 메세지 리스트 입니다.
      */
-    fun getFailedMessages() : ArrayList<Chat>? {
+    fun getFailedMessages(): ArrayList<Chat>? {
         return chatDao.getAllMessage()?.let { ArrayList(it) }
     }
 
@@ -302,7 +303,7 @@ class CoinliveChat(
 
     private fun sendMessage(message: String, myInfo: CustomerUser, urlList: ArrayList<String>?) {
 
-        if(myInfo.status != UserStatus.ACTIVE) {
+        if (myInfo.status != UserStatus.ACTIVE) {
             throw SendMessageException("UserStatus가 ACTIVE 상태일 때만 가능합니다.")
         }
 
@@ -340,7 +341,8 @@ class CoinliveChat(
             koMessage = message, enMessage = message, firebaseAuthId = myInfo.firebaseUuid,
             st = firestoreWrapper.getServerTimeStamp(), appName = customerName, symbol = coinSymbol, coinId = coinId,
             insertTime = CalendarHelper.nowCalendar().timeInMillis, messageType = MessageType.USER.toLowName(),
-            chattingLocale = getAppResourceLocale(), memberId = myInfo.id, images = urlList
+            chattingLocale = getAppResourceLocale(), memberId = myInfo.id, images = urlList, userNickname = myInfo
+                .nickName, profileUrl = myInfo.profileImage, isNFTProfile = false
         )
     }
 
@@ -352,7 +354,7 @@ class CoinliveChat(
     /**
      * 로컬 디비에서 오늘 자정 기준으로 부터 7일 이전 전송 실패 데이터를 삭제합니다.
      */
-    private fun deleteOldFailMessage(){
+    private fun deleteOldFailMessage() {
 //        GlobalScope.launch {
 //            chatDao.deleteOldMessage(CalendarHelper.getTodayMidnightTimeStamp())
 //        }

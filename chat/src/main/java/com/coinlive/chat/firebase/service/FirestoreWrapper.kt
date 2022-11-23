@@ -102,27 +102,29 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
         val now = CalendarHelper.nowCalendar()
         val result = now.get(Calendar.DATE) - standardTime.get(Calendar.DATE)
-        if(result in 0 .. 7) {
+        if (result in 0..7) {
             LoggerHelper.d("day diff : $result")
-            var queryCalendar : Calendar = standardTime.clone() as Calendar
+            var queryCalendar: Calendar = standardTime.clone() as Calendar
             var collectionPath = "$BASE_PATH/${standardTime.timeInMillis}/$coinId"
-            var collection : CollectionReference = Firebase.firestore.collection(collectionPath)
-            var query : Query = collection.limitToLast(standardSize).orderBy("t", Query.Direction.DESCENDING)
+            var collection: CollectionReference = Firebase.firestore.collection(collectionPath)
+            var query: Query = collection.orderBy("t", Query.Direction.DESCENDING).limit(standardSize)
 
-            if(documentSnapshotList.size > 0) {
+            if (documentSnapshotList.size > 0) {
                 val lastDocument = documentSnapshotList.last()
                 val lastChat = convertChat(lastDocument)
                 val lastChatCalendar = CalendarHelper.getMidnightCalendarByMillis(lastChat!!.insertTime)
 
-                if(lastChatCalendar.timeInMillis < standardTime.timeInMillis) {
+                if (lastChatCalendar.timeInMillis < standardTime.timeInMillis) {
                     queryCalendar = lastChatCalendar.clone() as Calendar
-                    collectionPath  = "$BASE_PATH/${lastChatCalendar.timeInMillis}/$coinId"
+                    collectionPath = "$BASE_PATH/${lastChatCalendar.timeInMillis}/$coinId"
                     collection = Firebase.firestore.collection(collectionPath)
-                    query = collection.limitToLast(standardSize).orderBy("t", Query.Direction.DESCENDING).startAfter(lastDocument)
+                    query =
+                        collection.limit(standardSize).orderBy("t", Query.Direction.DESCENDING).startAfter(lastDocument)
+                } else {
+                    query =
+                        collection.limit(standardSize).orderBy("t", Query.Direction.DESCENDING).startAfter(lastDocument)
                 }
             }
-
-            LoggerHelper.d("path : $collectionPath")
 
             query.get().addOnSuccessListener {
                 val documents = it.documents
@@ -139,14 +141,12 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
                 listener.oldMessages(oldMessage, false)
 
-
-                if (!existCollectionSnapshot.contains(collectionPath)) {
+                if (!existCollectionSnapshot.contains(collection.path)) {
                     collection.addSnapshotListener(this)
-                    existCollectionSnapshot.add(collectionPath)
+                    existCollectionSnapshot.add(collection.path)
                 }
 
                 if (oldMessage.size < diffSize) {
-                    queryCalendar.set(Calendar.DATE, queryCalendar.get(Calendar.DATE) - 1)
                     isLoading = false
                     fetchMessage(standardSize, notificationMap, queryCalendar, diffSize - oldMessage.size)
                     return@addOnSuccessListener
@@ -196,7 +196,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
     }
 
     private fun sort(chat: List<Chat>) {
-        chat.sortedWith(compareBy<Chat> { it.insertTime }.thenBy { it.symbol }).reversed()
+        chat.sortedByDescending { it.insertTime }
     }
 
     private fun filterWithConvert(documents: List<DocumentSnapshot>): ArrayList<Chat> {
@@ -265,26 +265,30 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
     override fun onEvent(snapshots: QuerySnapshot?, error: FirebaseFirestoreException?) {
         if (error != null) {
-            LoggerHelper.de("startMidnightCheck FirebaseFirestoreException\ncode : ${error.code}, msg : ${error.message}")
+            LoggerHelper.de("FirebaseFirestoreException\ncode : ${error.code}, msg : ${error.message}")
         } else if (snapshots != null) {
             for (dc in snapshots.documentChanges) {
                 val document = dc.document
                 when (dc.type) {
                     DocumentChange.Type.ADDED -> {
-                        if (isExistDocument(document)) return
-                        convertChat(document)?.let {
-                            if (isShowMessage(it, getChatNotiMap())) {
-                                listener.newMessages(it)
+                        val newTime: Long = document.data["t"] as Long
+                        val firstTime: Long = if (documentSnapshotList.size > 0) documentSnapshotList.first()["t"] as
+                                Long else 0
+                        if (firstTime < newTime) {
+                            convertChat(document)?.let {
+                                if (isShowMessage(it, getChatNotiMap())) {
+                                    listener.newMessages(it)
+                                }
                             }
+                            documentSnapshotList.add(0, document)
                         }
-                        documentSnapshotList.add(document)
+
                     }
                     DocumentChange.Type.MODIFIED -> {
                         if (isExistDocument(document)) {
                             convertChat(document)?.let {
                                 listener.modifyMessage(it)
                             }
-
                         }
                     }
                     DocumentChange.Type.REMOVED -> {
