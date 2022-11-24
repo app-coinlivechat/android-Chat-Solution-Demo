@@ -48,6 +48,11 @@
     <color name="new_message_background">@color/grey_030</color>
     <color name="profile_nickname">#E0000000</color>
     <color name="profile_background">#FFFFFF</color>
+    <color name="translator_item_background">@color/grey_020</color>
+    <color name="translator_bottom_sheet_background">@color/grey_090</color>
+    <color name="dialog_description">@color/grey_015</color>
+    <color name="dialog_cancel_background">@color/grey_020</color>
+    <color name="dialog_cancel_text">@color/grey_015</color>
 
 
 </resources>

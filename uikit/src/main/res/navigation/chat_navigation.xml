@@ -40,6 +40,12 @@
         <action
             android:id="@+id/action_translatorSettingFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_translatorSettingFragment_to_translatorBottomSheet"
+            app:destination="@id/translatorBottomSheet" />
+        <action
+            android:id="@+id/action_translatorSettingFragment_to_translatorConfirmDialog"
+            app:destination="@id/translatorConfirmDialog" />
     </fragment>
     <fragment
         android:id="@+id/notificationSettingFragment"
@@ -55,4 +61,14 @@
         android:id="@+id/profileBottomSheet"
         android:name="com.coinlive.uikit.framents.ProfileBottomSheet"
         android:label="ProfileBottomSheet" />
+    <dialog
+        tools:layout="@layout/bottom_sheet_translator"
+        android:id="@+id/translatorBottomSheet"
+        android:name="com.coinlive.uikit.framents.TranslatorBottomSheet"
+        android:label="TranslatorBottomSheet" />
+    <dialog
+        android:id="@+id/translatorConfirmDialog"
+        tools:layout="@layout/dialog_translator_download"
+        android:name="com.coinlive.uikit.framents.TranslatorConfirmDialog"
+        android:label="TranslatorConfirmDialog" />
 </navigation>

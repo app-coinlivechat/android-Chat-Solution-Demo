@@ -19,7 +19,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@drawable/shape_round_bottom_sheet_background"
+        android:background="@drawable/shape_profile_bottom_sheet_background"
         android:layout_width="match_parent"
         android:paddingBottom="72dp"
         android:layout_height="wrap_content">
