@@ -72,22 +72,22 @@ object BindingAdapters {
 
     @BindingAdapter("loadExchangeImage")
     @JvmStatic
-    fun loadExchangeImage(view: ImageView, exchange: String) {
+    fun loadExchangeImage(view: ImageView, exchange: String?) {
         //TODO 거래소 이미지
         when (exchange) {
             "UPBIT" -> {
-                view.setImageResource(R.drawable.icon_additonal)
+                view.setImageResource(R.drawable.img_upbit)
             }
             "BITHUM" -> {
-                view.setImageResource(R.drawable.icon_additonal)
+                view.setImageResource(R.drawable.img_bithum)
 
             }
             "BINANCE" -> {
-                view.setImageResource(R.drawable.icon_additonal)
+                view.setImageResource(R.drawable.icon_binance)
 
             }
             "METAMASK" -> {
-                view.setImageResource(R.drawable.icon_additonal)
+                view.setImageResource(R.drawable.img_metamask)
             }
             else -> {
                 view.setImageResource(R.drawable.icon_additonal)

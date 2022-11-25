@@ -27,6 +27,7 @@ import com.coinlive.uikit.utils.PreferenceHelper.enableTranslator
 import com.coinlive.uikit.utils.PreferenceHelper.translatorLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
+import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -109,7 +110,7 @@ class MessageListAdapter(
             }
             val constraintSet = ConstraintSet()
             constraintSet.clone(binding.clRoot)
-            if(binding.message!!.length > 400) {
+            if (binding.message!!.length > 400) {
                 constraintSet.connect(binding.tvTime.id, ConstraintSet.END, binding.clMaxMsg.id, ConstraintSet.START)
                 constraintSet.connect(binding.tvTime.id,
                     ConstraintSet.BOTTOM,
@@ -241,9 +242,9 @@ class MessageListAdapter(
         private fun moveTextFragment(description: String) {
             binding.root.findNavController().navigate(R.id.action_chatFragment_to_textFragment,
                 bundleOf(Constants.argKeyTitle to binding.root.context.getString(R.string.read_all),
-                Constants.argKeyDescription to description,
-                Constants.argKeyIsMyMessage to false,
-                Constants.argKeyAutoTranslator to true))
+                    Constants.argKeyDescription to description,
+                    Constants.argKeyIsMyMessage to false,
+                    Constants.argKeyAutoTranslator to true))
         }
 
 
@@ -274,6 +275,11 @@ class MessageListAdapter(
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
             binding.isSameDate = isSameDate
+            val price = if (binding.locale!! == "ko") item.asset!!.priceWon else item.asset!!.priceDol
+
+            binding.price = "$${item.symbol} ${String.format("%.4f", item.asset!!.amount)} (${
+                NumberFormat.getCurrencyInstance(Coinlive.locale).format(price)
+            })"
             binding.base.setIsEnableTranslator(false)
         }
     }
