@@ -38,8 +38,7 @@ object BindingAdapters {
 
         url?.let {
             Glide.with(view.context).load(url).circleCrop()
-//            .placeholder(holder)
-                .error(R.drawable.icon_additonal)
+                .error(R.drawable.img_error)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(view)
         }
@@ -51,7 +50,7 @@ object BindingAdapters {
         Glide.with(view.context)
             .load(url)
             .transform(CenterCrop(), RoundedCorners(view.dpToPx(6F)))
-            .error(R.drawable.icon_additonal)
+            .error(R.drawable.img_error)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(view)
     }
@@ -88,9 +87,6 @@ object BindingAdapters {
             }
             "METAMASK" -> {
                 view.setImageResource(R.drawable.img_metamask)
-            }
-            else -> {
-                view.setImageResource(R.drawable.icon_additonal)
             }
         }
     }
