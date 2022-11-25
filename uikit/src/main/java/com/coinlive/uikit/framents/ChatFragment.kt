@@ -32,6 +32,8 @@ import com.coinlive.uikit.databinding.FragmentCoinBinding
 import com.coinlive.uikit.models.Notification
 import com.coinlive.uikit.utils.Constants
 import com.coinlive.uikit.utils.KeyboardHelper
+import com.coinlive.uikit.utils.PreferenceHelper
+import com.coinlive.uikit.utils.PreferenceHelper.translatorLanguage
 import com.coinlive.uikit.viewmodels.ChatViewModel
 import com.coinlive.uikit.views.SendMessageListener
 
@@ -109,6 +111,14 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         LoggerHelper.d("onViewCreated")
+
+        setFragmentResultListener(Constants.reqKeyTranslator) {_,bundle ->
+            val originLanguage = bundle.getString(Constants.argKeyOldTransLanguage) ?: return@setFragmentResultListener
+            val newSelectLanguage = PreferenceHelper.defaultPreference(requireContext()).translatorLanguage
+            if(originLanguage != newSelectLanguage) {
+                adapter.clearTansMsg()
+            }
+        }
 
         setFragmentResultListener(Constants.reqKeyNotification) { _, bundle ->
             val newList = bundle.getParcelableArrayList<Notification>(Constants.argKeyList)
@@ -294,7 +304,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     private var isShowKeyboard = false
     override fun onGlobalLayout() {
-        val rootView = requireActivity().window.decorView.rootView
+        val rootView = activity?.window?.decorView?.rootView ?: return
 
         val rect = Rect()
         rootView.getWindowVisibleDisplayFrame(rect)

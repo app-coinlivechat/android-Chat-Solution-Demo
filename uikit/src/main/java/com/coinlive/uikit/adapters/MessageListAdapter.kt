@@ -1,5 +1,6 @@
 package com.coinlive.uikit.adapters
 
+import android.content.Context
 import android.graphics.Rect
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,7 +20,14 @@ import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.uikit.R
 import com.coinlive.uikit.bindingadapterex.BindingAdapters
 import com.coinlive.uikit.databinding.*
+import com.coinlive.uikit.utils.PreferenceHelper
+import com.coinlive.uikit.utils.PreferenceHelper.isTranslatorEnable
+import com.coinlive.uikit.utils.PreferenceHelper.translatorLanguage
+import com.google.mlkit.nl.translate.Translation
+import com.google.mlkit.nl.translate.TranslatorOptions
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 interface MessageEventListener {
@@ -35,6 +43,7 @@ class MessageListAdapter(
 ) :
     RecyclerView.Adapter<MessageListAdapter.BaseViewHolder>() {
     val items = ArrayList<Chat>()
+    val translatorItem : HashMap<String,String> = HashMap()
 
     open inner class BaseViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         open fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
@@ -67,7 +76,6 @@ class MessageListAdapter(
                     binding.ivCon.setImageResource(R.drawable.icon_twitter)
                     binding.tvTitle.text =
                         binding.tvTitle.context.getString(R.string.twitter_chat_title, coinName, item.symbol)
-
                 }
                 2 -> {
                     binding.ivCon.setImageResource(R.drawable.icon_waring)
@@ -81,7 +89,6 @@ class MessageListAdapter(
                 }
             }
         }
-
     }
 
     inner class MyTextMessageViewHolder(private val binding: ViewMyTextMessageBinding) : BaseViewHolder(binding) {
@@ -97,7 +104,6 @@ class MessageListAdapter(
     inner class MyAssetMessageViewHolder(private val binding: ViewMyAssetChatItemBinding) : BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
-
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
@@ -153,9 +159,53 @@ class MessageListAdapter(
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
             binding.isSameDate = isSameDate
+            binding.enableTranslator = PreferenceHelper.defaultPreference(binding.root.context).isTranslatorEnable
             binding.ibtnProfile.setOnClickListener {
                 eventListener?.onProfileClick(item,it)
             }
+            if(!translatorItem.contains(item.messageId)) {
+                goneTransLayout()
+            } else {
+                visibleTransLayout(item.messageId)
+            }
+
+            binding.ibtnTranslator.setOnClickListener {
+                val originMsg = (if (binding.locale.equals("ko")) binding.chat?.koMessage else binding.chat?.enMessage)
+                    ?: return@setOnClickListener
+                val options = TranslatorOptions.Builder()
+                    .setSourceLanguage(Coinlive.locale.language)
+                    .setTargetLanguage(PreferenceHelper.defaultPreference(it.context).translatorLanguage!!)
+                    .build()
+                val translator = Translation.getClient(options)
+                translator.translate(originMsg).addOnSuccessListener { transMsg ->
+                    translatorItem[item.messageId] = transMsg
+                    visibleTransLayout(item.messageId)
+                    translator.close()
+                }
+            }
+        }
+
+
+        private fun visibleTransLayout(messageId : String) {
+            binding.clTrans.visibility = View.VISIBLE
+            binding.tvMsg.visibility = View.GONE
+            binding.tvTransMsg.text = translatorItem[messageId]
+
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.clRoot)
+            constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.clTrans.id, ConstraintSet.END)
+            constraintSet.applyTo(binding.clRoot)
+        }
+
+        private fun goneTransLayout() {
+            binding.clTrans.visibility = View.GONE
+            binding.tvMsg.visibility = View.VISIBLE
+
+            val constraintSet = ConstraintSet()
+            constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.tvMsg.id, ConstraintSet.END)
+
+            constraintSet.clone(binding.clRoot)
+            constraintSet.applyTo(binding.clRoot)
         }
     }
 
@@ -167,6 +217,7 @@ class MessageListAdapter(
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
             binding.isSameDate = isSameDate
+            binding.base.setIsEnableTranslator(false)
         }
     }
 
@@ -256,6 +307,7 @@ class MessageListAdapter(
         }
     }
 
+
     override fun getItemViewType(position: Int): Int {
         val chat = items[position]
         return when (chat.messageType) {
@@ -339,6 +391,10 @@ class MessageListAdapter(
             val previousTimeDiff = chat.insertTime - previousChat!!.insertTime
             previousTimeDiff < 60000
         }
+    }
+
+    fun clearTansMsg() {
+        translatorItem.clear()
     }
 
 }

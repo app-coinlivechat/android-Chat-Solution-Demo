@@ -21,16 +21,20 @@ class OtherTextMessageView @JvmOverloads constructor(
         binding.chat = item
     }
 
-    fun setIsRoundMessage(isRound:Boolean) {
+    fun setIsRoundMessage(isRound: Boolean) {
         binding.isRoundMessage = isRound
     }
 
-    fun setLocale(locale:String) {
+    fun setLocale(locale: String) {
         binding.locale = locale
     }
 
-    fun setIsSameDate(isSameDate:Boolean) {
+    fun setIsSameDate(isSameDate: Boolean) {
         binding.isSameDate = isSameDate
+    }
+
+    fun setIsEnableTranslator(enableTranslator: Boolean) {
+        binding.enableTranslator = enableTranslator
     }
 
 

@@ -10,7 +10,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.MutableLiveData
 import com.coinlive.uikit.R
-import com.coinlive.uikit.databinding.BottomSheetProfileBinding
 import com.coinlive.uikit.databinding.BottomSheetTranslatorBinding
 import com.coinlive.uikit.utils.Constants
 import com.coinlive.uikit.utils.PreferenceHelper
@@ -26,7 +25,7 @@ class TranslatorBottomSheet : BottomSheetDialogFragment(), OnClickListener {
         selectPosition.value = PreferenceHelper.defaultPreference(requireContext()).translatorLanguage
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = BottomSheetTranslatorBinding.inflate(inflater, container, false)
         return binding!!.root
     }
@@ -53,7 +52,7 @@ class TranslatorBottomSheet : BottomSheetDialogFragment(), OnClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        setFragmentResult(Constants.reqKeyTranslator,
+        setFragmentResult(Constants.reqKeyTranslatorSelect,
             bundleOf(Constants.argKeySelectTransLanguage to selectPosition.value))
         selectPosition.value = null
     }

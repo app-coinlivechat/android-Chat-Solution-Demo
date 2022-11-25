@@ -37,19 +37,19 @@
             android:id="@+id/base"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:chat="@{chat}"
+            app:isRoundMessage="@{isRoundMessage}"
+            app:isSameDate="@{isSameDate}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:chat="@{chat}"
-            app:isSameDate="@{isSameDate}"
-            app:isRoundMessage="@{isRoundMessage}"
             app:locale="@{locale}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_asset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="6dp"
             android:layout_marginEnd="19dp"
             android:background="@drawable/asset_chatting_background"
             android:paddingHorizontal="12dp"
@@ -110,7 +110,8 @@
                 android:text="@string/asset_description"
                 android:textColor="@color/asset_chat_description"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_price" />
+                app:layout_constraintTop_toBottomOf="@id/tv_price"
+                tools:ignore="TextContrastCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View

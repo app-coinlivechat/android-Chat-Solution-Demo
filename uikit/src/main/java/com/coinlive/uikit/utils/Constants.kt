@@ -14,11 +14,13 @@ object Constants {
     const val argKeyUrl  = "url"
     const val argKeyIsConfirmClick  = "isConfirmClick"
     const val argKeySelectTransLanguage = "selectTransLanguage"
+    const val argKeyOldTransLanguage = "selectTransLanguage"
 
 
     // fragment request key
     const val reqKeyNotification = "notification"
     const val reqKeyTranslator = "translator"
+    const val reqKeyTranslatorSelect = "translatorSelect"
     const val reqKeyTranslatorDownload = "translatorDownload"
 
 
