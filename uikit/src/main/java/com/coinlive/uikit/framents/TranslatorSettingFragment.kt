@@ -13,7 +13,7 @@ import com.coinlive.uikit.R
 import com.coinlive.uikit.databinding.FragmentTranslatorSettingBinding
 import com.coinlive.uikit.utils.Constants
 import com.coinlive.uikit.utils.PreferenceHelper
-import com.coinlive.uikit.utils.PreferenceHelper.isTranslatorEnable
+import com.coinlive.uikit.utils.PreferenceHelper.enableTranslator
 import com.coinlive.uikit.utils.PreferenceHelper.translatorLanguage
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.common.model.RemoteModelManager
@@ -54,9 +54,9 @@ class TranslatorSettingFragment : BaseFragment() {
             selectBottomSheetCallback(key,bundle)
         }
 
-        binding!!.sTranslator.isChecked = PreferenceHelper.defaultPreference(requireContext()).isTranslatorEnable
+        binding!!.sTranslator.isChecked = PreferenceHelper.defaultPreference(requireContext()).enableTranslator
         binding!!.sTranslator.setOnCheckedChangeListener { button, isChecked ->
-            PreferenceHelper.defaultPreference(requireContext()).isTranslatorEnable = isChecked
+            PreferenceHelper.defaultPreference(requireContext()).enableTranslator = isChecked
             if (isChecked) {
                 button.findNavController().navigate(R.id.action_translatorSettingFragment_to_translatorBottomSheet)
             } else {

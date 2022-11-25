@@ -25,8 +25,8 @@ class OtherTextMessageView @JvmOverloads constructor(
         binding.isRoundMessage = isRound
     }
 
-    fun setLocale(locale: String) {
-        binding.locale = locale
+    fun setOriginMsg(message: String) {
+        binding.originMsg = message
     }
 
     fun setIsSameDate(isSameDate: Boolean) {

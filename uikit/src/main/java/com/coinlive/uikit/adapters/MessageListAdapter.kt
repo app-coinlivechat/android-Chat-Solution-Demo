@@ -1,14 +1,15 @@
 package com.coinlive.uikit.adapters
 
-import android.content.Context
 import android.graphics.Rect
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.os.bundleOf
 import androidx.core.view.setPadding
 import androidx.databinding.ViewDataBinding
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
@@ -20,8 +21,9 @@ import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.uikit.R
 import com.coinlive.uikit.bindingadapterex.BindingAdapters
 import com.coinlive.uikit.databinding.*
+import com.coinlive.uikit.utils.Constants
 import com.coinlive.uikit.utils.PreferenceHelper
-import com.coinlive.uikit.utils.PreferenceHelper.isTranslatorEnable
+import com.coinlive.uikit.utils.PreferenceHelper.enableTranslator
 import com.coinlive.uikit.utils.PreferenceHelper.translatorLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
@@ -33,7 +35,7 @@ import kotlin.collections.HashMap
 interface MessageEventListener {
     fun onClick(item: Chat, view: View)
     fun onLongClick(item: Chat, view: View)
-    fun onProfileClick(item:Chat, view: View)
+    fun onProfileClick(item: Chat, view: View)
 }
 
 class MessageListAdapter(
@@ -43,7 +45,7 @@ class MessageListAdapter(
 ) :
     RecyclerView.Adapter<MessageListAdapter.BaseViewHolder>() {
     val items = ArrayList<Chat>()
-    val translatorItem : HashMap<String,String> = HashMap()
+    val translatorItem: HashMap<String, String> = HashMap()
 
     open inner class BaseViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
         open fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
@@ -155,56 +157,88 @@ class MessageListAdapter(
     inner class OtherTextMessageViewHolder(private val binding: ViewOtherTextMessageBinding) : BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
+            val transMsg = translatorItem[item.messageId]
+            val message = if (Coinlive.locale.language.equals("ko")) item.koMessage else item.enMessage ?: ""
+
             binding.chat = item
-            binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
             binding.isSameDate = isSameDate
-            binding.enableTranslator = PreferenceHelper.defaultPreference(binding.root.context).isTranslatorEnable
-            binding.ibtnProfile.setOnClickListener {
-                eventListener?.onProfileClick(item,it)
+            binding.enableTranslator = PreferenceHelper.defaultPreference(binding.root.context).enableTranslator &&
+                    transMsg == null
+            binding.transMsg = transMsg
+            binding.originMsg = message
+
+
+            binding.clMaxMsg.setOnClickListener {
+                it.findNavController().navigate(R.id.action_chatFragment_to_textFragment, bundleOf(Constants
+                    .argKeyTitle to it.context.getString(R.string.read_all), Constants.argKeyDescription to message))
             }
-            if(!translatorItem.contains(item.messageId)) {
+            binding.ibtnProfile.setOnClickListener {
+                eventListener?.onProfileClick(item, it)
+            }
+
+            if (message!!.length > 400) {
+                val constraintSet = ConstraintSet()
+                constraintSet.clone(binding.clRoot)
+                constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.clMaxMsg.id, ConstraintSet.END)
+                constraintSet.connect(binding.tvTime.id,
+                    ConstraintSet.BOTTOM,
+                    binding.clMaxMsg.id,
+                    ConstraintSet.BOTTOM)
+                constraintSet.connect(binding.ibtnTranslator.id,
+                    ConstraintSet.START,
+                    binding.clMaxMsg.id,
+                    ConstraintSet.END)
+                constraintSet.applyTo(binding.clRoot)
+            } else if (transMsg == null) {
                 goneTransLayout()
             } else {
                 visibleTransLayout(item.messageId)
             }
 
             binding.ibtnTranslator.setOnClickListener {
-                val originMsg = (if (binding.locale.equals("ko")) binding.chat?.koMessage else binding.chat?.enMessage)
-                    ?: return@setOnClickListener
-                val options = TranslatorOptions.Builder()
-                    .setSourceLanguage(Coinlive.locale.language)
-                    .setTargetLanguage(PreferenceHelper.defaultPreference(it.context).translatorLanguage!!)
-                    .build()
-                val translator = Translation.getClient(options)
-                translator.translate(originMsg).addOnSuccessListener { transMsg ->
-                    translatorItem[item.messageId] = transMsg
-                    visibleTransLayout(item.messageId)
-                    translator.close()
+                if (message.length > 400) {
+                    moveTextFragment(message)
+                } else {
+                    val options = TranslatorOptions.Builder()
+                        .setSourceLanguage(Coinlive.locale.language)
+                        .setTargetLanguage(PreferenceHelper.defaultPreference(it.context).translatorLanguage!!)
+                        .build()
+                    val translator = Translation.getClient(options)
+                    translator.translate(message).addOnSuccessListener { transMsg ->
+                        translatorItem[item.messageId] = transMsg
+                        visibleTransLayout(item.messageId)
+                        translator.close()
+                    }
                 }
+
             }
         }
 
+        private fun moveTextFragment(description: String) {
+            binding.root.findNavController().navigate(R.id.action_chatFragment_to_textFragment,
+                bundleOf(Constants.argKeyTitle to binding.root.context.getString(R.string.read_all),
+                Constants.argKeyDescription to description,
+                Constants.argKeyIsMyMessage to false,
+                Constants.argKeyAutoTranslator to true))
+        }
 
-        private fun visibleTransLayout(messageId : String) {
-            binding.clTrans.visibility = View.VISIBLE
-            binding.tvMsg.visibility = View.GONE
-            binding.tvTransMsg.text = translatorItem[messageId]
 
+        private fun visibleTransLayout(messageId: String) {
+            binding.transMsg = translatorItem[messageId]
             val constraintSet = ConstraintSet()
             constraintSet.clone(binding.clRoot)
             constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.clTrans.id, ConstraintSet.END)
+            constraintSet.connect(binding.tvTime.id, ConstraintSet.BOTTOM, binding.clTrans.id, ConstraintSet.BOTTOM)
             constraintSet.applyTo(binding.clRoot)
         }
 
         private fun goneTransLayout() {
-            binding.clTrans.visibility = View.GONE
-            binding.tvMsg.visibility = View.VISIBLE
-
             val constraintSet = ConstraintSet()
-            constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.tvMsg.id, ConstraintSet.END)
-
             constraintSet.clone(binding.clRoot)
+            constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.tvMsg.id, ConstraintSet.END)
+            constraintSet.connect(binding.tvTime.id, ConstraintSet.BOTTOM, binding.tvMsg.id, ConstraintSet.BOTTOM)
+            constraintSet.connect(binding.ibtnTranslator.id, ConstraintSet.START, binding.tvMsg.id, ConstraintSet.END)
             constraintSet.applyTo(binding.clRoot)
         }
     }
@@ -231,7 +265,7 @@ class MessageListAdapter(
             binding.isRoundMessage = isRoundMessage
             binding.isSameDate = isSameDate
             binding.ibtnProfile.setOnClickListener {
-                eventListener?.onProfileClick(item,it)
+                eventListener?.onProfileClick(item, it)
             }
             val constraintSet = ConstraintSet()
             constraintSet.clone(binding.clRoot)

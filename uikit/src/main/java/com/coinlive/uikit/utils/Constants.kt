@@ -15,6 +15,9 @@ object Constants {
     const val argKeyIsConfirmClick  = "isConfirmClick"
     const val argKeySelectTransLanguage = "selectTransLanguage"
     const val argKeyOldTransLanguage = "selectTransLanguage"
+    const val argKeyAutoTranslator = "autoTranslator"
+    const val argKeyIsMyMessage = "isMyMessage"
+
 
 
     // fragment request key

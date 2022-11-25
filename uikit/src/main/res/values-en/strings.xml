@@ -29,6 +29,7 @@
     <string name="cancel">Cancel</string>
     <string name="confirm">OK</string>
     <string name="translator_download">번역을 위한 리소스 다운로드가 진행됩니다.\n다운로드 하시겠습니까?\n(예상 리소스 파일크기 30MB)</string>
+    <string name="read_all">전체보기</string>
 
 
 </resources>

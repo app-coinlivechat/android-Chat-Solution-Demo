@@ -24,7 +24,7 @@ object PreferenceHelper {
             }
         }
 
-    var SharedPreferences.isTranslatorEnable
+    var SharedPreferences.enableTranslator
         get() = getBoolean(TRANSLATOR_ENABLE,false)
         set(value) {
             editMe {

@@ -68,7 +68,6 @@ class ChatViewModel : ViewModel() {
                 context)
         loadNotificationType()
         startTimer()
-
     }
 
     fun fetchMessage() = viewModelScope.launch {

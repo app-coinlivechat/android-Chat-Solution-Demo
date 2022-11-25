@@ -48,20 +48,19 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     private val scrollListener: RecyclerView.OnScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-           if(newState != RecyclerView.SCROLL_STATE_DRAGGING) {
-               recyclerView.layoutManager?.let {
-                   val visibleItemPosition = (it as LinearLayoutManager).findFirstVisibleItemPosition()
-                   if (visibleItemPosition > 0 && binding?.btnBottom?.visibility == View.GONE) {
-                       binding?.btnBottom?.visibility = View.VISIBLE
-                   } else if(visibleItemPosition == 0 && binding?.btnBottom?.visibility == View.VISIBLE){
-                       binding?.btnBottom?.visibility = View.GONE
-                   }
-               }
-           }
+            if (newState != RecyclerView.SCROLL_STATE_DRAGGING) {
+                recyclerView.layoutManager?.let {
+                    val visibleItemPosition = (it as LinearLayoutManager).findFirstVisibleItemPosition()
+                    if (visibleItemPosition > 0 && binding?.btnBottom?.visibility == View.GONE) {
+                        binding?.btnBottom?.visibility = View.VISIBLE
+                    } else if (visibleItemPosition == 0 && binding?.btnBottom?.visibility == View.VISIBLE) {
+                        binding?.btnBottom?.visibility = View.GONE
+                    }
+                }
+            }
         }
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-
 
 
         }
@@ -112,19 +111,18 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         super.onViewCreated(view, savedInstanceState)
         LoggerHelper.d("onViewCreated")
 
-        setFragmentResultListener(Constants.reqKeyTranslator) {_,bundle ->
+        setFragmentResultListener(Constants.reqKeyTranslator) { _, bundle ->
             val originLanguage = bundle.getString(Constants.argKeyOldTransLanguage) ?: return@setFragmentResultListener
             val newSelectLanguage = PreferenceHelper.defaultPreference(requireContext()).translatorLanguage
-            if(originLanguage != newSelectLanguage) {
+            if (originLanguage != newSelectLanguage) {
                 adapter.clearTansMsg()
             }
         }
 
         setFragmentResultListener(Constants.reqKeyNotification) { _, bundle ->
-            val newList = bundle.getParcelableArrayList<Notification>(Constants.argKeyList)
-            newList?.let {
-                viewModel.setNotification(it)
-            }
+            val newList =
+                bundle.getParcelableArrayList<Notification>(Constants.argKeyList) ?: return@setFragmentResultListener
+            viewModel.setNotification(newList)
         }
 
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
@@ -298,7 +296,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         bundle.putString(Constants.argKeyUrl, item.profileUrl)
         bundle.putString(Constants.argKeyAppName, item.appName)
 
-        view.findNavController().navigate(R.id.action_chatFragment_to_profileBottomSheet,bundle)
+        view.findNavController().navigate(R.id.action_chatFragment_to_profileBottomSheet, bundle)
 
     }
 
