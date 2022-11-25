@@ -3,7 +3,6 @@ package com.coinlive.chat.firebase.model
 import android.os.Parcelable
 import androidx.annotation.Keep
 import com.google.firebase.firestore.PropertyName
-import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -25,19 +24,19 @@ data class Asset(
     /**
      * 자산 인증 수량
      */
-    var amount: Int? = null,
+    var amount: Double? = null,
     /**
      * 자산 인증 원화 환산 금액
      */
-    var priceWon: Int? = null,
+    var priceWon: Double? = null,
     /**
      * 자산 인증 달러 환산 금액
      */
-    var priceDol: Int? = null,
+    var priceDol: Double? = null,
     /**
      * 자산 인증 사용자 닉네임
      */
-    var nickname: Int? = null,
+    var nickname: String? = null,
     /**
      * 자산 인증한 코인 id
      */
