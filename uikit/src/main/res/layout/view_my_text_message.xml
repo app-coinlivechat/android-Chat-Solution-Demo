@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="android.view.View" />
+
         <variable
             name="chat"
             type="com.coinlive.chat.firebase.model.Chat" />
@@ -15,19 +17,20 @@
             type="Boolean" />
 
         <variable
-            name="locale"
-            type="String" />
-        <variable
             name="isSameDate"
             type="Boolean" />
+
+        <variable
+            name="message"
+            type="String" />
     </data>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_root"
-        android:layout_marginEnd="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp">
 
 
         <TextView
@@ -45,22 +48,77 @@
         <TextView
             android:id="@+id/tv_msg"
             style="@style/body2"
-            android:gravity="start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
+            android:autoLink="web"
             android:background="@{isRoundMessage ? @drawable/shape_round_my_msg_background : @drawable/shape_my_msg_background}"
+            android:gravity="start"
+            android:linksClickable="false"
+            android:maxWidth="246dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp"
-            android:maxWidth="246dp"
-            android:autoLink="web"
-            android:linksClickable="false"
-            android:textColorLink="@color/sub_blue_500"
+            android:text="@{message}"
             android:textColor="@color/grey_090"
-            android:text="@{locale.equals(`ko`)? chat.koMessage : chat.enMessage}"
+            android:textColorLink="@color/sub_blue_500"
+            android:visibility="@{message.length > 400 ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_date" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_max_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:visibility="@{message.length > 400 ? View.VISIBLE :View.GONE}"
+            app:layout_constraintBottom_toTopOf="@id/v_bottom"
+            app:layout_constraintTop_toBottomOf="@id/tv_date"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/tv_max_msg"
+                style="@style/body2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:ellipsize="end"
+                android:linksClickable="false"
+                android:maxWidth="222dp"
+                android:maxLength="400"
+                android:text="@{message}"
+                android:textColor="@color/normal_text"
+                android:textColorLink="@color/sub_blue_500"
+                app:layout_constraintBottom_toTopOf="@id/tv_all"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_all"
+                style="@style/subtitle4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/read_all"
+                android:textColor="@color/normal_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_max_msg"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/icon_chevron_right"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_max_msg"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:ignore="ContentDescription" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <TextView
@@ -70,8 +128,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="19dp"
-            android:visibility="@{isRoundMessage ? View.GONE : View.VISIBLE}"
             android:textColor="@color/chat_msg_time_text"
+            android:visibility="@{isRoundMessage ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/tv_msg"
             app:layout_constraintEnd_toStartOf="@id/tv_msg"
             app:setTime="@{chat.insertTime}" />
@@ -81,7 +139,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/normal_message_bottom_margin"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_msg" />
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

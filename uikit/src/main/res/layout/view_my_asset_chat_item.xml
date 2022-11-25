@@ -42,7 +42,7 @@
             app:isSameDate="@{isSameDate}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:locale="@{locale}" />
+            app:message="@{locale.equals(`ko`)? chat.koMessage : chat.enMessage}" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
