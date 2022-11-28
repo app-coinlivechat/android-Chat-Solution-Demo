@@ -9,5 +9,5 @@ enum class EmojiType(val key:String) {
     CLAP(":clap:"),
     ROCKET(":rocket:"),
     CRY(":cry:"),
-    IASTONISHED(":astonished:");
+    ASTONISHED(":astonished:");
 }

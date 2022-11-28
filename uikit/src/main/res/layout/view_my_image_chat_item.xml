@@ -92,6 +92,18 @@
             app:layout_constraintEnd_toStartOf="@id/rv_list"
             app:setTime="@{chat.insertTime}" />
 
+        <com.coinlive.uikit.views.EmojiView
+            android:id="@+id/emoji"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:emojiMap="@{chat.emoji}"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+
+            app:layout_constraintBottom_toTopOf="@id/v_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_one" />
+
         <View
             android:id="@+id/v_bottom"
             android:layout_width="match_parent"

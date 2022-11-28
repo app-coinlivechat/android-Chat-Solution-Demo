@@ -18,6 +18,8 @@ import com.coinlive.chat.firebase.CoinliveChat
 import com.coinlive.chat.firebase.listener.AmaListener
 import com.coinlive.chat.firebase.listener.CmNoticeListener
 import com.coinlive.chat.firebase.listener.MessageListener
+import com.coinlive.chat.firebase.model.Chat
+import com.coinlive.chat.firebase.model.enum.EmojiType
 import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.models.Notification
 import kotlinx.coroutines.launch
@@ -215,6 +217,28 @@ class ChatViewModel : ViewModel() {
     fun sendImage() {
 
     }
+
+    fun addEmoji(chat: Chat,key:String) {
+        if(myInfo == null) return
+        coinliveChat?.addEmoji(chat,myInfo!!.id,getEmojiType(key))
+    }
+
+    fun deleteEmoji(chat: Chat, key: String) {
+        if(myInfo == null) return
+        coinliveChat?.deleteEmoji(chat,myInfo!!.id,getEmojiType(key))
+    }
+
+    private fun getEmojiType(key:String) : EmojiType{
+        return when(key) {
+            EmojiType.CLAP.key -> EmojiType.CLAP
+            EmojiType.GOOD.key -> EmojiType.GOOD
+            EmojiType.HEART.key -> EmojiType.HEART
+            EmojiType.ROCKET.key -> EmojiType.ROCKET
+            EmojiType.CRY.key -> EmojiType.CRY
+            else  -> EmojiType.ASTONISHED
+        }
+    }
+
 
     fun destroy() {
         timer?.cancel()

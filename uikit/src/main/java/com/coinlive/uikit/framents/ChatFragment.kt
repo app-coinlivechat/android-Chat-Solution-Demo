@@ -183,7 +183,11 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     }
 
     override fun modifyMessage(chat: Chat) {
-
+       val index = adapter.items.indexOfFirst { it.messageId == chat.messageId }
+        if(index > -1) {
+            adapter.items[index] = chat
+            adapter.notifyItemChanged(index)
+        }
     }
 
     override fun oldMessages(chatList: ArrayList<Chat>, isReload: Boolean) {
@@ -297,6 +301,15 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         bundle.putString(Constants.argKeyAppName, item.appName)
 
         view.findNavController().navigate(R.id.action_chatFragment_to_profileBottomSheet, bundle)
+
+    }
+
+    override fun addEmoji(item: Chat, emojiKey: String) {
+        viewModel.addEmoji(item, emojiKey)
+    }
+
+    override fun deleteEmoji(item: Chat, emojiKey: String) {
+        viewModel.deleteEmoji(item, emojiKey)
 
     }
 

@@ -46,10 +46,12 @@
     <color name="profile_nickname">#E0FFFFFF</color>
     <color name="profile_background">#101010</color>
     <color name="translator_item_background">#464650</color>
-    <color name="translator_bottom_sheet_background">#2B2B33</color>
+    <color name="translator_bottom_sheet_background">@color/grey_020</color>
     <color name="dialog_description">#FFFFFF</color>
     <color name="dialog_cancel_background">#7E7E86</color>
     <color name="dialog_cancel_text">#000000</color>
+    <color name="emoji_item_background">@color/grey_020</color>
+    <color name="emoji_item_stoke">@android:color/transparent</color>
 
 
 

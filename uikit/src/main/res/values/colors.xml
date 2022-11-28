@@ -53,6 +53,8 @@
     <color name="dialog_description">@color/grey_015</color>
     <color name="dialog_cancel_background">@color/grey_020</color>
     <color name="dialog_cancel_text">@color/grey_015</color>
+    <color name="emoji_item_background">#F6F6F6</color>
+    <color name="emoji_item_stoke">@color/primary</color>
 
 
 </resources>

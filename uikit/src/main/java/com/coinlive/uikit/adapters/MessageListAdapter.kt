@@ -25,6 +25,7 @@ import com.coinlive.uikit.utils.Constants
 import com.coinlive.uikit.utils.PreferenceHelper
 import com.coinlive.uikit.utils.PreferenceHelper.enableTranslator
 import com.coinlive.uikit.utils.PreferenceHelper.translatorLanguage
+import com.coinlive.uikit.views.OnEmojiEventListener
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
 import java.text.NumberFormat
@@ -37,6 +38,8 @@ interface MessageEventListener {
     fun onClick(item: Chat, view: View)
     fun onLongClick(item: Chat, view: View)
     fun onProfileClick(item: Chat, view: View)
+    fun addEmoji(item: Chat, emojiKey: String)
+    fun deleteEmoji(item: Chat, emojiKey: String)
 }
 
 class MessageListAdapter(
@@ -116,12 +119,15 @@ class MessageListAdapter(
                     ConstraintSet.BOTTOM,
                     binding.clMaxMsg.id,
                     ConstraintSet.BOTTOM)
+                constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.clMaxMsg.id, ConstraintSet.BOTTOM)
             } else {
                 constraintSet.connect(binding.tvTime.id, ConstraintSet.END, binding.tvMsg.id, ConstraintSet.START)
                 constraintSet.connect(binding.tvTime.id,
                     ConstraintSet.BOTTOM,
                     binding.clMaxMsg.id,
                     ConstraintSet.BOTTOM)
+                constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.tvMsg.id, ConstraintSet.BOTTOM)
+
             }
             constraintSet.applyTo(binding.clRoot)
         }
@@ -167,12 +173,14 @@ class MessageListAdapter(
                     this.adapter = ImageMessageListAdapter(item.images!!)
                 }
 
-
+                constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.rvList.id, ConstraintSet.BOTTOM)
                 constraintSet.connect(binding.tvTime.id, ConstraintSet.END, binding.rvList.id, ConstraintSet.START)
                 constraintSet.connect(binding.tvTime.id, ConstraintSet.BOTTOM, binding.rvList.id, ConstraintSet.BOTTOM)
             } else {
                 constraintSet.connect(binding.tvTime.id, ConstraintSet.END, binding.ivOne.id, ConstraintSet.START)
                 constraintSet.connect(binding.tvTime.id, ConstraintSet.BOTTOM, binding.ivOne.id, ConstraintSet.BOTTOM)
+                constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.ivOne.id, ConstraintSet.BOTTOM)
+
             }
             constraintSet.applyTo(binding.clRoot)
         }
@@ -200,6 +208,16 @@ class MessageListAdapter(
             binding.ibtnProfile.setOnClickListener {
                 eventListener?.onProfileClick(item, it)
             }
+            binding.emoji.setMyMid(myInfo?.id)
+            binding.emoji.setEmojiListener(object : OnEmojiEventListener {
+                override fun addEmoji(key: String) {
+                    eventListener?.addEmoji(item, key)
+                }
+
+                override fun deleteEmoji(key: String) {
+                    eventListener?.deleteEmoji(item, key)
+                }
+            })
 
             if (message!!.length > 400) {
                 val constraintSet = ConstraintSet()
@@ -213,6 +231,7 @@ class MessageListAdapter(
                     ConstraintSet.START,
                     binding.clMaxMsg.id,
                     ConstraintSet.END)
+                constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.clMaxMsg.id, ConstraintSet.BOTTOM)
                 constraintSet.applyTo(binding.clRoot)
             } else if (transMsg == null) {
                 goneTransLayout()
@@ -281,6 +300,17 @@ class MessageListAdapter(
                 NumberFormat.getCurrencyInstance(Coinlive.locale).format(price)
             })"
             binding.base.setIsEnableTranslator(false)
+            binding.emoji.setMyMid(myInfo?.id)
+            binding.emoji.setEmojiListener(object : OnEmojiEventListener {
+                override fun addEmoji(key: String) {
+                    eventListener?.addEmoji(item, key)
+                }
+
+                override fun deleteEmoji(key: String) {
+                    eventListener?.deleteEmoji(item, key)
+                }
+
+            })
         }
     }
 
@@ -296,6 +326,17 @@ class MessageListAdapter(
             binding.ibtnProfile.setOnClickListener {
                 eventListener?.onProfileClick(item, it)
             }
+            binding.emoji.setMyMid(myInfo?.id)
+            binding.emoji.setEmojiListener(object : OnEmojiEventListener {
+                override fun addEmoji(key: String) {
+                    eventListener?.addEmoji(item, key)
+                }
+
+                override fun deleteEmoji(key: String) {
+                    eventListener?.deleteEmoji(item, key)
+                }
+
+            })
             val constraintSet = ConstraintSet()
             constraintSet.clone(binding.clRoot)
 
@@ -318,12 +359,13 @@ class MessageListAdapter(
                     this.adapter = ImageMessageListAdapter(item.images!!)
                 }
 
-
+                constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.rvList.id, ConstraintSet.BOTTOM)
                 constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.rvList.id, ConstraintSet.END)
                 constraintSet.connect(binding.tvTime.id, ConstraintSet.BOTTOM, binding.rvList.id, ConstraintSet.BOTTOM)
             } else {
                 constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.ivOne.id, ConstraintSet.END)
                 constraintSet.connect(binding.tvTime.id, ConstraintSet.BOTTOM, binding.ivOne.id, ConstraintSet.BOTTOM)
+                constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.ivOne.id, ConstraintSet.BOTTOM)
             }
             constraintSet.applyTo(binding.clRoot)
         }

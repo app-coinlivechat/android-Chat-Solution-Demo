@@ -74,9 +74,9 @@
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp"
             android:visibility="@{message.length > 400 ? View.VISIBLE :View.GONE}"
-            app:layout_constraintBottom_toTopOf="@id/v_bottom"
-            app:layout_constraintTop_toBottomOf="@id/tv_date"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintBottom_toTopOf="@id/emoji"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_date">
 
             <TextView
                 android:id="@+id/tv_max_msg"
@@ -104,18 +104,18 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/read_all"
                 android:textColor="@color/normal_text"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_max_msg"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_max_msg" />
 
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/icon_chevron_right"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_max_msg"
-                app:layout_constraintBottom_toBottomOf="parent"
                 tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -134,12 +134,22 @@
             app:layout_constraintEnd_toStartOf="@id/tv_msg"
             app:setTime="@{chat.insertTime}" />
 
+        <com.coinlive.uikit.views.EmojiView
+            android:id="@+id/emoji"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:emojiMap="@{chat.emoji}"
+            android:layout_marginTop="4dp"
+            app:layout_constraintBottom_toTopOf="@id/v_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_msg" />
+
         <View
             android:id="@+id/v_bottom"
             android:layout_width="match_parent"
             android:layout_height="@dimen/normal_message_bottom_margin"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
