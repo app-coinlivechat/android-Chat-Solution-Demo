@@ -6,7 +6,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.coinlive.chat.util.MessageIdHelper
 import com.google.firebase.Timestamp
-import com.google.gson.annotations.SerializedName
 import com.coinlive.chat.firebase.model.enum.MessageType
 import com.google.firebase.firestore.PropertyName
 import kotlinx.parcelize.Parcelize
@@ -121,7 +120,7 @@ data class Chat(
      */
     @set:PropertyName("rp_mt")
     @get:PropertyName("rp_mt")
-    var replyInsertTime: Int = 0,
+    var replyInsertTime: Long = 0,
     /**
      * 답장할 메세지의 id
      * 답장 메세지가 아닐경우 null 입니다.
