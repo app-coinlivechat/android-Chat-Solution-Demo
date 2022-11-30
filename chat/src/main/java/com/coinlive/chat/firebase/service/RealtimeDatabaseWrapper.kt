@@ -61,7 +61,7 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
      * CM 공지사항을 로드하고 데이터를 [CmNoticeListener.getCmNotice]를 통해 전달합니다.
      */
     private fun initCm() {
-        cmRef.orderByChild("t").limitToFirst(1).addValueEventListener(cmValueEventListener)
+        cmRef.orderByChild("t").limitToLast(1).addValueEventListener(cmValueEventListener)
     }
 
     /**
@@ -69,6 +69,6 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
      *
      */
     private fun initAma() {
-        amaRef.limitToFirst(1).addValueEventListener(amaValueEventListener)
+        amaRef.limitToLast(1).addValueEventListener(amaValueEventListener)
     }
 }
