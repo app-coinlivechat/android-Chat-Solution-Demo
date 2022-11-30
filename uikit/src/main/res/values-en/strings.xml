@@ -39,6 +39,10 @@
     <string name="block_description">차단 하시겠습니까?</string>
     <string name="block_delete_description">차단 하시겠습니까?</string>
     <string name="take_over">접수</string>
+    <string name="cm_close">접어두기</string>
+    <string name="cm">공지</string>
+
+
 
 
 

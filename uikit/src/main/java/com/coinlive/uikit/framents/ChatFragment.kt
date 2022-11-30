@@ -28,7 +28,6 @@ import com.coinlive.chat.api.ResponseCallback
 import com.coinlive.chat.api.model.Channel
 import com.coinlive.chat.api.model.CustomerUser
 import com.coinlive.chat.api.model.ReportType
-import com.coinlive.chat.api.model.enums.UserStatus
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.firebase.listener.AmaListener
 import com.coinlive.chat.firebase.listener.CmNoticeListener
@@ -139,17 +138,18 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         }
 
         override fun onClickReportMenu(chat: Chat) {
-            if(chat.memberId == null) return
-            if(viewModel.reportType.size == 0) return
+            if (chat.memberId == null) return
+            if (viewModel.reportType.size == 0) return
             binding?.root?.findNavController()?.navigate(R.id.action_chatFragment_to_reportDialog, bundleOf(Constants
                 .argKeyReportTypeList to viewModel.reportType))
-            setFragmentResultListener(Constants.reqKeyReport) {_,bundle ->
+            setFragmentResultListener(Constants.reqKeyReport) { _, bundle ->
                 val isConfirmClick = bundle.getBoolean(Constants.argKeyIsConfirmClick)
-                if(isConfirmClick) {
-                    val selectType = bundle.getParcelable<ReportType>(Constants.argKeyReportType) ?: run{
-                        Log.e(TAG,"selectType is null!!!!!")
-                        return@setFragmentResultListener }
-                    viewModel.report(selectType,chat.memberId!!,object : ResponseCallback<Boolean> {
+                if (isConfirmClick) {
+                    val selectType = bundle.getParcelable<ReportType>(Constants.argKeyReportType) ?: run {
+                        Log.e(TAG, "selectType is null!!!!!")
+                        return@setFragmentResultListener
+                    }
+                    viewModel.report(selectType, chat.memberId!!, object : ResponseCallback<Boolean> {
                         override fun onSuccess(value: Boolean) {
                             Toast.makeText(requireContext(), "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
                         }
@@ -180,9 +180,11 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LoggerHelper.d("onCreate")
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
         arguments?.let { it ->
             val customerName = it.getString(Constants.argKeyCustomerName)
@@ -202,31 +204,24 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     }
 
 
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 //        registerForActivityResult()
         LoggerHelper.d("onCreateView")
 
         binding = FragmentCoinBinding.inflate(inflater, container, false)
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding!!.apply {
             lifecycleOwner = viewLifecycleOwner
             chattingViewModel = viewModel
             locale = Coinlive.locale.language
-            clInput.setLoginUser(viewModel.myInfo != null)
             root.viewTreeObserver.addOnGlobalLayoutListener(this@ChatFragment)
         }
-        viewModel.userStatus.observe(viewLifecycleOwner) { status ->
-            updateUserStatus(status)
-        }
+
         return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         LoggerHelper.d("onViewCreated")
-
-
 
         setFragmentResultListener(Constants.reqKeyTranslator) { _, bundle ->
             val originLanguage = bundle.getString(Constants.argKeyOldTransLanguage) ?: return@setFragmentResultListener
@@ -282,16 +277,14 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         viewModel.destroy()
     }
 
-    private fun updateUserStatus(userStatus: UserStatus) {
-        binding?.clInput?.setActiveUser(userStatus)
-    }
 
     override fun getAma(ama: Ama) {
         binding?.clInput?.setAma(ama.endTime == null)
     }
 
     override fun getCmNotice(msg: String?) {
-        LoggerHelper.d("cm :$msg")
+        LoggerHelper.d("cm : $msg")
+        viewModel.cm.value = msg
     }
 
     override fun deletedMessage(chat: Chat) {

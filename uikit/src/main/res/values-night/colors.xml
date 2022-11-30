@@ -57,6 +57,13 @@
     <color name="message_background">#464650</color>
     <color name="message_menu_emoji_select_background">#464650</color>
     <color name="primary_press">#166B77</color>
+    <color name="cm_background">#2B2B33</color>
+    <color name="cm_background_stork">@android:color/transparent</color>
+    <color name="cm_divider">#7E7E86</color>
+    <color name="cm_button_text">#FFFFFF</color>
+
+
+
 
 
 </resources>

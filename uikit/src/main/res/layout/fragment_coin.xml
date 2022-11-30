@@ -19,6 +19,7 @@
         <variable
             name="newMessage"
             type="com.coinlive.chat.firebase.model.Chat" />
+
     </data>
 
 
@@ -114,7 +115,6 @@
                 app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refresh"
             android:layout_width="match_parent"
@@ -134,11 +134,19 @@
                 android:focusableInTouchMode="true" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
+        <com.coinlive.uikit.views.CmView
+            android:id="@+id/v_cm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_appbar"
+            app:message="@{chattingViewModel.cm}" />
         <com.coinlive.uikit.views.InputView
             android:id="@+id/cl_input"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            app:loginUser="@{chattingViewModel.myInfo != null}"
+            app:activeUser="@{chattingViewModel.userStatus}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -150,8 +158,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginBottom="4dp"
-            android:background="@drawable/shape_new_msg_background"
             android:alpha="0.9"
+            android:background="@drawable/shape_new_msg_background"
             android:padding="8dp"
             android:visibility="@{newMessage  == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/cl_input"
@@ -207,14 +215,14 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageButton
-            android:visibility="gone"
             android:id="@+id/btn_bottom"
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
-            android:src="@drawable/btn_bottom"
             android:background="@android:color/transparent"
+            android:src="@drawable/btn_bottom"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/cl_input"
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="ContentDescription" />

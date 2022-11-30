@@ -30,6 +30,7 @@ class ChatViewModel : ViewModel() {
     private val coinliveApi = CoinliveRestApi()
     val userCount: MutableLiveData<Int> = MutableLiveData(0)
     val userStatus: MutableLiveData<UserStatus> = MutableLiveData(UserStatus.NONE)
+    val cm: MutableLiveData<String> = MutableLiveData<String>(null)
     val originNotiList = ArrayList<Notification>()
     val reportType = ArrayList<ReportType>()
     var standardSize = 50
@@ -207,7 +208,7 @@ class ChatViewModel : ViewModel() {
     }
 
     private fun loadReportType() = viewModelScope.launch {
-        coinliveApi.getReportType(object :ResponseCallback<List<ReportType>>{
+        coinliveApi.getReportType(object : ResponseCallback<List<ReportType>> {
             override fun onSuccess(value: List<ReportType>) {
                 this@ChatViewModel.reportType.addAll(value)
             }
@@ -245,7 +246,7 @@ class ChatViewModel : ViewModel() {
         coinliveChat?.deletedMessage(chat)
     }
 
-    fun addBlock(mId: String, callback : ResponseCallback<ArrayList<String>>) = viewModelScope.launch {
+    fun addBlock(mId: String, callback: ResponseCallback<ArrayList<String>>) = viewModelScope.launch {
         coinliveApi.addBlock(mId, object : ResponseCallback<ArrayList<String>> {
             override fun onSuccess(value: ArrayList<String>) {
                 myInfo = myInfo!!.copy(blockUserMidList = value)
@@ -259,7 +260,7 @@ class ChatViewModel : ViewModel() {
         })
     }
 
-    fun deleteBlock(mId: String, callback : ResponseCallback<ArrayList<String>>) = viewModelScope.launch {
+    fun deleteBlock(mId: String, callback: ResponseCallback<ArrayList<String>>) = viewModelScope.launch {
         coinliveApi.deleteBlock(mId, object : ResponseCallback<ArrayList<String>> {
             override fun onSuccess(value: ArrayList<String>) {
                 myInfo = myInfo!!.copy(blockUserMidList = value)
@@ -276,8 +277,8 @@ class ChatViewModel : ViewModel() {
         return myInfo != null && myInfo!!.blockUserMidList.contains(mId)
     }
 
-    fun report(reportType: ReportType, mId: String, callback: ResponseCallback<Boolean>) = viewModelScope.launch{
-        coinliveApi.setReport(reportMid = mId, reportTypeId = reportType.typeId,callback)
+    fun report(reportType: ReportType, mId: String, callback: ResponseCallback<Boolean>) = viewModelScope.launch {
+        coinliveApi.setReport(reportMid = mId, reportTypeId = reportType.typeId, callback)
     }
 
 
