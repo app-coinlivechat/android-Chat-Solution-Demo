@@ -43,7 +43,7 @@ interface MessageEventListener {
 }
 
 class MessageListAdapter(
-    private val myInfo: CustomerUser?,
+    private var myInfo: CustomerUser?,
     private val coinName: String,
     private val eventListener: MessageEventListener? = null,
 ) :
@@ -55,12 +55,6 @@ class MessageListAdapter(
         open fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             binding.root.setOnClickListener {
                 eventListener?.onClick(item, binding.root)
-                Log.e("ETGKQO", "item click!!!")
-            }
-            binding.root.setOnLongClickListener {
-                Log.e("ETGKQO", "item long click!!!")
-                eventListener?.onLongClick(item, binding.root)
-                true
             }
         }
     }
@@ -100,6 +94,11 @@ class MessageListAdapter(
     inner class MyTextMessageViewHolder(private val binding: ViewMyTextMessageBinding) : BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
+            binding.root.setOnLongClickListener {
+                val view = if (binding.message!!.length > 400) binding.clMaxMsg else binding.tvMsg
+                eventListener?.onLongClick(item, view)
+                true
+            }
             binding.chat = item
             binding.isRoundMessage = isRoundMessage
             binding.isSameDate = isSameDate
@@ -133,20 +132,13 @@ class MessageListAdapter(
         }
     }
 
-    inner class MyAssetMessageViewHolder(private val binding: ViewMyAssetChatItemBinding) : BaseViewHolder(binding) {
-        override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
-            super.bind(item, viewType, isSameDate, isRoundMessage)
-            binding.chat = item
-            binding.locale = Coinlive.locale.language
-            binding.isRoundMessage = isRoundMessage
-            binding.isSameDate = isSameDate
-        }
-    }
-
     inner class MyImageMessageViewHolder(private val binding: ViewMyImageChatItemBinding) : BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
-
+            binding.root.setOnLongClickListener {
+                eventListener?.onLongClick(item, if(binding.chat!!.images!!.size > 1) binding.ivOne else binding.rvList)
+                true
+            }
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
@@ -189,6 +181,13 @@ class MessageListAdapter(
     inner class OtherTextMessageViewHolder(private val binding: ViewOtherTextMessageBinding) : BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
+            binding.root.setOnLongClickListener {
+                val view = if (binding.originMsg!!.length > 400) binding.clMaxMsg else if (binding.transMsg != null)
+                    binding.clTrans else binding.tvMsg
+                eventListener?.onLongClick(item, view)
+                true
+            }
+
             val transMsg = translatorItem[item.messageId]
             val message = if (Coinlive.locale.language.equals("ko")) item.koMessage else item.enMessage ?: ""
 
@@ -198,7 +197,9 @@ class MessageListAdapter(
             binding.enableTranslator = PreferenceHelper.defaultPreference(binding.root.context).enableTranslator &&
                     transMsg == null
             binding.transMsg = transMsg
-            binding.originMsg = message
+            binding.originMsg = if(myInfo != null && myInfo!!.blockUserMidList.contains(item.memberId)) "차단 사용자의 " +
+            "메세지입니다" +
+                    "." else message
 
 
             binding.clMaxMsg.setOnClickListener {
@@ -219,7 +220,7 @@ class MessageListAdapter(
                 }
             })
 
-            if (message!!.length > 400) {
+            if (binding.originMsg!!.length > 400) {
                 val constraintSet = ConstraintSet()
                 constraintSet.clone(binding.clRoot)
                 constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.clMaxMsg.id, ConstraintSet.END)
@@ -240,15 +241,15 @@ class MessageListAdapter(
             }
 
             binding.ibtnTranslator.setOnClickListener {
-                if (message.length > 400) {
-                    moveTextFragment(message)
+                if (binding.originMsg!!.length > 400) {
+                    moveTextFragment(binding.originMsg!!)
                 } else {
                     val options = TranslatorOptions.Builder()
                         .setSourceLanguage(Coinlive.locale.language)
                         .setTargetLanguage(PreferenceHelper.defaultPreference(it.context).translatorLanguage!!)
                         .build()
                     val translator = Translation.getClient(options)
-                    translator.translate(message).addOnSuccessListener { transMsg ->
+                    translator.translate(binding.originMsg!!).addOnSuccessListener { transMsg ->
                         translatorItem[item.messageId] = transMsg
                         visibleTransLayout(item.messageId)
                         translator.close()
@@ -273,6 +274,8 @@ class MessageListAdapter(
             constraintSet.clone(binding.clRoot)
             constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.clTrans.id, ConstraintSet.END)
             constraintSet.connect(binding.tvTime.id, ConstraintSet.BOTTOM, binding.clTrans.id, ConstraintSet.BOTTOM)
+            constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.clTrans.id, ConstraintSet.BOTTOM)
+
             constraintSet.applyTo(binding.clRoot)
         }
 
@@ -282,6 +285,8 @@ class MessageListAdapter(
             constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.tvMsg.id, ConstraintSet.END)
             constraintSet.connect(binding.tvTime.id, ConstraintSet.BOTTOM, binding.tvMsg.id, ConstraintSet.BOTTOM)
             constraintSet.connect(binding.ibtnTranslator.id, ConstraintSet.START, binding.tvMsg.id, ConstraintSet.END)
+            constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.tvMsg.id, ConstraintSet.BOTTOM)
+
             constraintSet.applyTo(binding.clRoot)
         }
     }
@@ -290,6 +295,10 @@ class MessageListAdapter(
         BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
+            binding.root.setOnLongClickListener {
+                eventListener?.onLongClick(item, binding.clAsset)
+                true
+            }
             binding.chat = item
             binding.locale = Coinlive.locale.language
             binding.isRoundMessage = isRoundMessage
@@ -318,6 +327,10 @@ class MessageListAdapter(
         BaseViewHolder(binding) {
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
+            binding.root.setOnLongClickListener {
+                eventListener?.onLongClick(item, if(binding.chat!!.images!!.size > 1) binding.rvList else binding.ivOne)
+                true
+            }
 
             binding.chat = item
             binding.locale = Coinlive.locale.language
@@ -399,11 +412,6 @@ class MessageListAdapter(
                 val binding = ViewMyTextMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 return MyTextMessageViewHolder(binding)
             }
-            8 -> {
-                // 본인 Asset Message
-                val binding = ViewMyAssetChatItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                return MyAssetMessageViewHolder(binding)
-            }
             else -> {
                 // 본인 이미지 Message
                 val binding = ViewMyImageChatItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -422,21 +430,22 @@ class MessageListAdapter(
             MessageType.MEDIUM.name -> 3
             else -> {
                 if (myInfo == null) return getOtherMessageType(chat)
-                if (myInfo.id == chat.memberId) getMyMessageType(chat) else getOtherMessageType(chat)
+                if (myInfo!!.id == chat.memberId) getMyMessageType(chat) else getOtherMessageType(chat)
             }
         }
     }
 
 
     private fun getOtherMessageType(item: Chat): Int {
+        if(myInfo != null && myInfo!!.blockUserMidList.contains(item.memberId)) return 4
+
         if (item.asset != null) return 5
         if (item.images != null && item.images!!.size > 0) return 6
         return 4
     }
 
     private fun getMyMessageType(item: Chat): Int {
-        if (item.asset != null) return 8
-        if (item.images != null && item.images!!.size > 0) return 9
+        if (item.images != null && item.images!!.size > 0) return 8
         return 7
     }
 
@@ -496,6 +505,11 @@ class MessageListAdapter(
             val previousTimeDiff = chat.insertTime - previousChat!!.insertTime
             previousTimeDiff < 60000
         }
+    }
+
+    fun setMyInfo(myInfo:CustomerUser) {
+        this.myInfo = myInfo
+        notifyDataSetChanged()
     }
 
     fun clearTansMsg() {

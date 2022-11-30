@@ -62,9 +62,13 @@ class EmojiView @JvmOverloads constructor(
             if (index > items.size - 1) {
                 view.visibility = View.GONE
             } else {
-                view.visibility = View.VISIBLE
                 val emojiItem = items[index]
-                view.setEmojiItem(emojiItem)
+                if(emojiItem.count > 0) {
+                    view.setEmojiItem(emojiItem)
+                    view.visibility = View.VISIBLE
+                } else {
+                    view.visibility = View.GONE
+                }
             }
         }
 

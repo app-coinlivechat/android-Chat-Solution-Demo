@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <com.coinlive.uikit.views.DialogConfirmView
+        android:layout_centerInParent="true"
+        android:id="@+id/dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:confirmBackground="@drawable/select_dialog_confirm_red_background"
+        app:description="@{@string/block_description}" />
+    </RelativeLayout>
+</layout>

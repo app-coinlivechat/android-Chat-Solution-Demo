@@ -8,10 +8,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.coinlive.chat.api.CoinliveRestApi
 import com.coinlive.chat.api.ResponseCallback
-import com.coinlive.chat.api.model.Channel
-import com.coinlive.chat.api.model.CustomerUser
-import com.coinlive.chat.api.model.NotificationType
-import com.coinlive.chat.api.model.UserCount
+import com.coinlive.chat.api.model.*
 import com.coinlive.chat.api.model.enums.UserStatus
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.firebase.CoinliveChat
@@ -24,6 +21,7 @@ import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.models.Notification
 import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class ChatViewModel : ViewModel() {
@@ -33,6 +31,7 @@ class ChatViewModel : ViewModel() {
     val userCount: MutableLiveData<Int> = MutableLiveData(0)
     val userStatus: MutableLiveData<UserStatus> = MutableLiveData(UserStatus.NONE)
     val originNotiList = ArrayList<Notification>()
+    val reportType = ArrayList<ReportType>()
     var standardSize = 50
     var timer: Timer? = null
 
@@ -68,6 +67,7 @@ class ChatViewModel : ViewModel() {
         coinliveChat =
             CoinliveChat(channel.coinId, channel.coinSymbol, customerName, listener, cmNoticeListener, amaListener,
                 context)
+        loadReportType()
         loadNotificationType()
         startTimer()
     }
@@ -206,6 +206,19 @@ class ChatViewModel : ViewModel() {
         })
     }
 
+    private fun loadReportType() = viewModelScope.launch {
+        coinliveApi.getReportType(object :ResponseCallback<List<ReportType>>{
+            override fun onSuccess(value: List<ReportType>) {
+                this@ChatViewModel.reportType.addAll(value)
+            }
+
+            override fun onFail(exception: CoinliveException) {
+                LoggerHelper.de(exception.stackTraceToString())
+            }
+
+        })
+    }
+
     fun sendMessage(text: String) {
         if (myInfo == null) {
             return
@@ -218,24 +231,64 @@ class ChatViewModel : ViewModel() {
 
     }
 
-    fun addEmoji(chat: Chat,key:String) {
-        if(myInfo == null) return
-        coinliveChat?.addEmoji(chat,myInfo!!.id,getEmojiType(key))
+    fun addEmoji(chat: Chat, key: String) {
+        if (myInfo == null) return
+        coinliveChat?.addEmoji(chat, myInfo!!.id, getEmojiType(key))
     }
 
     fun deleteEmoji(chat: Chat, key: String) {
-        if(myInfo == null) return
-        coinliveChat?.deleteEmoji(chat,myInfo!!.id,getEmojiType(key))
+        if (myInfo == null) return
+        coinliveChat?.deleteEmoji(chat, myInfo!!.id, getEmojiType(key))
     }
 
-    private fun getEmojiType(key:String) : EmojiType{
-        return when(key) {
+    fun deleteMessage(chat: Chat) {
+        coinliveChat?.deletedMessage(chat)
+    }
+
+    fun addBlock(mId: String, callback : ResponseCallback<ArrayList<String>>) = viewModelScope.launch {
+        coinliveApi.addBlock(mId, object : ResponseCallback<ArrayList<String>> {
+            override fun onSuccess(value: ArrayList<String>) {
+                myInfo = myInfo!!.copy(blockUserMidList = value)
+                callback.onSuccess(value)
+            }
+
+            override fun onFail(exception: CoinliveException) {
+                callback.onFail(exception)
+
+            }
+        })
+    }
+
+    fun deleteBlock(mId: String, callback : ResponseCallback<ArrayList<String>>) = viewModelScope.launch {
+        coinliveApi.deleteBlock(mId, object : ResponseCallback<ArrayList<String>> {
+            override fun onSuccess(value: ArrayList<String>) {
+                myInfo = myInfo!!.copy(blockUserMidList = value)
+                callback.onSuccess(value)
+            }
+
+            override fun onFail(exception: CoinliveException) {
+                callback.onFail(exception)
+            }
+        })
+    }
+
+    fun isBlockUser(mId: String): Boolean {
+        return myInfo != null && myInfo!!.blockUserMidList.contains(mId)
+    }
+
+    fun report(reportType: ReportType, mId: String, callback: ResponseCallback<Boolean>) = viewModelScope.launch{
+        coinliveApi.setReport(reportMid = mId, reportTypeId = reportType.typeId,callback)
+    }
+
+
+    private fun getEmojiType(key: String): EmojiType {
+        return when (key) {
             EmojiType.CLAP.key -> EmojiType.CLAP
             EmojiType.GOOD.key -> EmojiType.GOOD
             EmojiType.HEART.key -> EmojiType.HEART
             EmojiType.ROCKET.key -> EmojiType.ROCKET
             EmojiType.CRY.key -> EmojiType.CRY
-            else  -> EmojiType.ASTONISHED
+            else -> EmojiType.ASTONISHED
         }
     }
 

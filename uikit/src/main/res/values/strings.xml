@@ -31,6 +31,16 @@
     <string name="translator_download">번역을 위한 리소스 다운로드가 진행됩니다.\n다운로드 하시겠습니까?\n(예상 리소스 파일크기 30MB)</string>
 
     <string name="read_all">전체보기</string>
+    <string name="message_menu_duplicate">복사</string>
+    <string name="message_menu_report">신고</string>
+    <string name="message_menu_block">차단</string>
+    <string name="message_menu_block_delete">차단 해제</string>
+    <string name="message_menu_delete">삭제</string>
+
+    <string name="block_description">차단 하시겠습니까?</string>
+    <string name="block_delete_description">차단 하시겠습니까?</string>
+    <string name="take_over">접수</string>
+
 
     <string name="max_test" translatable="false">로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토로렘 입숨(lorem ipsum; 줄여서 립숨lip로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 로렘 입숨(lorem ipsum; 줄여서 립숨lip로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 로렘 입숨(lorem ipsum; 줄여서 립숨lip로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 로렘 입숨(lorem ipsum; 줄여서 립숨lip 로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 입숨(lorem ipsum; 줄여서 립숨
 로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토로렘 입숨(lorem ipsum; 줄여서 립숨lip로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 로렘 입숨(lorem ipsum; 줄여서 립숨lip로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 로렘 입숨(lorem ipsum; 줄여서 립숨lip로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 로렘 입숨(lorem ipsum; 줄여서 립숨lip 로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 입숨(lorem ipsum; 줄여서 립숨</string>

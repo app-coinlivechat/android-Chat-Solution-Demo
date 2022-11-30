@@ -31,30 +31,36 @@
     <color name="menu_line_color">#1F000000</color>
     <color name="normal_text">#000000</color>
 
-    <color name="chat_other_msg_background">@color/grey_030</color>
+    <color name="chat_other_msg_background">#AEB7C1</color>
     <color name="chat_me_msg_background">@color/primary</color>
-    <color name="chat_msg_text">@color/background</color>
-    <color name="chat_msg_time_text">@color/grey_050</color>
-    <color name="asset_chat_stroke">@color/grey_030</color>
-    <color name="asset_chat_background">@color/background</color>
-    <color name="asset_chat_description">@color/grey_030</color>
-    <color name="server_chat_background">@color/grey_030</color>
-    <color name="server_chat_time">@color/grey_050</color>
-    <color name="switch_track_off">@color/grey_020</color>
+    <color name="chat_msg_text">#FFFFFF</color>
+    <color name="chat_msg_time_text">#6D7583</color>
+    <color name="asset_chat_stroke">#AEB7C1</color>
+    <color name="asset_chat_background">#FFFFFF</color>
+    <color name="asset_chat_description">#AEB7C1</color>
+    <color name="server_chat_background">#AEB7C1</color>
+    <color name="server_chat_time">#6D7583</color>
+    <color name="switch_track_off">#DADEE2</color>
 
     <color name="ama_label">#FA5B4A</color>
     <color name="swipe_background">#FFFFFF</color>
-    <color name="swipe_progress">@color/grey_070</color>
-    <color name="new_message_background">@color/grey_030</color>
+    <color name="swipe_progress">#353C4A</color>
+    <color name="new_message_background">#AEB7C1</color>
     <color name="profile_nickname">#E0000000</color>
     <color name="profile_background">#FFFFFF</color>
-    <color name="translator_item_background">@color/grey_020</color>
-    <color name="translator_bottom_sheet_background">@color/grey_090</color>
-    <color name="dialog_description">@color/grey_015</color>
-    <color name="dialog_cancel_background">@color/grey_020</color>
-    <color name="dialog_cancel_text">@color/grey_015</color>
+    <color name="translator_item_background">#DADEE2</color>
+    <color name="translator_bottom_sheet_background">#FFFFFF</color>
+    <color name="dialog_description">#202025</color>
+    <color name="dialog_cancel_background">#DADEE2</color>
+    <color name="dialog_cancel_press_background">#AEB7C1</color>
+    <color name="dialog_cancel_text">#202025</color>
     <color name="emoji_item_background">#F6F6F6</color>
     <color name="emoji_item_stoke">@color/primary</color>
+    <color name="message_background_stroke">#E4E4E6</color>
+    <color name="message_background">#FFFFFF</color>
+    <color name="message_menu_emoji_select_background">#DADEE2</color>
+    <color name="transparent">@android:color/transparent</color>
+    <color name="primary_press">#267F8B</color>
 
 
 </resources>

@@ -17,6 +17,10 @@ object Constants {
     const val argKeyOldTransLanguage = "selectTransLanguage"
     const val argKeyAutoTranslator = "autoTranslator"
     const val argKeyIsMyMessage = "isMyMessage"
+    const val argKeyUserMid = "userMid"
+    const val argKeyIsReadyBlock = "isReadyBlock"
+    const val argKeyReportTypeList = "reportTypeList"
+    const val argKeyReportType = "reportType"
 
 
 
@@ -25,6 +29,8 @@ object Constants {
     const val reqKeyTranslator = "translator"
     const val reqKeyTranslatorSelect = "translatorSelect"
     const val reqKeyTranslatorDownload = "translatorDownload"
+    const val reqKeyBlock = "Block"
+    const val reqKeyReport = "Report"
 
 
 }
