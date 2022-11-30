@@ -1,41 +1,40 @@
 package com.coinlive.chat.api.service
 
 import com.coinlive.chat.api.model.*
-import retrofit2.Call
 import retrofit2.http.*
 
 interface MemberService {
     @GET("v1/member/check/nickname")
-    fun isAvailableNickName(@Body nickName: NickNameBody): Call<RestApiResponse<NickName>>
+    suspend fun isAvailableNickName(@Body nickName: NickNameBody): RestApiResponse<NickName>
 
     @PUT("v1/member/nickname")
-    fun setNickName(
+    suspend fun setNickName(
         @Header("Authorization") auth: String,
         @Body nickName: NickNameBody,
-    ): Call<RestApiResponse<NickName>>
+    ): RestApiResponse<NickName>
 
     @POST("v1/member/check")
     suspend fun signupCheck(@Body firebaseUuid: MemberSignupCheckBody): RestApiResponse<MemberSignupCheck>
 
     @PUT("v1/member/profile/basic")
-    fun setBasicProfile(@Header("Authorization") auth: String): Call<RestApiResponse<Upload>>
+    suspend fun setBasicProfile(@Header("Authorization") auth: String): RestApiResponse<Upload>
 
     @GET("v1/member/report/type")
-    fun getReportType(@Header("Authorization") auth: String): Call<RestApiResponse<ReportTypeList>>
+    suspend fun getReportType(@Header("Authorization") auth: String): RestApiResponse<ReportTypeList>
 
     @POST("v1/member/report")
-    fun setReport(@Header("Authorization") auth: String, @Body body: MemberReportBody): Call<RestApiResponse<Void>>
+    suspend fun setReport(@Header("Authorization") auth: String, @Body body: MemberReportBody): RestApiResponse<Void>
 
     @DELETE("v1/member/{bMid}/block")
-    fun deleteBlock(
+    suspend fun deleteBlock(
         @Header("Authorization") auth: String,
         @Path("bMid") blockMid: String,
-    ): Call<RestApiResponse<BlockList>>
+    ): RestApiResponse<BlockList>
 
     @POST("v1/member/{bMid}/block")
-    fun addBlock(
+    suspend fun addBlock(
         @Header("Authorization") auth: String,
         @Path("bMid") blockMid: String,
-    ): Call<RestApiResponse<BlockList>>
+    ): RestApiResponse<BlockList>
 
 }

@@ -123,7 +123,7 @@ class CoinliveRestApi {
         }
     }
 
-    suspend fun deleteBlock(blockMid: String,callback: ResponseCallback<List<String>>) {
+    suspend fun deleteBlock(blockMid: String,callback: ResponseCallback<ArrayList<String>>) {
         try {
             callback.onSuccess(memberRepo.deleteBlock(getAuth(),blockMid))
         } catch (e: CoinliveException) {
@@ -131,7 +131,7 @@ class CoinliveRestApi {
         }
     }
 
-    suspend fun addBlock(blockMid: String,callback: ResponseCallback<List<String>>) {
+    suspend fun addBlock(blockMid: String,callback: ResponseCallback<ArrayList<String>>) {
         try {
             callback.onSuccess(memberRepo.addBlock(getAuth(),blockMid))
         } catch (e: CoinliveException) {
