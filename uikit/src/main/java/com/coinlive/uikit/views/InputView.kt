@@ -3,6 +3,7 @@ package com.coinlive.uikit.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import androidx.annotation.ColorRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -34,16 +35,20 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 }
                 binding.ibtnSend.apply {
                     setImageResource(getResourceId(R.styleable.InputView_sendImage, R.drawable.icon_send))
+                    setOnClickListener{
+                        listener?.sendMessage(binding.etInput.text.toString())
+                        binding.etInput.text.clear()
+                    }
                 }
                 binding.etInput.apply {
                     setHintTextColor(getColor(R.styleable.InputView_hitTextColor, getColor(R.color.grey_040)))
                     background = getDrawable(R.styleable.InputView_inputBackground)
                         ?: ContextCompat.getDrawable(context, R.drawable.shape_input_background)
+                    setOnFocusChangeListener { v, hasFocus ->
+                        binding.ibtnAddOn.visibility = if(hasFocus) View.GONE else View.VISIBLE
+                    }
                 }
-                binding.ibtnSend.setOnClickListener {
-                    listener?.sendMessage(binding.etInput.text.toString())
-                    binding.etInput.text.clear()
-                }
+
 
             }
 

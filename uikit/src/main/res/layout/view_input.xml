@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="isLoginUser"
             type="Boolean" />
@@ -17,9 +19,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:layout_height="56dp">
+        android:focusableInTouchMode="true">
 
         <View
             android:id="@+id/v_divider"
@@ -46,8 +48,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
+            android:layout_marginVertical="11dp"
             android:enabled="@{isLoginUser}"
             android:hint="@{isAMA ? @string/input_ama_hint : (isLoginUser ? (isActiveUser ? @string/input_hint : @string/input_block_hint) : @string/input_anonymously_hint)}"
+            android:maxLines="5"
             android:paddingHorizontal="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/ibtn_send"
@@ -66,7 +70,8 @@
             android:minHeight="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/v_divider" />
+            app:layout_constraintTop_toTopOf="@id/v_divider"
+            tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
