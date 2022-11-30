@@ -2,15 +2,13 @@ package com.coinlive.chat.firebase.model
 
 import android.os.Parcelable
 import androidx.annotation.Keep
-import com.google.firebase.firestore.PropertyName
+import com.google.firebase.database.PropertyName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Keep
 data class Cm(
-    @set:PropertyName("aid")
-    @get:PropertyName("aid")
-    var cmFirebaseUuid:String? = null,
+    var messageId:String? = null,
 
     @set:PropertyName("msg")
     @get:PropertyName("msg")
@@ -19,7 +17,7 @@ data class Cm(
 
     @set:PropertyName("t")
     @get:PropertyName("t")
-    var insertTime:Int
+    var insertTime:Long
 ): Parcelable {
     constructor() : this("","",0)
 }

@@ -2,7 +2,7 @@ package com.coinlive.chat.firebase.model
 
 import android.os.Parcelable
 import androidx.annotation.Keep
-import com.google.firebase.firestore.PropertyName
+import com.google.firebase.database.PropertyName
 import kotlinx.parcelize.Parcelize
 
 /**

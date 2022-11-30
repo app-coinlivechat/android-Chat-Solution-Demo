@@ -23,7 +23,9 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
 
     private val cmValueEventListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            val cm = snapshot.getValue<Cm>() ?: return
+            if(!snapshot.hasChildren()) return
+
+            val cm = snapshot.children.first().getValue<Cm>() ?: return
             cmListener.getCmNotice(cm.message)
         }
 
@@ -32,7 +34,10 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
 
     private val amaValueEventListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            val ama = snapshot.getValue<Ama>() ?: return
+
+            if(!snapshot.hasChildren()) return
+
+            val ama = snapshot.children.first().getValue<Ama>() ?: return
             this@RealtimeDatabaseWrapper.ama = ama
             amaListener.getAma(ama)
         }
@@ -56,13 +61,7 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
      * CM 공지사항을 로드하고 데이터를 [CmNoticeListener.getCmNotice]를 통해 전달합니다.
      */
     private fun initCm() {
-
-        val query = cmRef.orderByChild("t").limitToFirst(1)
-        query.get().addOnSuccessListener {
-            val cm = it.getValue<Cm>() ?: return@addOnSuccessListener
-            cmListener.getCmNotice(cm.message)
-        }
-        query.addValueEventListener(cmValueEventListener)
+        cmRef.orderByChild("t").limitToFirst(1).addValueEventListener(cmValueEventListener)
     }
 
     /**
@@ -70,13 +69,6 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
      *
      */
     private fun initAma() {
-        val query = amaRef.limitToFirst(1)
-        query.get().addOnSuccessListener {
-            val ama = it.getValue<Ama>() ?: return@addOnSuccessListener
-            this.ama = ama
-            amaListener.getAma(ama)
-        }
-
-        query.addValueEventListener(amaValueEventListener)
+        amaRef.limitToFirst(1).addValueEventListener(amaValueEventListener)
     }
 }
