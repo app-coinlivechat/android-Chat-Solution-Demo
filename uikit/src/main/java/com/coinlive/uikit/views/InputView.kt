@@ -12,19 +12,22 @@ import com.coinlive.uikit.R
 import com.coinlive.uikit.databinding.ViewInputBinding
 
 
-interface SendMessageListener {
+interface OnInputViewListener {
     fun sendMessage(text: String)
+    fun onClickCamera()
+    fun onClickGallery()
 }
 
 
 class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     ConstraintLayout(context, attrs, defStyleAttr) {
     private val binding: ViewInputBinding by lazy { ViewInputBinding.inflate(LayoutInflater.from(context), this, true) }
-    private var listener: SendMessageListener? = null
+    private var listener: OnInputViewListener? = null
 
     init {
         context.theme.obtainStyledAttributes(attrs, R.styleable.InputView, 0, 0).apply {
             if (!isInEditMode) {
+                binding.isClickAdd = false
                 binding.root.setBackgroundColor(getColor(R.styleable.InputView_viewBackground,
                     getColor(R.color.background)))
                 binding.vDivider.apply {
@@ -32,10 +35,13 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 }
                 binding.ibtnAddOn.apply {
                     setImageResource(getResourceId(R.styleable.InputView_addOnImage, R.drawable.icon_additonal))
+                    setOnClickListener {
+                        binding.isClickAdd = !binding.isClickAdd!!
+                    }
                 }
                 binding.ibtnSend.apply {
                     setImageResource(getResourceId(R.styleable.InputView_sendImage, R.drawable.icon_send))
-                    setOnClickListener{
+                    setOnClickListener {
                         listener?.sendMessage(binding.etInput.text.toString())
                         binding.etInput.text.clear()
                     }
@@ -45,11 +51,18 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     background = getDrawable(R.styleable.InputView_inputBackground)
                         ?: ContextCompat.getDrawable(context, R.drawable.shape_input_background)
                     setOnFocusChangeListener { v, hasFocus ->
-                        binding.ibtnAddOn.visibility = if(hasFocus) View.GONE else View.VISIBLE
+                        binding.ibtnAddOn.visibility = if (hasFocus) View.GONE else View.VISIBLE
                     }
                 }
 
-
+                binding.llCamera.setOnClickListener {
+                    binding.isClickAdd = false
+                    listener?.onClickCamera()
+                }
+                binding.llGallery.setOnClickListener {
+                    binding.isClickAdd = false
+                    listener?.onClickGallery()
+                }
             }
 
 
@@ -73,14 +86,13 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         }
     }
 
-    fun setSendMessageListener(listener: SendMessageListener) {
+    fun setSendMessageListener(listener: OnInputViewListener) {
         this.listener = listener
     }
 
     fun clearFocusEditeText() {
         binding.etInput.clearFocus()
     }
-
 
     private fun getColor(@ColorRes id: Int): Int {
         return ContextCompat.getColor(context, id)

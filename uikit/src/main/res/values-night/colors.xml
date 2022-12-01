@@ -61,6 +61,7 @@
     <color name="cm_background_stork">@android:color/transparent</color>
     <color name="cm_divider">#7E7E86</color>
     <color name="cm_button_text">#FFFFFF</color>
+    <color name="progress_background">#99000000</color>
 
 
 

@@ -1,19 +1,26 @@
 package com.coinlive.uikit.framents
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
+import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -34,6 +41,7 @@ import com.coinlive.chat.firebase.listener.CmNoticeListener
 import com.coinlive.chat.firebase.listener.MessageListener
 import com.coinlive.chat.firebase.model.Ama
 import com.coinlive.chat.firebase.model.Chat
+import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.R
 import com.coinlive.uikit.adapters.MessageEventListener
@@ -42,16 +50,18 @@ import com.coinlive.uikit.databinding.FragmentCoinBinding
 import com.coinlive.uikit.models.Notification
 import com.coinlive.uikit.utils.Constants
 import com.coinlive.uikit.utils.KeyboardHelper
+import com.coinlive.uikit.utils.MultipartHelper
 import com.coinlive.uikit.utils.PreferenceHelper
 import com.coinlive.uikit.utils.PreferenceHelper.translatorLanguage
 import com.coinlive.uikit.viewmodels.ChatViewModel
 import com.coinlive.uikit.views.MessageMenuView
 import com.coinlive.uikit.views.OnMessageMenuEventListener
-import com.coinlive.uikit.views.SendMessageListener
+import com.coinlive.uikit.views.OnInputViewListener
+import okhttp3.MultipartBody
 
 
 class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListener, OnClickListener,
-    SendMessageListener, MessageEventListener, ViewTreeObserver.OnGlobalLayoutListener {
+    OnInputViewListener, MessageEventListener, ViewTreeObserver.OnGlobalLayoutListener {
     private val TAG = ChatFragment::class.java.simpleName
     private var binding: FragmentCoinBinding? = null
     private lateinit var viewModel: ChatViewModel
@@ -205,7 +215,6 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-//        registerForActivityResult()
         LoggerHelper.d("onCreateView")
 
         binding = FragmentCoinBinding.inflate(inflater, container, false)
@@ -393,6 +402,80 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         binding?.rvList?.scrollToPosition(0)
     }
 
+    private val permReqLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                displayCameraFragment()
+            } else {
+                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    private val galleryReqLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                displayGalleryFragment()
+            } else {
+                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        result.data?.extras?.let {
+            val bitmap = it.get("data") as Bitmap
+            viewModel.sendImage(MultipartHelper.buildBitmapBodyPart("${CalendarHelper.nowCalendar().timeInMillis}_image" +
+                    ".png", bitmap, requireContext()))
+        }
+    }
+
+    private val galleryLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            result.data?.clipData?.let {
+                val multiparts = ArrayList<MultipartBody.Part>()
+                for (index in 0 until it.itemCount) {
+                    val uri = it.getItemAt(index).uri
+                    val input = requireContext().contentResolver.openInputStream(uri)
+                    val img: Bitmap = BitmapFactory.decodeStream(input)
+                    input?.close()
+                    multiparts.add(MultipartHelper.buildBitmapBodyPart("${CalendarHelper.nowCalendar().timeInMillis}_image.png",
+                        img,
+                        requireContext()))
+                }
+                viewModel.sendImage(multiparts)
+            }
+        }
+
+    private fun displayCameraFragment() {
+        cameraLauncher.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
+    }
+
+    private fun displayGalleryFragment() {
+        galleryLauncher.launch(Intent(Intent.ACTION_PICK).apply {
+            setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        })
+    }
+
+    override fun onClickCamera() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager
+                .PERMISSION_GRANTED
+        ) {
+            permReqLauncher.launch(Manifest.permission.CAMERA)
+        } else {
+            displayCameraFragment()
+        }
+    }
+
+    override fun onClickGallery() {
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+        ) {
+            galleryReqLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        } else {
+            displayGalleryFragment()
+        }
+    }
+
     override fun onClick(item: Chat, view: View) {
         binding?.clInput?.clearFocusEditeText()
         KeyboardHelper.hideKeyboard(view)
@@ -407,7 +490,6 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             messageMenuView.setIsReadyBlock(viewModel.isBlockUser(item.memberId!!))
             messagePopupWindow.showAsDropDown(view)
         }
-
     }
 
     override fun onProfileClick(item: Chat, view: View) {
@@ -417,7 +499,6 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         bundle.putString(Constants.argKeyAppName, item.appName)
 
         view.findNavController().navigate(R.id.action_chatFragment_to_profileBottomSheet, bundle)
-
     }
 
     override fun addEmoji(item: Chat, emojiKey: String) {

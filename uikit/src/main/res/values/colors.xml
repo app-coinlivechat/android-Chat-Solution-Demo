@@ -65,6 +65,7 @@
     <color name="cm_background_stork">#E4E4E6</color>
     <color name="cm_divider">#C3C3C7</color>
     <color name="cm_button_text">#464650</color>
+    <color name="progress_background">#99000000</color>
 
 
 </resources>

@@ -20,6 +20,7 @@ import com.coinlive.chat.firebase.model.enum.EmojiType
 import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.models.Notification
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -35,6 +36,7 @@ class ChatViewModel : ViewModel() {
     val reportType = ArrayList<ReportType>()
     var standardSize = 50
     var timer: Timer? = null
+    val uploadImage : MutableLiveData<Boolean> = MutableLiveData(false)
 
     var channel: Channel? = null
         private set(value) {
@@ -228,9 +230,57 @@ class ChatViewModel : ViewModel() {
         coinliveChat?.sendMessage(text, myInfo!!)
     }
 
-    fun sendImage() {
+    fun sendImage(image: MultipartBody.Part) = viewModelScope.launch{
+        if(myInfo == null) return@launch
+        uploadImage.value = true
 
+
+        coinliveApi.uploadImage(image,object : ResponseCallback<String>{
+            override fun onSuccess(value: String) {
+                coinliveChat?.sendImage(arrayListOf(value),myInfo!!)
+                uploadImage.value = false
+
+            }
+
+            override fun onFail(exception: CoinliveException) {
+                LoggerHelper.de("uploadImage fail : ${exception.stackTraceToString()}")
+                uploadImage.value = false
+
+            }
+        })
     }
+
+
+    fun sendImage(images: ArrayList<MultipartBody.Part>) = viewModelScope.launch{
+        if(myInfo == null) return@launch
+        uploadImage.value = true
+        if(images.size > 10) {
+            LoggerHelper.de("이미지는 한번에 10개까지만 보낼 수 있습니다.")
+        }
+
+        val size = if(images.size > 10) 11 else images.size
+        val results = ArrayList<String>()
+        for (index in 0 until size) {
+            coinliveApi.uploadImage(images[index],object : ResponseCallback<String>{
+                override fun onSuccess(value: String) {
+                    results.add(value)
+                }
+
+                override fun onFail(exception: CoinliveException) {
+                    LoggerHelper.de("uploadImage fail : ${exception.stackTraceToString()}")
+                }
+            })
+        }
+
+        if(results.isNotEmpty()) {
+            coinliveChat?.sendImage(results,myInfo!!)
+        }
+
+        uploadImage.value = false
+    }
+
+
+
 
     fun addEmoji(chat: Chat, key: String) {
         if (myInfo == null) return
