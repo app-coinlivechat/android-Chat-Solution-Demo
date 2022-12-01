@@ -13,6 +13,8 @@ enum class Error(val msg: String,val code: Int) {
     SEND_MESSAGE("Send message error",2004),
     FETCH_MESSAGE("",2005),
     QUERY_FETCH_MESSAGE("",2006),
-    CHAT_AMA("",2007)
+    CHAT_AMA("",2007),
+    UPLOAD_IMAGE("이미지는 15MB를 넘을 수 없습니다.",2008),
+
 
 }

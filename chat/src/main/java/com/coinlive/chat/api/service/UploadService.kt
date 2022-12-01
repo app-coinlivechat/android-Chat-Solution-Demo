@@ -2,7 +2,7 @@ package com.coinlive.chat.api.service
 
 import com.coinlive.chat.api.model.Upload
 import com.coinlive.chat.api.model.RestApiResponse
-import retrofit2.Call
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface UploadService {
@@ -13,16 +13,19 @@ interface UploadService {
 
     @Multipart
     @POST("v1/upload/image")
-    fun uploadImage(@Header("Authorization") auth: String, @Part file: List<Int>): Call<RestApiResponse<Upload>>
+    suspend fun uploadImage(
+        @Header("Authorization") auth: String,
+        @Part file: MultipartBody.Part,
+    ): RestApiResponse<Upload>
 
     @HTTP(method = "DELETE", path = "v1/upload/image", hasBody = true)
-    fun deleteImage(@Header("Authorization") auth: String, @Body url: Upload): Call<RestApiResponse<Upload>>
+    suspend fun deleteImage(@Header("Authorization") auth: String, @Body url: Upload): RestApiResponse<Upload>
 
     @Multipart
     @POST("v1/upload/profile")
-    fun uploadProfile(
+    suspend fun uploadProfile(
         @Header("Authorization") auth: String,
         @Query("nft") isNft: Boolean,
-        @Part file: List<Int>
-    ): Call<RestApiResponse<Upload>>
+        @Part file: MultipartBody.Part,
+    ): RestApiResponse<Upload>
 }

@@ -7,13 +7,19 @@ open class CoinliveException(message: String, val code: Int) : Exception(message
 
 
 class FetchMessageException(message: String) : CoinliveException(
-    "$message NetworkException : ${Error.FETCH_MESSAGE.msg}", Error
+    "$message FetchMessageException : ${Error.FETCH_MESSAGE.msg}", Error
         .FETCH_MESSAGE
         .code
 )
 
+class UploadImageException(message: String) : CoinliveException(
+    "$message UploadImageException : ${Error.UPLOAD_IMAGE.msg}", Error
+        .UPLOAD_IMAGE
+        .code
+)
+
 class UnknwonExecption(message: String) : CoinliveException(
-    "$message NetworkException : ${Error.UNKNOWN.msg}", Error
+    "$message UnknwonExecption : ${Error.UNKNOWN.msg}", Error
         .UNKNOWN
         .code
 )

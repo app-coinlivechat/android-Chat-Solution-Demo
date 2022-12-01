@@ -5,48 +5,56 @@ import com.coinlive.chat.api.model.Upload
 import com.coinlive.chat.api.service.UploadService
 import com.coinlive.chat.exception.NetworkException
 import com.coinlive.chat.exception.RequestFailException
+import okhttp3.MultipartBody
 
 class UploadRepository {
     private val service: UploadService = RestApiClient.uploadService
 
-    fun uploadImage(auth: String, image: List<Int>): String {
-        val response = service.uploadImage(auth, image).execute().body()
-            ?: throw NetworkException("UploadRepository.uploadImage error!")
+    suspend fun uploadImage(auth: String, image: MultipartBody.Part): String {
+        try{
+            val response = service.uploadImage(auth, image)
+            if (!response.isSuccess() && response.d == null) {
+                throw RequestFailException(
+                    "UploadRepository.uploadImage fail. please check auth or file ",
+                    response.code, response.msg
+                )
+            }
+            return response.d!!.url
+        } catch (exception:Exception) {
+            exception.printStackTrace()
 
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException(
-                "UploadRepository.uploadImage fail. please check auth or file ",
-                response.code, response.msg
-            )
+            throw NetworkException("UploadRepository.uploadImage error!")
         }
-        return response.d!!.url
     }
 
-    fun deleteImage(auth: String, url: String): String {
-        val response = service.deleteImage(auth, Upload(url)).execute().body()
-            ?: throw NetworkException("UploadRepository.deleteImage error!")
-
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException(
-                "UploadRepository.deleteImage fail. please check auth or url ",
-                response.code, response.msg
-            )
+    suspend fun deleteImage(auth: String, url: String): String {
+        try{
+            val response = service.deleteImage(auth, Upload(url))
+            if (!response.isSuccess() && response.d == null) {
+                throw RequestFailException(
+                    "UploadRepository.deleteImage fail. please check auth or url ",
+                    response.code, response.msg
+                )
+            }
+            return response.d!!.url
+        }catch (exception:Exception) {
+            throw NetworkException("UploadRepository.deleteImage error!")
         }
-        return response.d!!.url
     }
 
-    fun uploadProfileImage(auth: String, image: List<Int>): String {
-        val response = service.uploadProfile(auth, false, image).execute().body()
-            ?: throw NetworkException("UploadRepository.uploadProfile error!")
-
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException(
-                "UploadRepository.uploadProfile fail. please check auth or file",
-                response.code, response.msg
-            )
+    suspend fun uploadProfileImage(auth: String, image: MultipartBody.Part): String {
+        try{
+            val response = service.uploadProfile(auth, false, image)
+            if (!response.isSuccess() && response.d == null) {
+                throw RequestFailException(
+                    "UploadRepository.uploadProfile fail. please check auth or file",
+                    response.code, response.msg
+                )
+            }
+            return response.d!!.url
+        }catch (exception:Exception) {
+            throw NetworkException("UploadRepository.uploadProfile error!")
         }
-        return response.d!!.url
     }
-
 
 }
