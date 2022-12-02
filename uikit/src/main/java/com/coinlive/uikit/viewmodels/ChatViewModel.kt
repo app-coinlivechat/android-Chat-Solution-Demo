@@ -36,7 +36,7 @@ class ChatViewModel : ViewModel() {
     val reportType = ArrayList<ReportType>()
     var standardSize = 50
     var timer: Timer? = null
-    val uploadImage : MutableLiveData<Boolean> = MutableLiveData(false)
+    val uploadImage: MutableLiveData<Boolean> = MutableLiveData(false)
 
     var channel: Channel? = null
         private set(value) {
@@ -230,14 +230,14 @@ class ChatViewModel : ViewModel() {
         coinliveChat?.sendMessage(text, myInfo!!)
     }
 
-    fun sendImage(image: MultipartBody.Part) = viewModelScope.launch{
-        if(myInfo == null) return@launch
+    fun sendImage(image: MultipartBody.Part) = viewModelScope.launch {
+        if (myInfo == null) return@launch
         uploadImage.value = true
 
 
-        coinliveApi.uploadImage(image,object : ResponseCallback<String>{
+        coinliveApi.uploadImage(image, object : ResponseCallback<String> {
             override fun onSuccess(value: String) {
-                coinliveChat?.sendImage(arrayListOf(value),myInfo!!)
+                coinliveChat?.sendImage(arrayListOf(value), myInfo!!)
                 uploadImage.value = false
 
             }
@@ -251,17 +251,17 @@ class ChatViewModel : ViewModel() {
     }
 
 
-    fun sendImage(images: ArrayList<MultipartBody.Part>) = viewModelScope.launch{
-        if(myInfo == null) return@launch
+    fun sendImage(images: ArrayList<MultipartBody.Part>) = viewModelScope.launch {
+        if (myInfo == null) return@launch
         uploadImage.value = true
-        if(images.size > 10) {
+        if (images.size > 10) {
             LoggerHelper.de("이미지는 한번에 10개까지만 보낼 수 있습니다.")
         }
 
-        val size = if(images.size > 10) 11 else images.size
+        val size = if (images.size > 10) 11 else images.size
         val results = ArrayList<String>()
         for (index in 0 until size) {
-            coinliveApi.uploadImage(images[index],object : ResponseCallback<String>{
+            coinliveApi.uploadImage(images[index], object : ResponseCallback<String> {
                 override fun onSuccess(value: String) {
                     results.add(value)
                 }
@@ -272,14 +272,12 @@ class ChatViewModel : ViewModel() {
             })
         }
 
-        if(results.isNotEmpty()) {
-            coinliveChat?.sendImage(results,myInfo!!)
+        if (results.isNotEmpty()) {
+            coinliveChat?.sendImage(results, myInfo!!)
         }
 
         uploadImage.value = false
     }
-
-
 
 
     fun addEmoji(chat: Chat, key: String) {
@@ -329,6 +327,10 @@ class ChatViewModel : ViewModel() {
 
     fun report(reportType: ReportType, mId: String, callback: ResponseCallback<Boolean>) = viewModelScope.launch {
         coinliveApi.setReport(reportMid = mId, reportTypeId = reportType.typeId, callback)
+    }
+
+    fun getOldFailMessage(): ArrayList<Chat>? {
+        return coinliveChat?.getFailedMessages()
     }
 
 

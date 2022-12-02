@@ -106,7 +106,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                     if (isReadyBlock) {
                         viewModel.deleteBlock(chat.memberId!!, object : ResponseCallback<java.util.ArrayList<String>> {
                             override fun onSuccess(value: java.util.ArrayList<String>) {
-                                adapter.setMyInfo(viewModel.myInfo!!)
+                                adapter.deleteBlockUser(viewModel.myInfo!!,chat.memberId!!)
+
                             }
 
                             override fun onFail(exception: CoinliveException) {
@@ -117,7 +118,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                     } else {
                         viewModel.addBlock(chat.memberId!!, object : ResponseCallback<java.util.ArrayList<String>> {
                             override fun onSuccess(value: java.util.ArrayList<String>) {
-                                adapter.setMyInfo(viewModel.myInfo!!)
+                                adapter.addBlockUser(viewModel.myInfo!!,chat.memberId!!)
                             }
 
                             override fun onFail(exception: CoinliveException) {
@@ -253,7 +254,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 this.adapter = this@ChatFragment.adapter
                 val layoutManager = LinearLayoutManager(requireContext())
                 layoutManager.reverseLayout = true
-                layoutManager.stackFromEnd = true
+//                layoutManager.stackFromEnd = true
+                layoutManager.isItemPrefetchEnabled = true
                 this.layoutManager = layoutManager //레이아웃 매니저 연결
                 addOnScrollListener(scrollListener)
             }
@@ -297,8 +299,10 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     }
 
     override fun deletedMessage(chat: Chat) {
-        adapter.items.remove(chat)
-        adapter.notifyDataSetChanged()
+        val index = adapter.items.indexOfFirst { it.messageId == chat.messageId }
+
+        adapter.items.removeAt(index)
+        adapter.notifyItemRemoved(index)
     }
 
     override fun modifyMessage(chat: Chat) {
@@ -310,14 +314,13 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     }
 
     override fun oldMessages(chatList: ArrayList<Chat>, isReload: Boolean) {
-
         if (chatList.size > 0) {
             val pushIndex = adapter.items.size
-
             LoggerHelper.d("oldMessages!!!, message Size : ${chatList.size} pushIndex : $pushIndex")
             binding?.refresh?.isRefreshing = false
             adapter.items.addAll(pushIndex, chatList)
-            adapter.notifyItemRangeChanged(pushIndex - 1, chatList.size + 1)
+            val changeStartPosition = if(pushIndex == 0) 0 else pushIndex - 1
+            adapter.notifyItemRangeChanged(changeStartPosition, chatList.size)
             if (binding?.rvList?.layoutManager != null) {
                 binding?.rvList?.scrollToPosition(pushIndex)
             }

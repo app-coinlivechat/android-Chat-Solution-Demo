@@ -8,10 +8,17 @@ import com.coinlive.uikit.databinding.ItemImageBinding
 import com.coinlive.uikit.utils.ViewUtils.dpToPx
 import com.coinlive.uikit.utils.ViewUtils.layoutParams
 
-class ImageMessageListAdapter(private val items: ArrayList<String>) :
+class ImageMessageListAdapter(private val items: ArrayList<String>, private val itemClick : ()-> Unit) :
     RecyclerView.Adapter<ImageMessageListAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemImageBinding) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.root.setOnLongClickListener {
+                itemClick()
+                true
+            }
+        }
+
         fun bind(url: String) {
             LoggerHelper.d("url : $url")
             binding.url = url
