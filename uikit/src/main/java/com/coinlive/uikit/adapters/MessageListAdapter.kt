@@ -1,7 +1,6 @@
 package com.coinlive.uikit.adapters
 
 import android.graphics.Rect
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,6 +55,18 @@ class MessageListAdapter(
             binding.root.setOnClickListener {
                 eventListener?.onClick(item, binding.root)
             }
+        }
+
+        open fun messageParser(message: String): String {
+            Regex(":CL\\\$([a-zA-Z]*)-([A-Z]*)-([A-Z]*)\\|(\\d*)CL:").find(message)?.groups?.let { matchGroup ->
+                return "$${matchGroup[1]!!.value}-${matchGroup[2]!!.value}-${matchGroup[3]!!.value}"
+            }
+
+            Regex(":CL@([\\da-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]*)\\_([\\d]*)CL:").find(message)?.groups?.let { matchGroup ->
+                return "@${matchGroup[1]!!.value}"
+            }
+
+            return message
         }
     }
 
@@ -136,7 +147,8 @@ class MessageListAdapter(
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
             binding.root.setOnLongClickListener {
-                eventListener?.onLongClick(item, if(binding.chat!!.images!!.size > 1) binding.ivOne else binding.rvList)
+                eventListener?.onLongClick(item,
+                    if (binding.chat!!.images!!.size > 1) binding.ivOne else binding.rvList)
                 true
             }
             binding.chat = item
@@ -197,9 +209,9 @@ class MessageListAdapter(
             binding.enableTranslator = PreferenceHelper.defaultPreference(binding.root.context).enableTranslator &&
                     transMsg == null
             binding.transMsg = transMsg
-            binding.originMsg = if(myInfo != null && myInfo!!.blockUserMidList.contains(item.memberId)) "차단 사용자의 " +
-            "메세지입니다" +
-                    "." else message
+            binding.originMsg =
+                if (myInfo != null && myInfo!!.blockUserMidList.contains(item.memberId)) "차단 사용자의 메세지입니다." else super
+                    .messageParser(message!!)
 
 
             binding.clMaxMsg.setOnClickListener {
@@ -328,7 +340,8 @@ class MessageListAdapter(
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
             binding.root.setOnLongClickListener {
-                eventListener?.onLongClick(item, if(binding.chat!!.images!!.size > 1) binding.rvList else binding.ivOne)
+                eventListener?.onLongClick(item,
+                    if (binding.chat!!.images!!.size > 1) binding.rvList else binding.ivOne)
                 true
             }
 
@@ -437,7 +450,7 @@ class MessageListAdapter(
 
 
     private fun getOtherMessageType(item: Chat): Int {
-        if(myInfo != null && myInfo!!.blockUserMidList.contains(item.memberId)) return 4
+        if (myInfo != null && myInfo!!.blockUserMidList.contains(item.memberId)) return 4
 
         if (item.asset != null) return 5
         if (item.images != null && item.images!!.size > 0) return 6
@@ -507,7 +520,7 @@ class MessageListAdapter(
         }
     }
 
-    fun setMyInfo(myInfo:CustomerUser) {
+    fun setMyInfo(myInfo: CustomerUser) {
         this.myInfo = myInfo
         notifyDataSetChanged()
     }
