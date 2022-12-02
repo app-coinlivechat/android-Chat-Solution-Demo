@@ -127,4 +127,11 @@
         <item name="android:textSize">18dp</item>
         <item name="android:textStyle">normal</item>
     </style>
+
+    <style name="ama_live">
+        <item name="android:textFontWeight">400</item>
+        <item name="android:lineHeight">20dp</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
 </resources>

@@ -20,6 +20,10 @@
             name="newMessage"
             type="com.coinlive.chat.firebase.model.Chat" />
 
+        <variable
+            name="isAma"
+            type="Boolean" />
+
     </data>
 
 
@@ -146,6 +150,7 @@
             android:id="@+id/cl_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:isAma="@{isAma}"
             app:loginUser="@{chattingViewModel.myInfo != null}"
             app:activeUser="@{chattingViewModel.userStatus}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -227,6 +232,35 @@
             app:layout_constraintBottom_toTopOf="@id/cl_input"
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="ContentDescription" />
+        <LinearLayout
+            android:visibility="@{isAma ? View.VISIBLE : View.GONE}"
+            android:background="@drawable/shape_ama_background"
+            app:layout_constraintTop_toBottomOf="@id/v_cm"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="10dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="AMA"
+                style="@style/subtitle3"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:text=" LIVE"
+                style="@style/ama_live"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
 
         <RelativeLayout
             android:layout_width="match_parent"

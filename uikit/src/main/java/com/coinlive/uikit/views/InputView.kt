@@ -42,6 +42,8 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 binding.ibtnSend.apply {
                     setImageResource(getResourceId(R.styleable.InputView_sendImage, R.drawable.icon_send))
                     setOnClickListener {
+                        val text = binding.etInput.text.toString()
+                        if(text.isEmpty()) return@setOnClickListener
                         listener?.sendMessage(binding.etInput.text.toString())
                         binding.etInput.text.clear()
                     }
@@ -70,7 +72,7 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         }
     }
 
-    fun setAma(isAma: Boolean) {
+    fun setIsAma(isAma: Boolean) {
         binding.isAMA = isAma
     }
 

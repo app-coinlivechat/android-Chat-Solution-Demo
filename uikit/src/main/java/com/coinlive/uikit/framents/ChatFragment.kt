@@ -288,7 +288,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
 
     override fun getAma(ama: Ama) {
-        binding?.clInput?.setAma(ama.endTime == null)
+        binding?.isAma = ama.endTime == null
     }
 
     override fun getCmNotice(msg: String?) {
