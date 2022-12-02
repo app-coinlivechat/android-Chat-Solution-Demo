@@ -40,5 +40,5 @@ data class Ama(
     @get:PropertyName("heart")
     var heartCount:Int = 0
 ): Parcelable {
-    constructor() : this(false,0,0,0)
+    constructor() : this(false,0,null,0)
 }

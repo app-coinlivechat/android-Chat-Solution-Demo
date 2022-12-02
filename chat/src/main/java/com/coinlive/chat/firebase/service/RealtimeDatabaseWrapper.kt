@@ -23,7 +23,10 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
 
     private val cmValueEventListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            if(!snapshot.hasChildren()) return
+            if(!snapshot.hasChildren()) {
+                cmListener.getCmNotice(null)
+                return
+            }
 
             val cm = snapshot.children.first().getValue<Cm>() ?: return
             cmListener.getCmNotice(cm.message)
@@ -35,9 +38,9 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
     private val amaValueEventListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
 
-            if(!snapshot.hasChildren()) return
+            if(!snapshot.exists()) return
 
-            val ama = snapshot.children.first().getValue<Ama>() ?: return
+            val ama = snapshot.getValue<Ama>() ?: return
             this@RealtimeDatabaseWrapper.ama = ama
             amaListener.getAma(ama)
         }
@@ -69,6 +72,6 @@ class RealtimeDatabaseWrapper(coinId: String, val cmListener: CmNoticeListener, 
      *
      */
     private fun initAma() {
-        amaRef.limitToLast(1).addValueEventListener(amaValueEventListener)
+        amaRef.addValueEventListener(amaValueEventListener)
     }
 }
