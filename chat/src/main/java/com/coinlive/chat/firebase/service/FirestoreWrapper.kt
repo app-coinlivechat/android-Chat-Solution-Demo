@@ -31,6 +31,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
     private var documentSnapshotList: ArrayList<DocumentSnapshot> = ArrayList()
     private var existCollectionSnapshot: ArrayList<String> = ArrayList()
+    private var snapshotListener: ArrayList<ListenerRegistration> = ArrayList()
     private var initTimeStamp: Calendar? = null
     private var notificationMap: Map<String, Boolean>? = null
     private var timer: Timer? = null
@@ -62,8 +63,11 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
                 if (initTimeStamp!!.time.after(now.time)) {
                     val collectionPath = "$BASE_PATH/${now.timeInMillis}/$coinId"
-                    Firebase.firestore.collection(collectionPath).addSnapshotListener(this@FirestoreWrapper)
-                    existCollectionSnapshot.add(collectionPath)
+                    if(!existCollectionSnapshot.contains(collectionPath)) {
+                        snapshotListener.add(Firebase.firestore.collection(collectionPath).addSnapshotListener
+                            (this@FirestoreWrapper))
+                        existCollectionSnapshot.add(collectionPath)
+                    }
                 }
             }
         }, 1000 * 60, 1000 * 60)
@@ -83,6 +87,10 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
      */
     fun close() {
         endMidnightCheck()
+        snapshotListener.forEach {
+            it.remove()
+        }
+        snapshotListener.clear()
         documentSnapshotList.clear()
         existCollectionSnapshot.clear()
         initTimeStamp = null
@@ -142,7 +150,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
                 listener.oldMessages(oldMessage, false)
 
                 if (!existCollectionSnapshot.contains(collection.path)) {
-                    collection.addSnapshotListener(this)
+                    snapshotListener.add(collection.addSnapshotListener(this))
                     existCollectionSnapshot.add(collection.path)
                 }
 
