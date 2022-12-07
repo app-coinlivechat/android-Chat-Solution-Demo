@@ -292,6 +292,7 @@ class CoinliveChat(
 
     /**
      * 전송에 실패한 메세지를 확인하기 위한 function입니다.
+     * 실패 메세지는 [Chat.insertTime] 은 0이고 [Chat.st] 값은 null입니다.
      * @return[ArrayList] 전송에 실패한 [Chat] 메세지 리스트 입니다.
      */
     fun getFailedMessages(): ArrayList<Chat>? {
