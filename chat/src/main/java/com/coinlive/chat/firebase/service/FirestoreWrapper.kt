@@ -119,8 +119,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
             if (documentSnapshotList.size > 0) {
                 val lastDocument = documentSnapshotList.last()
-                val lastChat = convertChat(lastDocument)
-                val lastChatCalendar = CalendarHelper.getMidnightCalendarByMillis(lastChat!!.insertTime)
+                val lastChatCalendar = CalendarHelper.getMidnightCalendarByMillis(lastDocument.data?.get("t")!! as Long)
 
                 if (lastChatCalendar.timeInMillis < standardTime.timeInMillis) {
                     queryCalendar = lastChatCalendar.clone() as Calendar
@@ -249,11 +248,13 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
     fun sendMessage(chat: Chat, sendEventListener: SendEventListener, isRetry: Boolean = false) {
         Firebase.firestore.collection("$BASE_PATH/${CalendarHelper.getTodayMidnightTimeStamp()}/$coinId")
             .document(chat.messageId).set(chat).addOnFailureListener {
-                listener.failSendMessage(chat)
                 sendEventListener.fail(chat)
+                chat.insertTime = 0
+                chat.st = null
+                listener.failSendMessage(chat)
             }.addOnSuccessListener {
-                sendEventListener.success(chat)
                 if (isRetry) listener.retrySendMessageSuccess(chat.messageId)
+                sendEventListener.success(chat)
             }
     }
 

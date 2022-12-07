@@ -20,7 +20,8 @@ import com.coinlive.chat.firebase.model.enum.MessageType
 import com.coinlive.chat.firebase.service.*
 import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.chat.util.LoggerHelper
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
@@ -51,7 +52,7 @@ class CoinliveChat(
     private val coinId: String,
     private val coinSymbol: String,
     private val customerName: String,
-    listener: MessageListener,
+    private val listener: MessageListener,
     cmNoticeListener: CmNoticeListener,
     amaListener: AmaListener,
     private val context: Context,
@@ -142,7 +143,7 @@ class CoinliveChat(
      * @param[messageId] 재 전송할 메세지 id
      * @throws SendMessageException
      */
-    fun retrySendMessage(messageId: String) {
+    fun retrySendMessage(messageId: String)  = CoroutineScope(Dispatchers.IO).launch{
         val chat = chatDao.getMessage(messageId) ?: throw SendMessageException("$messageId 는 실패 메세지 DB에 존재하지 않습니다.")
 
         chat.images?.let {
@@ -166,15 +167,18 @@ class CoinliveChat(
             throw SendMessageException("메세지는 1자 보다 크고 500자 보다 적어야 합니다.")
         }
 
-        val cloneChat = chat.copy(insertTime = CalendarHelper.nowCalendar().timeInMillis)
-        firestoreWrapper.sendMessage(cloneChat, object : SendEventListener {
+        chat.insertTime = CalendarHelper.nowCalendar().timeInMillis
+        chat.st = firestoreWrapper.getServerTimeStamp()
+        firestoreWrapper.sendMessage(chat, object : SendEventListener {
             override fun fail(chat: Chat) {
                 // 재 전송 실패일 경우 아무것도 안함
             }
 
             override fun success(chat: Chat) {
                 //  재전송 성공시 DB에서 삭제하기
-                chatDao.deleteMessage(chat.messageId)
+                CoroutineScope(Dispatchers.IO).launch{
+                    chatDao.deleteMessage(chat.messageId)
+                }
             }
         }, isRetry = true)
     }
@@ -191,8 +195,9 @@ class CoinliveChat(
      * 로컬 디비에서 전송 실패 메세지를 삭제합니다.
      * @param[messageId] 삭제할 전송 실패 메세지 [Chat.messageId]
      */
-    fun deleteFailMessage(messageId: String) {
-        chatDao.deleteMessage(messageId)
+    fun deleteFailMessage(chat: Chat) = CoroutineScope(Dispatchers.IO).launch{
+        chatDao.deleteMessage(chat.messageId)
+        listener.deletedMessage(chat)
     }
 
     /**
@@ -290,7 +295,16 @@ class CoinliveChat(
      * @return[ArrayList] 전송에 실패한 [Chat] 메세지 리스트 입니다.
      */
     fun getFailedMessages(): ArrayList<Chat>? {
-        return chatDao.getAllMessage()?.let { ArrayList(it) }
+        val result = arrayListOf<Chat>()
+
+        chatDao.getAllMessage(coinId)?.let {
+            it.forEach { chat ->
+                chat.insertTime = 0
+                chat.st = null
+                result.add(chat)
+            }
+        }
+        return if (result.size > 0) result else null
     }
 
     /**
@@ -324,7 +338,9 @@ class CoinliveChat(
 
         firestoreWrapper.sendMessage(createChat(message, myInfo, urlList), object : SendEventListener {
             override fun fail(chat: Chat) {
-                chatDao.insertMessage(chat)
+                CoroutineScope(Dispatchers.IO).launch {
+                    chatDao.insertMessage(chat)
+                }
             }
 
             override fun success(chat: Chat) {}
@@ -354,10 +370,8 @@ class CoinliveChat(
     /**
      * 로컬 디비에서 오늘 자정 기준으로 부터 7일 이전 전송 실패 데이터를 삭제합니다.
      */
-    private fun deleteOldFailMessage() {
-//        GlobalScope.launch {
-//            chatDao.deleteOldMessage(CalendarHelper.getTodayMidnightTimeStamp())
-//        }
+    private fun deleteOldFailMessage() = CoroutineScope(Dispatchers.IO).launch {
+        chatDao.deleteOldMessage(CalendarHelper.getTodayMidnightTimeStamp())
     }
 
 }

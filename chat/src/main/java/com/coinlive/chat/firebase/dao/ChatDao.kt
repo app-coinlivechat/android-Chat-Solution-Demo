@@ -10,8 +10,8 @@ interface ChatDao {
     @Query("SELECT * FROM chat WHERE messageId = :messageId")
     fun getMessage(messageId: String): Chat?
 
-    @Query("SELECT * FROM chat")
-    fun getAllMessage(): List<Chat>?
+    @Query("SELECT * FROM chat WHERE coinId = :cId")
+    fun getAllMessage(cId : String): List<Chat>?
 
     @Query("DELETE FROM chat WHERE messageId = :messageId")
     fun deleteMessage(messageId: String)

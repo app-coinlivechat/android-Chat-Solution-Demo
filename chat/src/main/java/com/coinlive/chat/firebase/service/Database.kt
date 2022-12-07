@@ -19,29 +19,29 @@ abstract class ChatDatabase : RoomDatabase() {
 
 class Converters {
     @TypeConverter
-    fun fromStringList(value: ArrayList<String>): String = Gson().toJson(value)
+    fun fromStringList(value: ArrayList<String>?): String = Gson().toJson(value)
 
     @TypeConverter
-    fun toStringList(value: String): ArrayList<String> = Gson().fromJson(value, ArrayList<String>()::class.java)
+    fun toStringList(value: String): ArrayList<String>? = Gson().fromJson(value, ArrayList<String>()::class.java)
 
     @TypeConverter
-    fun fromEmojiMap(value: HashMap<String, Emoji>): String = Gson().toJson(value)
+    fun fromEmojiMap(value: HashMap<String, Emoji>?): String = Gson().toJson(value)
 
     @TypeConverter
-    fun toEmojiMap(value: String): HashMap<String, Emoji> =
+    fun toEmojiMap(value: String): HashMap<String, Emoji>? =
         Gson().fromJson(value, HashMap<String, Emoji>()::class.java)
 
     @TypeConverter
-    fun fromAsset(value: Asset): String = Gson().toJson(value)
+    fun fromAsset(value: Asset?): String = Gson().toJson(value)
 
     @TypeConverter
-    fun toAsset(value: String): Asset = Gson().fromJson(value, Asset::class.java)
+    fun toAsset(value: String): Asset? = Gson().fromJson(value, Asset::class.java)
 
 
     @TypeConverter
-    fun fromTimeStamp(value: Timestamp): String = Gson().toJson(value)
+    fun fromTimeStamp(value: Timestamp?): String = Gson().toJson(value)
 
     @TypeConverter
-    fun toTimeStamp(value: String): Timestamp = Gson().fromJson(value, Timestamp::class.java)
+    fun toTimeStamp(value: String): Timestamp? = Gson().fromJson(value, Timestamp::class.java)
 
 }
