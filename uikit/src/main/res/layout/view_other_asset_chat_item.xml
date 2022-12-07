@@ -56,7 +56,7 @@
             android:layout_marginStart="56dp"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="19dp"
-            android:background="@drawable/asset_chatting_background"
+            android:background="@drawable/shape_asset_chatting_background"
             android:paddingHorizontal="12dp"
             android:paddingTop="6dp"
             android:paddingBottom="8dp"

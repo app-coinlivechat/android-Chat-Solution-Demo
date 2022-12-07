@@ -57,6 +57,9 @@ import com.coinlive.uikit.viewmodels.ChatViewModel
 import com.coinlive.uikit.views.MessageMenuView
 import com.coinlive.uikit.views.OnMessageMenuEventListener
 import com.coinlive.uikit.views.OnInputViewListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
 
@@ -259,6 +262,11 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 this.layoutManager = layoutManager //레이아웃 매니저 연결
                 addOnScrollListener(scrollListener)
             }
+            CoroutineScope(Dispatchers.IO).launch {
+                viewModel.getOldFailMessage()?.let {
+                    adapter.addFailItems(it)
+                }
+            }
         }
         binding!!.ibtnDown.setOnClickListener(this)
         binding!!.ibtnMore.setOnClickListener(this)
@@ -298,38 +306,22 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         viewModel.cm.value = msg
     }
 
-    override fun deletedMessage(chat: Chat) {
-        val index = adapter.items.indexOfFirst { it.messageId == chat.messageId }
-
-        adapter.items.removeAt(index)
-        adapter.notifyItemRemoved(index)
-    }
 
     override fun modifyMessage(chat: Chat) {
-        val index = adapter.items.indexOfFirst { it.messageId == chat.messageId }
-        if (index > -1) {
-            adapter.items[index] = chat
-            adapter.notifyItemChanged(index)
-        }
+        adapter.modifyMessage(chat)
     }
 
     override fun oldMessages(chatList: ArrayList<Chat>, isReload: Boolean) {
         if (chatList.size > 0) {
-            val pushIndex = adapter.items.size
-            LoggerHelper.d("oldMessages!!!, message Size : ${chatList.size} pushIndex : $pushIndex")
-            binding?.refresh?.isRefreshing = false
-            adapter.items.addAll(pushIndex, chatList)
-            val changeStartPosition = if(pushIndex == 0) 0 else pushIndex - 1
-            adapter.notifyItemRangeChanged(changeStartPosition, chatList.size)
+            adapter.addOldMessage(chatList)
             if (binding?.rvList?.layoutManager != null) {
-                binding?.rvList?.scrollToPosition(pushIndex)
+                binding?.rvList?.scrollToPosition(adapter.itemCount)
             }
         }
     }
 
     override fun newMessages(chat: Chat) {
-        LoggerHelper.d("newMessages!!!: ${chat.messageId}")
-        adapter.items.add(0, chat)
+        adapter.addNewItem(chat)
 
         binding?.rvList?.layoutManager?.let {
             val visibleItemPosition = (it as LinearLayoutManager).findFirstVisibleItemPosition()
@@ -338,19 +330,19 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 binding?.btnBottom?.visibility = View.GONE
             }
         }
-
-        adapter.notifyItemInserted(0)
-
+    }
+    override fun deletedMessage(chat: Chat) {
+        adapter.deleteFailItem(chat.messageId)
     }
 
     override fun failSendMessage(chat: Chat) {
-//        TODO("Not yet implemented")
+        adapter.addFailItem(chat)
     }
 
     override fun retrySendMessageSuccess(messageId: String) {
-//        TODO("Not yet implemented")
-    }
+        adapter.deleteFailItem(messageId)
 
+    }
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -511,6 +503,14 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     override fun deleteEmoji(item: Chat, emojiKey: String) {
         viewModel.deleteEmoji(item, emojiKey)
 
+    }
+
+    override fun onClickDelete(item: Chat, view: View) {
+        viewModel.deleteMessage(item)
+    }
+
+    override fun onClickRetry(item: Chat, view: View) {
+        viewModel.retryFailMessage(item)
     }
 
     private var isShowKeyboard = false

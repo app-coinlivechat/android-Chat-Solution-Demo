@@ -28,6 +28,9 @@ import com.coinlive.uikit.utils.PreferenceHelper.translatorLanguage
 import com.coinlive.uikit.views.OnEmojiEventListener
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -40,6 +43,8 @@ interface MessageEventListener {
     fun onProfileClick(item: Chat, view: View)
     fun addEmoji(item: Chat, emojiKey: String)
     fun deleteEmoji(item: Chat, emojiKey: String)
+    fun onClickDelete(item: Chat, view: View)
+    fun onClickRetry(item: Chat, view: View)
 }
 
 class MessageListAdapter(
@@ -48,9 +53,10 @@ class MessageListAdapter(
     private val eventListener: MessageEventListener? = null,
 ) :
     RecyclerView.Adapter<MessageListAdapter.BaseViewHolder>() {
-    val items = ArrayList<Chat>()
+    private val items = ArrayList<Chat>()
     val translatorItem: HashMap<String, String> = HashMap()
     private val attachedPosition = ArrayList<Int>()
+    private var failMessageSize = 0
 
 
     override fun onViewAttachedToWindow(holder: BaseViewHolder) {
@@ -74,7 +80,7 @@ class MessageListAdapter(
         open fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
         }
 
-        open fun onLonClick(view : View) : Boolean{
+        open fun onLonClick(view: View): Boolean {
             eventListener?.onLongClick(items[adapterPosition], view)
             return true
         }
@@ -127,9 +133,9 @@ class MessageListAdapter(
     inner class MyTextMessageViewHolder(private val binding: ViewMyTextMessageBinding) : BaseViewHolder(binding) {
 
         init {
-            binding.clMaxMsg.setOnLongClickListener  { onLonClick(it) }
+            binding.clMaxMsg.setOnLongClickListener { onLonClick(it) }
 
-            binding.tvMsg.setOnLongClickListener  { onLonClick(it) }
+            binding.tvMsg.setOnLongClickListener { onLonClick(it) }
 
             binding.clMaxMsg.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_chatFragment_to_textFragment,
@@ -137,6 +143,13 @@ class MessageListAdapter(
                         Constants.argKeyDescription to binding.message!!,
                         Constants.argKeyIsMyMessage to true,
                         Constants.argKeyAutoTranslator to false))
+            }
+            binding.ibtnDelete.setOnClickListener {
+                LoggerHelper.d("onClickDelete position : $adapterPosition")
+                eventListener?.onClickDelete(items[adapterPosition], it)
+            }
+            binding.ibtnRetry.setOnClickListener {
+                eventListener?.onClickRetry(items[adapterPosition], it)
             }
         }
 
@@ -213,7 +226,6 @@ class MessageListAdapter(
                 }
             }
         }
-
 
 
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
@@ -347,6 +359,7 @@ class MessageListAdapter(
         private fun itemImageLonClick() {
             onLonClick(binding.rvList)
         }
+
         override fun bind(item: Chat, viewType: Int, isSameDate: Boolean, isRoundMessage: Boolean) {
             super.bind(item, viewType, isSameDate, isRoundMessage)
 
@@ -540,6 +553,52 @@ class MessageListAdapter(
 
     fun clearTansMsg() {
         translatorItem.clear()
+    }
+
+    fun addNewItem(chat: Chat) {
+        LoggerHelper.d("addNewItem inputIndex : $failMessageSize, id : ${chat.messageId}, message : ${chat.koMessage}")
+
+        items.add(failMessageSize, chat)
+        notifyItemRangeInserted(failMessageSize, 1)
+    }
+
+    fun addFailItem(chat: Chat) {
+
+        failMessageSize += 1
+        items.add(0, chat)
+        notifyItemInserted(0)
+    }
+
+    fun addFailItems(list: ArrayList<Chat>) {
+        failMessageSize += list.size
+        items.addAll(0, list)
+        notifyItemInserted(0)
+    }
+
+    fun deleteFailItem(messageId: String) {
+        val index = items.indexOfFirst { it.messageId == messageId }
+        if (index > -1) {
+            failMessageSize -= 1
+
+            items.removeAt(index)
+            CoroutineScope(Dispatchers.Main).launch {
+                notifyItemRemoved(index)
+            }
+        }
+    }
+
+    fun modifyMessage(chat: Chat) {
+        val index = items.indexOfFirst { it.messageId == chat.messageId }
+        if (index > -1) {
+            items[index] = chat
+            notifyItemChanged(index)
+        }
+    }
+
+    fun addOldMessage(chatList: ArrayList<Chat>) {
+        val pushIndex = items.size
+        items.addAll(pushIndex, chatList)
+        notifyItemRangeChanged(if (pushIndex == 0) 0 else pushIndex - 1, chatList.size)
     }
 
 }

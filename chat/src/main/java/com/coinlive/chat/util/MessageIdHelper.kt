@@ -4,7 +4,7 @@ import java.security.SecureRandom
 import java.util.*
 
 object MessageIdHelper {
-    private const val AUTO_ID_LENGTH = 12
+    private const val AUTO_ID_LENGTH = 20
 
     private const val AUTO_ID_ALPHABET = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz"
 

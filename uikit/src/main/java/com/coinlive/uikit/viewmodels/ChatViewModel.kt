@@ -19,6 +19,8 @@ import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.chat.firebase.model.enum.EmojiType
 import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.models.Notification
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import java.util.*
@@ -279,6 +281,10 @@ class ChatViewModel : ViewModel() {
         uploadImage.value = false
     }
 
+    fun retryFailMessage(item: Chat) {
+        coinliveChat?.retrySendMessage(item.messageId)
+    }
+
 
     fun addEmoji(chat: Chat, key: String) {
         if (myInfo == null) return
@@ -291,8 +297,15 @@ class ChatViewModel : ViewModel() {
     }
 
     fun deleteMessage(chat: Chat) {
-        coinliveChat?.deletedMessage(chat)
+        if (chat.insertTime < 1) {
+            CoroutineScope(Dispatchers.IO).launch {
+                coinliveChat?.deleteFailMessage(chat)
+            }
+        } else {
+            coinliveChat?.deletedMessage(chat)
+        }
     }
+
 
     fun addBlock(mId: String, callback: ResponseCallback<ArrayList<String>>) = viewModelScope.launch {
         coinliveApi.addBlock(mId, object : ResponseCallback<ArrayList<String>> {

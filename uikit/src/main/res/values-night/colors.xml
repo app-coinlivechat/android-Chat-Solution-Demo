@@ -62,6 +62,7 @@
     <color name="cm_divider">#7E7E86</color>
     <color name="cm_button_text">#FFFFFF</color>
     <color name="progress_background">#99000000</color>
+    <color name="fail_message_button_background">#464650</color>
 
 
 
