@@ -31,6 +31,14 @@
         <variable
             name="enableTranslator"
             type="Boolean" />
+
+        <variable
+            name="isMessageMenu"
+            type="Boolean" />
+
+        <variable
+            name="isEnableEmoji"
+            type="Boolean" />
     </data>
 
 
@@ -46,7 +54,7 @@
             android:layout_height="56dp"
             android:gravity="center"
             android:textColor="@color/normal_text"
-            android:visibility="@{isSameDate ? View.GONE : View.VISIBLE}"
+            android:visibility="@{isMessageMenu ? View.GONE : (isSameDate ? View.GONE : View.VISIBLE)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -58,7 +66,7 @@
             android:layout_height="32dp"
             android:layout_marginStart="16dp"
             android:background="@android:color/transparent"
-            android:visibility="@{isRoundMessage ? View.INVISIBLE : View.VISIBLE}"
+            android:visibility="@{isMessageMenu ? View.GONE :(isRoundMessage ? View.INVISIBLE : View.VISIBLE)}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_date"
             app:loadProfile="@{chat.profileUrl}"
@@ -72,7 +80,7 @@
             android:layout_marginStart="8dp"
             android:text="@{chat.userNickname}"
             android:textColor="@color/normal_text"
-            android:visibility="@{isRoundMessage ? View.GONE : View.VISIBLE}"
+            android:visibility="@{isMessageMenu ? View.GONE :(isRoundMessage ? View.GONE : View.VISIBLE)}"
             app:layout_constraintStart_toEndOf="@id/ibtn_profile"
             app:layout_constraintTop_toBottomOf="@id/tv_date" />
 
@@ -84,7 +92,7 @@
             android:layout_marginStart="4dp"
             android:text="@{chat.appName.toUpperCase()}"
             android:textColor="@color/grey_030"
-            android:visibility="@{isRoundMessage ? View.GONE : View.VISIBLE}"
+            android:visibility="@{isMessageMenu ? View.GONE :(isRoundMessage ? View.GONE : View.VISIBLE)}"
             app:layout_constraintBottom_toBottomOf="@id/tv_nickName"
             app:layout_constraintStart_toEndOf="@id/tv_nickName"
             app:layout_constraintTop_toTopOf="@id/tv_nickName" />
@@ -113,7 +121,7 @@
             android:autoLink="web"
             android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
             android:gravity="start"
-            android:linksClickable="false"
+            android:linksClickable="true"
             android:maxWidth="246dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp"
@@ -134,8 +142,8 @@
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp"
             android:visibility="@{originMsg.length > 400 ? View.VISIBLE :View.GONE}"
-            app:layout_constraintStart_toEndOf="@id/ibtn_profile"
             app:layout_constraintBottom_toTopOf="@id/emoji"
+            app:layout_constraintStart_toEndOf="@id/ibtn_profile"
             app:layout_constraintTop_toBottomOf="@id/tv_nickName">
 
             <TextView
@@ -145,14 +153,14 @@
                 android:layout_height="wrap_content"
                 android:autoLink="web"
                 android:ellipsize="end"
-                android:linksClickable="false"
+                android:linksClickable="true"
                 android:maxWidth="222dp"
                 android:maxLength="400"
                 android:text="@{originMsg}"
                 android:textColor="@color/normal_text"
                 android:textColorLink="@color/sub_blue_500"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/tv_all"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -164,18 +172,18 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/read_all"
                 android:textColor="@color/normal_text"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_max_msg"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/tv_max_msg" />
 
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/icon_chevron_right"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_max_msg"
-                app:layout_constraintBottom_toBottomOf="parent"
                 tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -189,8 +197,8 @@
             android:layout_marginTop="4dp"
             android:maxWidth="246dp"
             android:visibility="@{transMsg == null ? View.GONE : View.VISIBLE}"
-            app:layout_constraintStart_toEndOf="@id/ibtn_profile"
             app:layout_constraintBottom_toTopOf="@id/emoji"
+            app:layout_constraintStart_toEndOf="@id/ibtn_profile"
             app:layout_constraintTop_toBottomOf="@id/tv_nickName">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -209,7 +217,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="web"
-                    android:linksClickable="false"
+                    android:linksClickable="true"
                     android:text="@{originMsg}"
                     android:textColor="@color/normal_text"
                     android:textColorLink="@color/sub_blue_500"
@@ -233,7 +241,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:autoLink="web"
-                    android:linksClickable="false"
+                    android:linksClickable="true"
                     android:text="@{transMsg}"
                     android:textColor="@color/normal_text"
                     android:textColorLink="@color/sub_blue_500"
@@ -275,7 +283,7 @@
             android:layout_marginStart="4dp"
             android:background="@android:color/transparent"
             android:src="@drawable/icon_translator_16"
-            android:visibility="@{transMsg != null ? View.GONE : (enableTranslator ? View.VISIBLE : View.GONE)}"
+            android:visibility="@{isMessageMenu ? View.GONE :(transMsg != null ? View.GONE : (enableTranslator ? View.VISIBLE : View.GONE))}"
             app:layout_constraintBottom_toTopOf="@id/tv_time"
             app:layout_constraintStart_toEndOf="@id/tv_msg"
             tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -283,21 +291,23 @@
 
         <com.coinlive.uikit.views.EmojiView
             android:id="@+id/emoji"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_msg"
-            app:layout_constraintStart_toEndOf="@id/ibtn_profile"
-            app:layout_constraintBottom_toTopOf="@id/v_bottom"
+            android:visibility="@{isMessageMenu ? View.GONE : (isEnableEmoji ? View.VISIBLE : View.GONE)}"
             app:emojiMap="@{chat.emoji}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            app:layout_constraintBottom_toTopOf="@id/v_bottom"
+            app:layout_constraintStart_toEndOf="@id/ibtn_profile"
+            app:layout_constraintTop_toBottomOf="@id/tv_msg" />
 
         <View
             android:id="@+id/v_bottom"
             android:layout_width="match_parent"
             android:layout_height="@dimen/normal_message_bottom_margin"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:visibility="@{isMessageMenu ? View.GONE :View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

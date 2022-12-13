@@ -23,6 +23,10 @@
         <variable
             name="message"
             type="String" />
+
+        <variable
+            name="isMessageMenu"
+            type="Boolean" />
     </data>
 
 
@@ -39,7 +43,7 @@
             android:layout_height="56dp"
             android:gravity="center"
             android:textColor="@color/normal_text"
-            android:visibility="@{isSameDate ? View.GONE : View.VISIBLE}"
+            android:visibility="@{isMessageMenu ? View.GONE : (isSameDate ? View.GONE : View.VISIBLE)}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:setDate="@{chat.insertTime}" />
@@ -54,7 +58,7 @@
             android:autoLink="web"
             android:background="@{isRoundMessage ? @drawable/shape_round_my_msg_background : @drawable/shape_my_msg_background}"
             android:gravity="start"
-            android:linksClickable="false"
+            android:linksClickable="true"
             android:maxWidth="246dp"
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp"
@@ -69,7 +73,7 @@
             android:id="@+id/cl_max_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
+            android:background="@{isRoundMessage ? @drawable/shape_round_my_msg_background : @drawable/shape_my_msg_background}"
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp"
             android:visibility="@{message.length > 400 ? View.VISIBLE :View.GONE}"
@@ -84,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:autoLink="web"
                 android:ellipsize="end"
-                android:linksClickable="false"
+                android:linksClickable="true"
                 android:maxWidth="222dp"
                 android:maxLength="400"
                 android:text="@{message}"
@@ -127,7 +131,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="19dp"
             android:textColor="@color/chat_msg_time_text"
-            android:visibility="@{chat.insertTime &lt; 1 ? View.GONE : (isRoundMessage ? View.GONE : View.VISIBLE)}"
+            android:visibility="@{isMessageMenu ? View.GONE : (chat.insertTime &lt; 1 ? View.GONE : (isRoundMessage ? View.GONE : View.VISIBLE))}"
             app:layout_constraintBottom_toBottomOf="@id/tv_msg"
             app:layout_constraintEnd_toStartOf="@id/tv_msg"
             app:setTime="@{chat.insertTime}" />
@@ -139,7 +143,7 @@
             android:layout_marginEnd="4dp"
             android:background="@drawable/shape_fail_message_button_background"
             android:orientation="horizontal"
-            android:visibility="@{chat.insertTime &lt; 1 ? View.VISIBLE : View.GONE}"
+            android:visibility="@{isMessageMenu ? View.GONE : (chat.insertTime &lt; 1 ? View.VISIBLE : View.GONE)}"
             app:layout_constraintBottom_toBottomOf="@id/tv_msg"
             app:layout_constraintEnd_toStartOf="@id/tv_msg">
 
@@ -166,6 +170,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             app:emojiMap="@{chat.emoji}"
+            android:visibility="@{isMessageMenu ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/v_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_msg" />
@@ -174,6 +179,7 @@
             android:id="@+id/v_bottom"
             android:layout_width="match_parent"
             android:layout_height="@dimen/normal_message_bottom_margin"
+            android:visibility="@{isMessageMenu ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

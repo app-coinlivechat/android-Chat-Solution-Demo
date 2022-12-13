@@ -91,8 +91,6 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         }
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-
-
         }
     }
 
@@ -130,12 +128,11 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             }
             binding?.root?.findNavController()?.navigate(R.id.action_chatFragment_to_blockDialog, bundleOf(Constants
                 .argKeyIsReadyBlock to isReadyBlock))
-            messagePopupWindow.dismiss()
-
+            messageMenuDismiss()
         }
 
         override fun onClickCopyMenu(chat: Chat) {
-            messagePopupWindow.dismiss()
+            messageMenuDismiss()
             (if (Coinlive.locale.language.equals("ko")) chat.koMessage else chat.enMessage)?.let {
                 setClipboard(it)
             }
@@ -144,7 +141,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
         override fun onClickDeleteMenu(chat: Chat) {
             viewModel.deleteMessage(chat)
-            messagePopupWindow.dismiss()
+            messageMenuDismiss()
         }
 
         override fun onClickReportMenu(chat: Chat) {
@@ -171,25 +168,25 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                     })
                 }
             }
-            messagePopupWindow.dismiss()
+            messageMenuDismiss()
         }
 
         override fun onClickCancelMenu() {
-            messagePopupWindow.dismiss()
+            messageMenuDismiss()
         }
 
         override fun onDeleteEmoji(chat: Chat, key: String) {
             viewModel.deleteEmoji(chat, key)
-            messagePopupWindow.dismiss()
+            messageMenuDismiss()
         }
 
         override fun onAddEmoji(chat: Chat, key: String) {
             viewModel.addEmoji(chat, key)
-            messagePopupWindow.dismiss()
+            messageMenuDismiss()
         }
 
         override fun onClickOutSide() {
-            messagePopupWindow.dismiss()
+            messageMenuDismiss()
         }
 
     }
@@ -282,7 +279,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     }
 
     override fun onDestroyView() {
-        messagePopupWindow.dismiss()
+        messageMenuDismiss()
         binding?.root?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
         binding?.rvList?.removeOnScrollListener(scrollListener)
 
@@ -400,11 +397,10 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     }
 
     override fun onLongClick(item: Chat, view: View, viewType: Int) {
-//        binding?.clInput?.clearFocusEditeText()
-//        KeyboardHelper.hideKeyboard(view)
 
         if (item.memberId != null) {
-            messageMenuView.addMessage(view, viewType, item)
+            binding?.rvList?.suppressLayout(true)
+            messageMenuView.addMessage(view, viewType, item,adapter)
             messageMenuView.setChat(item)
             messageMenuView.setIsReadyBlock(viewModel.isBlockUser(item.memberId!!))
             messagePopupWindow.showAsDropDown(view)
@@ -483,6 +479,12 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             CoinLiveToast.make(it, msg).show()
 
         }
+    }
+
+    private fun messageMenuDismiss() {
+        binding?.rvList?.suppressLayout(false)
+        messagePopupWindow.dismiss()
+
     }
 
 }

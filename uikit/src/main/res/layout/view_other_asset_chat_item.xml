@@ -28,6 +28,10 @@
             name="isSameDate"
             type="Boolean" />
 
+        <variable
+            name="isMessageMenu"
+            type="Boolean" />
+
     </data>
 
 
@@ -42,7 +46,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:chat="@{chat}"
+            app:isEnableEmoji="@{false}"
             app:isEnableTranslator="@{false}"
+            app:isMessageMenu="@{isMessageMenu}"
             app:isRoundMessage="@{isRoundMessage}"
             app:isSameDate="@{isSameDate}"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,8 +59,8 @@
             android:id="@+id/cl_asset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="56dp"
             android:layout_marginTop="6dp"
+            android:layout_marginStart="56dp"
             android:layout_marginEnd="19dp"
             android:background="@drawable/shape_asset_chatting_background"
             android:paddingHorizontal="12dp"
@@ -124,9 +130,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:visibility="@{isMessageMenu ? View.GONE : View.VISIBLE}"
             app:emojiMap="@{chat.emoji}"
             app:layout_constraintBottom_toTopOf="@id/v_bottom"
-            app:layout_constraintStart_toStartOf="@id/base"
+            app:layout_constraintStart_toStartOf="@id/cl_asset"
             app:layout_constraintTop_toBottomOf="@id/cl_asset" />
 
 
@@ -135,7 +142,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/normal_message_bottom_margin"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_asset" />
+            app:layout_constraintTop_toBottomOf="@id/emoji" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
