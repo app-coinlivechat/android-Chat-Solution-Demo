@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.chat.firebase.model.enum.MessageType
 import com.coinlive.uikit.R
 import com.coinlive.uikit.utils.ViewUtils.dpToPx
@@ -59,7 +60,7 @@ object BindingAdapters {
     @JvmStatic
     fun loadProfile(view: ImageView, url: String?) {
 
-        if(url == null) return
+        if (url == null) return
 
         Glide.with(view.context).load(url)
             .error(R.drawable.icon_profile)
@@ -69,21 +70,41 @@ object BindingAdapters {
             .into(view)
     }
 
+    @BindingAdapter("loadNewChattingProfile")
+    @JvmStatic
+    fun loadNewChattingProfile(view: ImageView, chat: Chat?) {
+        if (chat == null) return
+
+        when (chat.messageType) {
+            MessageType.BUY.name, MessageType.SELL.name -> view.setImageResource(R.drawable.icon_binance)
+            MessageType.TWITTER.name -> view.setImageResource(R.drawable.icon_twitter)
+            MessageType.JUMP.name, MessageType.DROP.name -> view.setImageResource(R.drawable.icon_waring)
+            MessageType.MEDIUM.name -> view.setImageResource(R.drawable.icon_medium)
+            else -> {
+                val url = chat.profileUrl ?: return
+                Glide.with(view.context).load(url)
+                    .error(R.drawable.icon_profile)
+                    .placeholder(R.drawable.icon_profile)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .circleCrop()
+                    .into(view)
+            }
+        }
+    }
+
+
     @BindingAdapter("loadExchangeImage")
     @JvmStatic
     fun loadExchangeImage(view: ImageView, exchange: String?) {
-        //TODO 거래소 이미지
         when (exchange) {
             "UPBIT" -> {
                 view.setImageResource(R.drawable.img_upbit)
             }
             "BITHUM" -> {
                 view.setImageResource(R.drawable.img_bithum)
-
             }
             "BINANCE" -> {
                 view.setImageResource(R.drawable.icon_binance)
-
             }
             "METAMASK" -> {
                 view.setImageResource(R.drawable.img_metamask)
@@ -114,7 +135,6 @@ object BindingAdapters {
     fun userCont(view: TextView, userCont: Int) {
         view.text = DecimalFormat("#,###,###").format(userCont).toString()
     }
-
 
 
 }

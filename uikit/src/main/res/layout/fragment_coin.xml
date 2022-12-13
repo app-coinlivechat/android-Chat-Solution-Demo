@@ -173,7 +173,7 @@
 
             <ImageView
                 android:id="@+id/iv_new_msg_profile"
-                loadProfile="@{newMessage.profileUrl}"
+                loadNewChattingProfile="@{newMessage}"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:background="@android:color/transparent"
@@ -260,28 +260,6 @@
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/progress_background"
-            android:visibility="@{chattingViewModel.uploadImage ? View.VISIBLE : View.GONE}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:indeterminateTint="@color/primary"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </RelativeLayout>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
