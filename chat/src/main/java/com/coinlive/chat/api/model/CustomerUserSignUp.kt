@@ -24,4 +24,6 @@ data class CustomerUserSignUp(
 
 data class CustomTokenBody(
     @SerializedName("mid") val id:String,
+    @SerializedName("name") val customerName:String,
+    @SerializedName("pw") val passWord:String,
 )

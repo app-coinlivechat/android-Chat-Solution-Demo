@@ -1,26 +1,23 @@
 package com.coinlive.uikit.framents
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
-import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
 import android.view.View.OnClickListener
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.PopupWindow
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -38,10 +35,10 @@ import com.coinlive.chat.api.model.ReportType
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.firebase.listener.AmaListener
 import com.coinlive.chat.firebase.listener.CmNoticeListener
+import com.coinlive.chat.firebase.listener.DynamicLinkListener
 import com.coinlive.chat.firebase.listener.MessageListener
 import com.coinlive.chat.firebase.model.Ama
 import com.coinlive.chat.firebase.model.Chat
-import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.R
 import com.coinlive.uikit.adapters.MessageEventListener
@@ -50,32 +47,31 @@ import com.coinlive.uikit.databinding.FragmentCoinBinding
 import com.coinlive.uikit.models.Notification
 import com.coinlive.uikit.utils.Constants
 import com.coinlive.uikit.utils.KeyboardHelper
-import com.coinlive.uikit.utils.MultipartHelper
 import com.coinlive.uikit.utils.PreferenceHelper
 import com.coinlive.uikit.utils.PreferenceHelper.translatorLanguage
 import com.coinlive.uikit.viewmodels.ChatViewModel
+import com.coinlive.uikit.views.CoinLiveToast
 import com.coinlive.uikit.views.MessageMenuView
-import com.coinlive.uikit.views.OnMessageMenuEventListener
 import com.coinlive.uikit.views.OnInputViewListener
+import com.coinlive.uikit.views.OnMessageMenuEventListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MultipartBody
 
 
 class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListener, OnClickListener,
-    OnInputViewListener, MessageEventListener, ViewTreeObserver.OnGlobalLayoutListener {
+    OnInputViewListener, MessageEventListener, ViewTreeObserver.OnGlobalLayoutListener, DynamicLinkListener {
     private val TAG = ChatFragment::class.java.simpleName
     private var binding: FragmentCoinBinding? = null
     private lateinit var viewModel: ChatViewModel
     private lateinit var adapter: MessageListAdapter
     private val messageMenuView by lazy { MessageMenuView(requireContext()) }
     private val messagePopupWindow by lazy {
-        PopupWindow(messageMenuView.rootView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup
-            .LayoutParams.WRAP_CONTENT).apply {
+        PopupWindow(messageMenuView.rootView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
+            .LayoutParams.MATCH_PARENT).apply {
             isOutsideTouchable = true
-            isFocusable = true
-            overlapAnchor = false
+            isFocusable = false
+            overlapAnchor = true
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
     }
@@ -109,7 +105,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                     if (isReadyBlock) {
                         viewModel.deleteBlock(chat.memberId!!, object : ResponseCallback<java.util.ArrayList<String>> {
                             override fun onSuccess(value: java.util.ArrayList<String>) {
-                                adapter.deleteBlockUser(viewModel.myInfo!!,chat.memberId!!)
+                                adapter.deleteBlockUser(viewModel.myInfo!!, chat.memberId!!)
 
                             }
 
@@ -121,7 +117,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                     } else {
                         viewModel.addBlock(chat.memberId!!, object : ResponseCallback<java.util.ArrayList<String>> {
                             override fun onSuccess(value: java.util.ArrayList<String>) {
-                                adapter.addBlockUser(viewModel.myInfo!!,chat.memberId!!)
+                                adapter.addBlockUser(viewModel.myInfo!!, chat.memberId!!)
                             }
 
                             override fun onFail(exception: CoinliveException) {
@@ -140,10 +136,10 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
         override fun onClickCopyMenu(chat: Chat) {
             messagePopupWindow.dismiss()
-            val clipboard: ClipboardManager = activity?.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("label", if (Coinlive.locale.language.equals("ko")) chat.koMessage else
-                chat.enMessage)
-            clipboard.setPrimaryClip(clip)
+            (if (Coinlive.locale.language.equals("ko")) chat.koMessage else chat.enMessage)?.let {
+                setClipboard(it)
+            }
+
         }
 
         override fun onClickDeleteMenu(chat: Chat) {
@@ -189,6 +185,10 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
         override fun onAddEmoji(chat: Chat, key: String) {
             viewModel.addEmoji(chat, key)
+            messagePopupWindow.dismiss()
+        }
+
+        override fun onClickOutSide() {
             messagePopupWindow.dismiss()
         }
 
@@ -279,10 +279,10 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         binding!!.clInput.setSendMessageListener(this)
         binding!!.clNew.setOnClickListener(this)
         binding!!.btnBottom.setOnClickListener(this)
-
     }
 
     override fun onDestroyView() {
+        messagePopupWindow.dismiss()
         binding?.root?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
         binding?.rvList?.removeOnScrollListener(scrollListener)
 
@@ -331,6 +331,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             }
         }
     }
+
     override fun deletedMessage(chat: Chat) {
         adapter.deleteFailItem(chat.messageId)
     }
@@ -365,9 +366,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 popupMenu.inflate(R.menu.menu_chat)
                 popupMenu.setOnMenuItemClickListener {
                     when (it.itemId) {
-                        R.id.m_shared -> {
-
-                        }
+                        R.id.m_shared -> viewModel.getDynamicLink(this)
                         R.id.m_notification -> {
                             if (viewModel.originNotiList.isNotEmpty()) {
                                 val bundle = Bundle()
@@ -380,10 +379,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                                     .navigate(R.id.action_chatFragment_to_notificationSettingFragment, bundle)
                             }
                         }
-                        R.id.m_tranlator -> {
-                            v.findNavController().navigate(R.id.action_chatFragment_to_translatorSettingFragment)
-
-                        }
+                        R.id.m_tranlator -> v.findNavController()
+                            .navigate(R.id.action_chatFragment_to_translatorSettingFragment)
                     }
                     true
                 }
@@ -397,90 +394,17 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         binding?.rvList?.scrollToPosition(0)
     }
 
-    private val permReqLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) {
-                displayCameraFragment()
-            } else {
-                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-    private val galleryReqLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) {
-                displayGalleryFragment()
-            } else {
-                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        result.data?.extras?.let {
-            val bitmap = it.get("data") as Bitmap
-            viewModel.sendImage(MultipartHelper.buildBitmapBodyPart("${CalendarHelper.nowCalendar().timeInMillis}_image" +
-                    ".png", bitmap, requireContext()))
-        }
-    }
-
-    private val galleryLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            result.data?.clipData?.let {
-                val multiparts = ArrayList<MultipartBody.Part>()
-                for (index in 0 until it.itemCount) {
-                    val uri = it.getItemAt(index).uri
-                    val input = requireContext().contentResolver.openInputStream(uri)
-                    val img: Bitmap = BitmapFactory.decodeStream(input)
-                    input?.close()
-                    multiparts.add(MultipartHelper.buildBitmapBodyPart("${CalendarHelper.nowCalendar().timeInMillis}_image.png",
-                        img,
-                        requireContext()))
-                }
-                viewModel.sendImage(multiparts)
-            }
-        }
-
-    private fun displayCameraFragment() {
-        cameraLauncher.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
-    }
-
-    private fun displayGalleryFragment() {
-        galleryLauncher.launch(Intent(Intent.ACTION_PICK).apply {
-            setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        })
-    }
-
-    override fun onClickCamera() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager
-                .PERMISSION_GRANTED
-        ) {
-            permReqLauncher.launch(Manifest.permission.CAMERA)
-        } else {
-            displayCameraFragment()
-        }
-    }
-
-    override fun onClickGallery() {
-        if (ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-        ) {
-            galleryReqLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-        } else {
-            displayGalleryFragment()
-        }
-    }
-
     override fun onClick(item: Chat, view: View) {
         binding?.clInput?.clearFocusEditeText()
         KeyboardHelper.hideKeyboard(view)
     }
 
-    override fun onLongClick(item: Chat, view: View) {
-        binding?.clInput?.clearFocusEditeText()
-        KeyboardHelper.hideKeyboard(view)
+    override fun onLongClick(item: Chat, view: View, viewType: Int) {
+//        binding?.clInput?.clearFocusEditeText()
+//        KeyboardHelper.hideKeyboard(view)
 
         if (item.memberId != null) {
+            messageMenuView.addMessage(view, viewType, item)
             messageMenuView.setChat(item)
             messageMenuView.setIsReadyBlock(viewModel.isBlockUser(item.memberId!!))
             messagePopupWindow.showAsDropDown(view)
@@ -535,6 +459,29 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         } else {
             // hide keyboard
             isShowKeyboard = false
+        }
+    }
+
+    override fun onSuccess(uri: Uri) {
+        setClipboard(uri.toString())
+    }
+
+    override fun onFail(exception: Exception) {
+        exception.printStackTrace()
+        showToast("공유 링크 생성 실패")
+    }
+
+    private fun setClipboard(text: String) {
+        val clipboard: ClipboardManager = activity?.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("label", text)
+        clipboard.setPrimaryClip(clip)
+        showToast("URL이 복사 완료 되었습니다.")
+    }
+
+    private fun showToast(msg: String) {
+        binding?.rvList?.let {
+            CoinLiveToast.make(it, msg).show()
+
         }
     }
 

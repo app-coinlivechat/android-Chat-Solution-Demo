@@ -1,18 +1,18 @@
 package com.coinlive.chat.api.service
 
 import com.coinlive.chat.api.model.*
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ChattingMemberService {
     @GET("v1/chatting-member/channel")
-    suspend fun getChannelList(@Header("Authorization") apiKey: String): RestApiResponse<ChannelList>
+    suspend fun getChannelList(@Query("name") customerName : String): RestApiResponse<ChannelList>
 
     @GET("v1/chatting-member/customer/info")
-    suspend fun getCustomerInfo(@Header("Authorization") apiKey: String): RestApiResponse<Customer>
+    suspend fun getCustomerInfo(@Query("name") customerName : String): RestApiResponse<Customer>
 
     @GET("v1/chatting-member/my/info")
     suspend fun getCustomerMemberInfo(@Header("Authorization") auth: String): RestApiResponse<CustomerUser>
@@ -25,7 +25,6 @@ interface ChattingMemberService {
 
     @POST("v1/chatting-member/token")
     suspend fun getCustomToken(
-        @Header("Authorization") apiKey: String,
         @Body user: CustomTokenBody
     ): RestApiResponse<CustomerUserSignUp>
 }

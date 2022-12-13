@@ -14,14 +14,13 @@ import kotlinx.coroutines.launch
 class ChannelListFragmentViewModel : ViewModel() {
     private val TAG = ChannelListFragmentViewModel::class.java.simpleName
 
-    private val apiKey = "testsite"
     private val clApi = CoinliveRestApi()
     val itemList = MutableLiveData<List<Channel>>()
     var myInfo:CustomerUser? = null
 
     init {
         loadMyInfo()
-        getChannelList()
+        getChannelList("testsite")
     }
 
     private fun loadMyInfo() = viewModelScope.launch {
@@ -36,16 +35,14 @@ class ChannelListFragmentViewModel : ViewModel() {
         })
     }
 
-    fun getChannelList() = viewModelScope.launch {
-        clApi.getChannelList(apiKey,object : ResponseCallback<List<Channel>>{
+    private fun getChannelList(customerName : String) = viewModelScope.launch {
+        clApi.getChannelList(customerName,object : ResponseCallback<List<Channel>>{
             override fun onSuccess(value: List<Channel>) {
                 itemList.value = value
             }
-
             override fun onFail(exception: CoinliveException) {
                 Log.e(TAG,"${exception.message}")
             }
-
         })
     }
 

@@ -21,17 +21,17 @@ class CoinliveRestApi {
         }
     }
 
-    suspend fun getChannelList(apiKey: String, callback: ResponseCallback<List<Channel>>) {
+    suspend fun getChannelList(customerName: String, callback: ResponseCallback<List<Channel>>) {
         try {
-            callback.onSuccess(chattingMemberRepo.getChannelList(apiKey))
+            callback.onSuccess(chattingMemberRepo.getChannelList(customerName))
         } catch (e: CoinliveException) {
             callback.onFail(e)
         }
     }
 
-    suspend fun getCustomerInfo(apiKey: String, callback: ResponseCallback<Customer>) {
+    suspend fun getCustomerInfo(customerName: String, callback: ResponseCallback<Customer>) {
         try {
-            callback.onSuccess(chattingMemberRepo.getCustomerInfo(apiKey))
+            callback.onSuccess(chattingMemberRepo.getCustomerInfo(customerName))
         } catch (e: CoinliveException) {
             callback.onFail(e)
         }
@@ -63,14 +63,20 @@ class CoinliveRestApi {
     /**
      * 사용자를 Firebase Authentication에 로그인하고 coinlive에 가입하기 위해 Firebase Authentication [CustomerUserSignUp]을
      * 전달 받습니다.
-     * @param[apiKey] coinlive에서 전달 받은 customerApiKey
      * @param[uuid] 사용자 uuid
+     * @param[password] customer password
+     * @param[customerName] customer 이름
      * @return[CustomerUserSignUp] 사용자 uuid를 이용하여 Firebase Authentication에 로그인 할 수 있는 정보를 전달합니다.
      * 전달받은 데이터를 이용하여 [CoinliveAuthentication.signIn] 또는 [customerUserSignUp]을 이용하는데 사용하십시요.
      */
-    suspend fun getCustomToken(apiKey: String, uuid: String, callback: ResponseCallback<CustomerUserSignUp>) {
+    suspend fun getCustomToken(
+        password: String,
+        customerName: String,
+        uuid: String,
+        callback: ResponseCallback<CustomerUserSignUp>,
+    ) {
         try {
-            callback.onSuccess(chattingMemberRepo.getCustomToken(apiKey, uuid))
+            callback.onSuccess(chattingMemberRepo.getCustomToken(password, customerName, uuid))
         } catch (e: CoinliveException) {
             callback.onFail(e)
         }
@@ -167,27 +173,6 @@ class CoinliveRestApi {
     suspend fun getNotificationSetting(coinId: String, callback: ResponseCallback<Map<String, Boolean>>) {
         try {
             callback.onSuccess(notificationRepo.getNotificationSetting(getAuth(), coinId))
-        } catch (e: CoinliveException) {
-            callback.onFail(e)
-        }
-    }
-
-    suspend fun uploadImage(image: MultipartBody.Part, callback: ResponseCallback<String>) {
-        try {
-            if (!checkMaxSize(image.body.contentLength())) {
-                callback.onSuccess(uploadRepo.uploadImage(getAuth(), image))
-            } else {
-                callback.onFail(UploadImageException("upload fail"))
-            }
-
-        } catch (e: CoinliveException) {
-            callback.onFail(e)
-        }
-    }
-
-    suspend fun deleteImage(url: String, callback: ResponseCallback<String>) {
-        try {
-            callback.onSuccess(uploadRepo.deleteImage(getAuth(), url))
         } catch (e: CoinliveException) {
             callback.onFail(e)
         }

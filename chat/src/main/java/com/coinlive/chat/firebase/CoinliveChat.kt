@@ -1,16 +1,20 @@
 package com.coinlive.chat.firebase
 
 import android.content.Context
+import android.net.Uri
 import androidx.room.Room
+import com.coinlive.chat.Coinlive
 import com.coinlive.chat.api.model.CustomerUser
 import com.coinlive.chat.api.model.Channel
 import com.coinlive.chat.api.model.Customer
 import com.coinlive.chat.api.CoinliveRestApi
 import com.coinlive.chat.api.model.enums.UserStatus
+import com.coinlive.chat.exception.DynamicLinkException
 import com.coinlive.chat.exception.FetchMessageException
 import com.coinlive.chat.exception.SendMessageException
 import com.coinlive.chat.firebase.listener.AmaListener
 import com.coinlive.chat.firebase.listener.CmNoticeListener
+import com.coinlive.chat.firebase.listener.DynamicLinkListener
 import com.coinlive.chat.firebase.listener.MessageListener
 import com.coinlive.chat.firebase.model.Ama
 import com.coinlive.chat.firebase.model.Chat
@@ -20,6 +24,9 @@ import com.coinlive.chat.firebase.model.enum.MessageType
 import com.coinlive.chat.firebase.service.*
 import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.chat.util.LoggerHelper
+import com.google.firebase.dynamiclinks.ShortDynamicLink
+import com.google.firebase.dynamiclinks.ktx.*
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -112,21 +119,7 @@ class CoinliveChat(
      * @throws SendMessageException
      */
     fun sendMessage(message: String, myInfo: CustomerUser) {
-        sendMessage(message, myInfo, null)
-    }
-
-    /**
-     * 이미지 메세지를 전송합니다.
-     *
-     * AMA가 진행 중이거나 [urlList]의 사이즈가 10개 이상일 경우 [SendMessageException]가 발생합니다.
-     *
-     * 발신을 실패할 경우 [MessageListener.failSendMessage]로 해당 메세지([Chat])를 전달합니다.
-     * @param[urlList] 이미지 url List
-     * @param[myInfo] 사용자 자신의 정보
-     * @throws SendMessageException
-     */
-    fun sendImage(urlList: ArrayList<String>, myInfo: CustomerUser) {
-        sendMessage("", myInfo, urlList)
+        innerSendMessage(message, myInfo)
     }
 
     /**
@@ -143,7 +136,7 @@ class CoinliveChat(
      * @param[messageId] 재 전송할 메세지 id
      * @throws SendMessageException
      */
-    fun retrySendMessage(messageId: String)  = CoroutineScope(Dispatchers.IO).launch{
+    fun retrySendMessage(messageId: String) = CoroutineScope(Dispatchers.IO).launch {
         val chat = chatDao.getMessage(messageId) ?: throw SendMessageException("$messageId 는 실패 메세지 DB에 존재하지 않습니다.")
 
         chat.images?.let {
@@ -176,7 +169,7 @@ class CoinliveChat(
 
             override fun success(chat: Chat) {
                 //  재전송 성공시 DB에서 삭제하기
-                CoroutineScope(Dispatchers.IO).launch{
+                CoroutineScope(Dispatchers.IO).launch {
                     chatDao.deleteMessage(chat.messageId)
                 }
             }
@@ -195,7 +188,7 @@ class CoinliveChat(
      * 로컬 디비에서 전송 실패 메세지를 삭제합니다.
      * @param[messageId] 삭제할 전송 실패 메세지 [Chat.messageId]
      */
-    fun deleteFailMessage(chat: Chat) = CoroutineScope(Dispatchers.IO).launch{
+    fun deleteFailMessage(chat: Chat) = CoroutineScope(Dispatchers.IO).launch {
         chatDao.deleteMessage(chat.messageId)
         listener.deletedMessage(chat)
     }
@@ -316,18 +309,10 @@ class CoinliveChat(
         firestoreWrapper.close()
     }
 
-    private fun sendMessage(message: String, myInfo: CustomerUser, urlList: ArrayList<String>?) {
+    private fun innerSendMessage(message: String, myInfo: CustomerUser) {
 
         if (myInfo.status != UserStatus.ACTIVE) {
             throw SendMessageException("UserStatus가 ACTIVE 상태일 때만 가능합니다.")
-        }
-
-        if (urlList != null && urlList.size > 10) {
-            throw SendMessageException("이미지 10개 이상 보낼수 없습니다.")
-        }
-
-        if (urlList == null && message.trim().isEmpty()) {
-            throw SendMessageException("message is Empty")
         }
 
         if (checkAmaProceeding()) { // ama 진행 체크
@@ -337,7 +322,7 @@ class CoinliveChat(
             throw SendMessageException("메세지는 500자 보다 적어야 합니다.")
         }
 
-        firestoreWrapper.sendMessage(createChat(message, myInfo, urlList), object : SendEventListener {
+        firestoreWrapper.sendMessage(createChat(message, myInfo), object : SendEventListener {
             override fun fail(chat: Chat) {
                 CoroutineScope(Dispatchers.IO).launch {
                     chatDao.insertMessage(chat)
@@ -353,12 +338,12 @@ class CoinliveChat(
         return amaEndTimeStamp > Calendar.getInstance(TimeZone.getTimeZone("UTC")).timeInMillis
     }
 
-    private fun createChat(message: String = "", myInfo: CustomerUser, urlList: ArrayList<String>?): Chat {
+    private fun createChat(message: String = "", myInfo: CustomerUser): Chat {
         return Chat(
             koMessage = message, enMessage = message, firebaseAuthId = myInfo.firebaseUuid,
             st = firestoreWrapper.getServerTimeStamp(), appName = customerName, symbol = coinSymbol, coinId = coinId,
             insertTime = CalendarHelper.nowCalendar().timeInMillis, messageType = MessageType.USER.toLowName(),
-            chattingLocale = getAppResourceLocale(), memberId = myInfo.id, images = urlList, userNickname = myInfo
+            chattingLocale = getAppResourceLocale(), memberId = myInfo.id, userNickname = myInfo
                 .nickName, profileUrl = myInfo.profileImage, isNFTProfile = false
         )
     }
@@ -373,6 +358,39 @@ class CoinliveChat(
      */
     private fun deleteOldFailMessage() = CoroutineScope(Dispatchers.IO).launch {
         chatDao.deleteOldMessage(CalendarHelper.getTodayMidnightTimeStamp())
+    }
+
+    fun getDynamicLink(listener: DynamicLinkListener) {
+        Firebase.dynamicLinks.shortLinkAsync(ShortDynamicLink.Suffix.SHORT) {
+            link = Uri.parse("https://coinliveapp.com/#/coin_chatting/${coinSymbol}?cId=${coinId}")
+            domainUriPrefix = "https://coinliveapp.page.link"
+            androidParameters("com.tenxchat.coin_live_chat") {
+                minimumVersion = 1
+            }
+            iosParameters("com.tenxchat.clc") {
+                appStoreId = "1583689614"
+                minimumVersion = "1.0"
+            }
+            socialMetaTagParameters {
+                title =
+                    if (Coinlive.locale.language == "ko") "CoinLive - 세상 모든 코인이야기, 코인라이브"
+                    else "CoinLive - Live Crypto Chat"
+                description =
+                    if (Coinlive.locale.language == "ko") "코인라이브는 코인별 실시간 채팅뿐 아니라, 다양한 거래소의 가격 정보, 프로젝트 뉴스를 가장 빠르게 제공합니다."
+                    else "Where All Crypto talkers hang-out!"
+                imageUrl = Uri.parse("https://clc-prod.s3.ap-northeast-2.amazonaws.com/profile/basic_profile.png")
+            }
+        }.addOnSuccessListener {
+            it.shortLink?.let { uri ->
+                listener.onSuccess(uri)
+            } ?: run {
+                listener.onFail(DynamicLinkException(null))
+            }
+
+        }.addOnFailureListener {
+            it.printStackTrace()
+            listener.onFail(DynamicLinkException(it.message))
+        }
     }
 
 }

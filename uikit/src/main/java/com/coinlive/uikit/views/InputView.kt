@@ -3,7 +3,6 @@ package com.coinlive.uikit.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import androidx.annotation.ColorRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -14,8 +13,6 @@ import com.coinlive.uikit.databinding.ViewInputBinding
 
 interface OnInputViewListener {
     fun sendMessage(text: String)
-    fun onClickCamera()
-    fun onClickGallery()
 }
 
 
@@ -33,12 +30,6 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 binding.vDivider.apply {
                     setBackgroundColor(getColor(R.styleable.InputView_dividerColor, getColor(R.color.line_color)))
                 }
-                binding.ibtnAddOn.apply {
-                    setImageResource(getResourceId(R.styleable.InputView_addOnImage, R.drawable.icon_additonal))
-                    setOnClickListener {
-                        binding.isClickAdd = !binding.isClickAdd!!
-                    }
-                }
                 binding.ibtnSend.apply {
                     setImageResource(getResourceId(R.styleable.InputView_sendImage, R.drawable.icon_send))
                     setOnClickListener {
@@ -52,19 +43,8 @@ class InputView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     setHintTextColor(getColor(R.styleable.InputView_hitTextColor, getColor(R.color.grey_040)))
                     background = getDrawable(R.styleable.InputView_inputBackground)
                         ?: ContextCompat.getDrawable(context, R.drawable.shape_input_background)
-                    setOnFocusChangeListener { v, hasFocus ->
-                        binding.ibtnAddOn.visibility = if (hasFocus) View.GONE else View.VISIBLE
-                    }
                 }
 
-                binding.llCamera.setOnClickListener {
-                    binding.isClickAdd = false
-                    listener?.onClickCamera()
-                }
-                binding.llGallery.setOnClickListener {
-                    binding.isClickAdd = false
-                    listener?.onClickGallery()
-                }
             }
 
 

@@ -9,21 +9,22 @@ import com.coinlive.chat.exception.RequestFailException
 class ChattingMemberRepository {
     private val service: ChattingMemberService = RestApiClient.chattingMemberService
 
-    suspend fun getChannelList(apiKey: String): List<Channel> {
+    suspend fun getChannelList(customerName: String): List<Channel> {
         try {
-            val response = service.getChannelList(apiKey)
+            val response = service.getChannelList(customerName)
             if (!response.isSuccess() && response.d == null) {
                 throw RequestFailException("getChannelList fail. please check apiKey", response.code, response.msg)
             }
             return response.d!!.list
         } catch (exception: Exception) {
+            exception.printStackTrace()
             throw NetworkException("getCustomerInfo error!")
         }
     }
 
-    suspend fun getCustomerInfo(apiKey: String): Customer {
+    suspend fun getCustomerInfo(customerName: String): Customer {
         try {
-            val response = service.getCustomerInfo(apiKey)
+            val response = service.getCustomerInfo(customerName)
             if (!response.isSuccess() && response.d == null) {
                 throw RequestFailException("getCustomerInfo fail. please check apiKey", response.code, response.msg)
             }
@@ -56,9 +57,9 @@ class ChattingMemberRepository {
         }
     }
 
-    suspend fun getCustomToken(apiKey: String, uuid: String): CustomerUserSignUp {
+    suspend fun getCustomToken(password: String,customerName: String, uuid: String): CustomerUserSignUp {
         try {
-            val response = service.getCustomToken(apiKey, CustomTokenBody(uuid))
+            val response = service.getCustomToken(CustomTokenBody(uuid,customerName,password))
             if (!response.isSuccess() && response.d == null) {
                 throw RequestFailException("getCustomToken fail. please check apiKey or uuid",
                     response.code,

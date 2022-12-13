@@ -16,7 +16,8 @@ import kotlinx.coroutines.launch
 class LoginFragmentViewModel : ViewModel() {
     private val TAG = LoginFragmentViewModel::class.java.simpleName
 
-    private val apiKey = "testsite"
+    private val customerName = "testsite"
+    private val password = "testsite"
     private val clApi = CoinliveRestApi()
     var customer: Customer? = null
         get() = field
@@ -31,7 +32,7 @@ class LoginFragmentViewModel : ViewModel() {
 //    var loginResultCode: MutableLiveData<String> = MutableLiveData()
 
     fun getCustomerInfo() = viewModelScope.launch {
-        clApi.getCustomerInfo(apiKey, object : ResponseCallback<Customer> {
+        clApi.getCustomerInfo(customerName,object : ResponseCallback<Customer> {
             override fun onSuccess(value: Customer) {
                 customer = value
             }
@@ -119,7 +120,7 @@ class LoginFragmentViewModel : ViewModel() {
     }
 
     private suspend fun getCustomToken(uuid: String, nickName: String, continueSignUp : Boolean = false) {
-        clApi.getCustomToken(apiKey, uuid, object : ResponseCallback<CustomerUserSignUp> {
+        clApi.getCustomToken(password,customerName, uuid, object : ResponseCallback<CustomerUserSignUp> {
             override fun onSuccess(value: CustomerUserSignUp) {
                 Log.d(TAG, "customToken : ${value.customToken}")
                 customToken = value.customToken

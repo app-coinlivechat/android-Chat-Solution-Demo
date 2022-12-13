@@ -67,6 +67,7 @@
     <color name="cm_button_text">#464650</color>
     <color name="progress_background">#99000000</color>
     <color name="fail_message_button_background">#DADEE2</color>
+    <color name="toast_background">#AEB7C1</color>
 
 
 </resources>

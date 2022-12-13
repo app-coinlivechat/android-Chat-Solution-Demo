@@ -15,6 +15,7 @@ enum class Error(val msg: String,val code: Int) {
     QUERY_FETCH_MESSAGE("",2006),
     CHAT_AMA("",2007),
     UPLOAD_IMAGE("이미지는 15MB를 넘을 수 없습니다.",2008),
+    DYNAMIC_LINK("Firebase Dynamic link 생성에 실패하였습니다.",2009),
 
 
 }
