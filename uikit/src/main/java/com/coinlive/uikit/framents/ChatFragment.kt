@@ -78,19 +78,17 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     private val scrollListener: RecyclerView.OnScrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            if (newState != RecyclerView.SCROLL_STATE_DRAGGING) {
-                recyclerView.layoutManager?.let {
-                    val visibleItemPosition = (it as LinearLayoutManager).findFirstVisibleItemPosition()
-                    if (visibleItemPosition > 0 && binding?.btnBottom?.visibility == View.GONE) {
-                        binding?.btnBottom?.visibility = View.VISIBLE
-                    } else if (visibleItemPosition == 0 && binding?.btnBottom?.visibility == View.VISIBLE) {
-                        binding?.btnBottom?.visibility = View.GONE
-                    }
-                }
-            }
         }
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            recyclerView.layoutManager?.let {
+                val visibleItemPosition = (it as LinearLayoutManager).findFirstVisibleItemPosition()
+                if (visibleItemPosition > 0 && binding?.btnBottom?.visibility == View.GONE && binding?.newMessage == null) {
+                    binding?.btnBottom?.visibility = View.VISIBLE
+                } else if (visibleItemPosition == 0 && binding?.btnBottom?.visibility == View.VISIBLE) {
+                    binding?.btnBottom?.visibility = View.GONE
+                }
+            }
         }
     }
 
@@ -136,8 +134,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             messageMenuDismiss()
             (if (Coinlive.locale.language.equals("ko")) chat.koMessage else chat.enMessage)?.let {
                 setClipboard(it)
+                showToast("복사 되었습니다.")
             }
-
         }
 
         override fun onClickDeleteMenu(chat: Chat) {
@@ -403,7 +401,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
         if (item.memberId != null) {
             binding?.rvList?.suppressLayout(true)
-            messageMenuView.addMessage(view, viewType, item,adapter)
+            messageMenuView.addMessage(view, viewType, item, adapter)
             messageMenuView.setChat(item)
             messageMenuView.setIsReadyBlock(viewModel.isBlockUser(item.memberId!!))
             messagePopupWindow.showAsDropDown(view)
@@ -463,6 +461,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun onSuccess(uri: Uri) {
         setClipboard(uri.toString())
+        showToast("URL이 복사 완료 되었습니다.")
+
     }
 
     override fun onFail(exception: Exception) {
@@ -474,7 +474,6 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         val clipboard: ClipboardManager = activity?.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("label", text)
         clipboard.setPrimaryClip(clip)
-        showToast("URL이 복사 완료 되었습니다.")
     }
 
     private fun showToast(msg: String) {
