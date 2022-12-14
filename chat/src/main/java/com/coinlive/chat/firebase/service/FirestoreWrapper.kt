@@ -63,7 +63,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
                 if (initTimeStamp!!.time.after(now.time)) {
                     val collectionPath = "$BASE_PATH/${now.timeInMillis}/$coinId"
-                    if(!existCollectionSnapshot.contains(collectionPath)) {
+                    if (!existCollectionSnapshot.contains(collectionPath)) {
                         snapshotListener.add(Firebase.firestore.collection(collectionPath).addSnapshotListener
                             (this@FirestoreWrapper))
                         existCollectionSnapshot.add(collectionPath)
@@ -183,23 +183,29 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
 
     private fun convertChat(document: DocumentSnapshot): Chat? {
-        val chat: Chat = document.toObject<Chat>() ?: return null
-        var changeId: String? = null
-        var changeInsertTime: Long? = null
-        if (document.id != chat.messageId) { // document key와 맞추기 위한 로직 (server demon에서 추가된 메세지들은 messageId가 없기 때문에
-            // Chat 모델에서 자동 생성된다.)
-            changeId = document.id
-        }
+        try {
+            val chat: Chat = document.toObject<Chat>() ?: return null
+            var changeId: String? = null
+            var changeInsertTime: Long? = null
+            if (document.id != chat.messageId) { // document key와 맞추기 위한 로직 (server demon에서 추가된 메세지들은 messageId가 없기 때문에
+                // Chat 모델에서 자동 생성된다.)
+                changeId = document.id
+            }
 
-        if (chat.st != null) {
-            changeInsertTime = chat.st!!.toDate().time
-        }
+            if (chat.st != null) {
+                changeInsertTime = chat.st!!.toDate().time
+            }
 
-        if (changeId != null || changeInsertTime != null) {
-            return chat.copy(messageId = changeId ?: chat.messageId, insertTime = changeInsertTime ?: chat.insertTime)
-        }
+            if (changeId != null || changeInsertTime != null) {
+                return chat.copy(messageId = changeId ?: chat.messageId,
+                    insertTime = changeInsertTime ?: chat.insertTime)
+            }
 
-        return chat
+            return chat
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            return null
+        }
     }
 
     private fun sort(chat: List<Chat>) {

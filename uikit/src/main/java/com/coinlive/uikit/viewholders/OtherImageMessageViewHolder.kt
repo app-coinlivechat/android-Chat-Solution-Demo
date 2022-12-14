@@ -18,30 +18,30 @@ import com.coinlive.uikit.views.OnEmojiEventListener
 
 class OtherImageMessageViewHolder(
     private val binding: ViewOtherImageChatItemBinding,
-    isMessageMenu : Boolean = false,
+    isMessageMenu: Boolean = false,
     private val eventListener: MessageEventListener? = null,
     private val itemListener: ItemListener?,
 ) : BaseViewHolder(binding, eventListener, itemListener) {
     init {
         binding.isMessageMenu = isMessageMenu
-        if(!isMessageMenu) {
+        if (!isMessageMenu) {
             binding.ivOne.setOnLongClickListener { onLonClick(it) }
 
             binding.ibtnProfile.setOnClickListener {
-                itemListener?.getItem(adapterPosition)?.let { chat->
+                itemListener?.getItem(adapterPosition)?.let { chat ->
                     eventListener?.onProfileClick(chat, it)
                 }
             }
 
             binding.emoji.setEmojiListener(object : OnEmojiEventListener {
                 override fun addEmoji(key: String) {
-                    itemListener?.getItem(adapterPosition)?.let { chat->
+                    itemListener?.getItem(adapterPosition)?.let { chat ->
                         eventListener?.addEmoji(chat, key)
                     }
                 }
 
                 override fun deleteEmoji(key: String) {
-                    itemListener?.getItem(adapterPosition)?.let { chat->
+                    itemListener?.getItem(adapterPosition)?.let { chat ->
                         eventListener?.deleteEmoji(chat, key)
                     }
                 }
@@ -81,7 +81,7 @@ class OtherImageMessageViewHolder(
         if (item.images!!.size > 1) {
             LoggerHelper.d("no block user image!!")
 
-            val layoutManager = GridLayoutManager(binding.rvList.context, if (item.images!!.size > 6) 3 else 2)
+            val layoutManager = GridLayoutManager(binding.rvList.context, if (item.images!!.size > 4) 3 else 2)
             binding.rvList.apply {
                 this.layoutManager = layoutManager
                 this.setPadding(0)

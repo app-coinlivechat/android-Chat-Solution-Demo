@@ -24,8 +24,8 @@
     <color name="grey_090">#FFFFFF</color>
 
     // sub
-    <color name="blue_050">#4880EE</color>
-    <color name="red_050">#E64E3C</color>
+    <color name="sub_blue_500">#4880EE</color>
+    <color name="sub_red_400">#E64E3C</color>
     <color name="yellow_050">#FFD324</color>
     <color name="yellow_060">#FFF028</color>
     <color name="green_050">#137B5E</color>

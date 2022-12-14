@@ -119,7 +119,7 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="dialog" parent="Theme.AppCompat.Dialog">
+    <style name="dialog" parent="ThemeOverlay.AppCompat.Dialog">
         <item name="background">@null</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
