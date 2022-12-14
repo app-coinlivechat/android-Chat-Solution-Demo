@@ -49,7 +49,6 @@ class NotificationSettingFragment : BaseFragment(), AllItemChangeListener {
                 binding!!.sAll.isChecked = enableList.size == it.size
         }
         binding!!.sAll.setOnClickListener {
-            binding!!.sAll.isChecked = !binding!!.sAll.isChecked
             adapter.allChangeEnable(binding!!.sAll.isChecked)
         }
         binding!!.ibtnBack.setOnClickListener {

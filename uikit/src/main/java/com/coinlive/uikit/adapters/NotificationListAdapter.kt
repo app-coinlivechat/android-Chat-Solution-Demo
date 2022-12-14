@@ -3,7 +3,6 @@ package com.coinlive.uikit.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.databinding.ItemNotificationBinding
 import com.coinlive.uikit.models.Notification
 
@@ -27,7 +26,6 @@ class NotificationListAdapter(private val listener: AllItemChangeListener) : Rec
                 } else {
                     enablesId.remove(item.id)
                 }
-                LoggerHelper.de(enablesId.toString())
                 if(enablesId.size == items.size) {
                     listener.allItemChange(true)
                 } else {
@@ -37,8 +35,6 @@ class NotificationListAdapter(private val listener: AllItemChangeListener) : Rec
         }
 
         fun bind(item : Notification) {
-            LoggerHelper.de("${item.id} : ${item.enable}")
-
             binding.tvTitle.text = item.name
             binding.sValue.isChecked = item.enable
         }
