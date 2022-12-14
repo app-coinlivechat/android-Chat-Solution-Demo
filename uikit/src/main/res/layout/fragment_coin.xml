@@ -24,6 +24,10 @@
             name="isAma"
             type="Boolean" />
 
+        <variable
+            name="ama"
+            type="com.coinlive.chat.firebase.model.Ama" />
+
     </data>
 
 
@@ -138,6 +142,7 @@
                 android:focusableInTouchMode="true" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
         <com.coinlive.uikit.views.CmView
             android:id="@+id/v_cm"
             android:layout_width="match_parent"
@@ -150,13 +155,13 @@
             android:id="@+id/cl_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:isAma="@{isAma}"
-            app:loginUser="@{chattingViewModel.myInfo != null}"
             app:activeUser="@{chattingViewModel.userStatus}"
+            app:isAma="@{isAma}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/refresh" />
+            app:layout_constraintTop_toBottomOf="@id/refresh"
+            app:loginUser="@{chattingViewModel.myInfo != null}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_new"
@@ -232,34 +237,16 @@
             app:layout_constraintBottom_toTopOf="@id/cl_input"
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="ContentDescription" />
-        <LinearLayout
-            android:visibility="@{isAma ? View.VISIBLE : View.GONE}"
-            android:background="@drawable/shape_ama_background"
-            app:layout_constraintTop_toBottomOf="@id/v_cm"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="10dp"
-            android:orientation="horizontal"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="3dp"
+
+        <com.coinlive.uikit.views.AmaView
+            android:id="@+id/v_ama"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text="AMA"
-                style="@style/subtitle3"
-                android:layout_gravity="center_vertical"
-                android:textColor="@android:color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:ama="@{ama}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v_cm" />
 
-            <TextView
-                android:text=" LIVE"
-                style="@style/ama_live"
-                android:layout_gravity="center_vertical"
-                android:textColor="@android:color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

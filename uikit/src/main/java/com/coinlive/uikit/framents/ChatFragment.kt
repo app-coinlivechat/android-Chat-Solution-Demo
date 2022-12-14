@@ -280,6 +280,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun onDestroyView() {
         messageMenuDismiss()
+        binding?.vAma?.closeCountDownTimer()
         binding?.root?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
         binding?.rvList?.removeOnScrollListener(scrollListener)
 
@@ -296,6 +297,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun getAma(ama: Ama) {
         binding?.isAma = ama.endTime == null
+        binding?.ama = ama
     }
 
     override fun getCmNotice(msg: String?) {
