@@ -93,7 +93,7 @@ class ChatViewModel : ViewModel() {
                 val result = ArrayList<Notification>()
                 list.forEach { type ->
                     val enable: Boolean? = value[type.type]
-                    enable?.let {
+                    if(enable != null && type.tag == "CHAT") {
                         result.add(Notification(type.type, type.name, enable))
                     }
                 }

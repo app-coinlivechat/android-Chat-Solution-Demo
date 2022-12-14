@@ -3,6 +3,7 @@ package com.coinlive.uikit.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.databinding.ItemNotificationBinding
 import com.coinlive.uikit.models.Notification
 
@@ -17,23 +18,29 @@ class NotificationListAdapter(private val listener: AllItemChangeListener) : Rec
     private val enablesId = arrayListOf<String>()
 
     inner class ViewHolder(private val binding: ItemNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item : Notification) {
-            binding.tvTitle.text = item.name
-            binding.sValue.isChecked = item.enable
-            binding.sValue.setOnCheckedChangeListener { _, isChecked ->
-                items[adapterPosition].enable = isChecked
-                if(isChecked) {
+        init {
+            binding.sValue.setOnClickListener {
+                val item = items[adapterPosition]
+                item.enable = !item.enable
+                if(item.enable) {
                     enablesId.add(item.id)
                 } else {
                     enablesId.remove(item.id)
                 }
-
-                if(enablesId.size == 3) {
+                LoggerHelper.de(enablesId.toString())
+                if(enablesId.size == items.size) {
                     listener.allItemChange(true)
-                } else if(enablesId.size == 0) {
+                } else {
                     listener.allItemChange(false)
                 }
             }
+        }
+
+        fun bind(item : Notification) {
+            LoggerHelper.de("${item.id} : ${item.enable}")
+
+            binding.tvTitle.text = item.name
+            binding.sValue.isChecked = item.enable
         }
     }
 
@@ -47,11 +54,26 @@ class NotificationListAdapter(private val listener: AllItemChangeListener) : Rec
 
     override fun getItemCount(): Int = items.size
 
-    fun allChangeEnable(enable : Boolean) {
-        items.forEach {
-            it.enable = enable
+    fun addAllItems(list : ArrayList<Notification>) {
+        list.forEach {
+            if(it.enable) {
+                enablesId.add(it.id)
+            }
         }
-        notifyDataSetChanged()
+        items.addAll(list)
+        notifyItemRangeInserted(0,list.size)
+    }
+
+    fun allChangeEnable(enable : Boolean) {
+        items.forEachIndexed { index, notification ->
+            if(enable) {
+                enablesId.add(notification.id)
+            } else {
+                enablesId.remove(notification.id)
+            }
+            notification.enable = enable
+            notifyItemChanged(index)
+        }
     }
 
 

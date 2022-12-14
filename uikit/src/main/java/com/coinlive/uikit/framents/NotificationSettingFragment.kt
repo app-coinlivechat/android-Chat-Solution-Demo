@@ -44,11 +44,13 @@ class NotificationSettingFragment : BaseFragment(), AllItemChangeListener {
         originList?.let { it ->
             binding!!.progressBar.visibility = View.GONE
             binding!!.rvList.visibility = View.VISIBLE
-            adapter.items.addAll(it)
-            adapter.notifyDataSetChanged()
+            adapter.addAllItems(it)
+            val enableList = it.filter { it.enable }
+                binding!!.sAll.isChecked = enableList.size == it.size
         }
-        binding!!.sAll.setOnCheckedChangeListener { _, isChecked ->
-            adapter.allChangeEnable(isChecked)
+        binding!!.sAll.setOnClickListener {
+            binding!!.sAll.isChecked = !binding!!.sAll.isChecked
+            adapter.allChangeEnable(binding!!.sAll.isChecked)
         }
         binding!!.ibtnBack.setOnClickListener {
             setFragmentResult(Constants.reqKeyNotification,
