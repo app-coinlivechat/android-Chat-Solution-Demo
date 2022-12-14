@@ -104,11 +104,11 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                         viewModel.deleteBlock(chat.memberId!!, object : ResponseCallback<java.util.ArrayList<String>> {
                             override fun onSuccess(value: java.util.ArrayList<String>) {
                                 adapter.deleteBlockUser(viewModel.myInfo!!, chat.memberId!!)
-
+                                binding?.clNew?.setMyInfo(viewModel.myInfo!!)
                             }
 
                             override fun onFail(exception: CoinliveException) {
-                                Toast.makeText(requireContext(), "차단 해제 실패", Toast.LENGTH_SHORT).show()
+                                showToast("차단 해제 실패")
                             }
                         })
 
@@ -116,10 +116,11 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                         viewModel.addBlock(chat.memberId!!, object : ResponseCallback<java.util.ArrayList<String>> {
                             override fun onSuccess(value: java.util.ArrayList<String>) {
                                 adapter.addBlockUser(viewModel.myInfo!!, chat.memberId!!)
+                                binding?.clNew?.setMyInfo(viewModel.myInfo!!)
                             }
 
                             override fun onFail(exception: CoinliveException) {
-                                Toast.makeText(requireContext(), "차단 추가 실패", Toast.LENGTH_SHORT).show()
+                                showToast("차단 추가 실패")
                             }
 
                         })

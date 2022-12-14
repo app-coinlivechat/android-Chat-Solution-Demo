@@ -163,67 +163,16 @@
             app:layout_constraintTop_toBottomOf="@id/refresh"
             app:loginUser="@{chattingViewModel.myInfo != null}" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.coinlive.uikit.views.NewMessageView
             android:id="@+id/cl_new"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginBottom="4dp"
-            android:alpha="0.9"
-            android:background="@drawable/shape_new_msg_background"
-            android:padding="8dp"
             android:visibility="@{newMessage  == null ? View.GONE : View.VISIBLE}"
+            app:myInfo="@{chattingViewModel.myInfo}"
+            app:chat="@{newMessage}"
+            android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toTopOf="@id/cl_input"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <ImageView
-                android:id="@+id/iv_new_msg_profile"
-                loadNewChattingProfile="@{newMessage}"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@android:color/transparent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:id="@+id/tv_new_msg_nickname"
-                style="@style/new_msg_nickname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="@{newMessage.userNickname}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_new_msg_profile"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_new_msg"
-                style="@style/caption1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="6dp"
-                android:gravity="start"
-                android:text="@{locale.equals(`ko`)? newMessage.koMessage : newMessage.enMessage}"
-                android:textColor="@color/normal_text"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/iv_down"
-                app:layout_constraintStart_toEndOf="@id/tv_new_msg_nickname"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/iv_down"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/icon_chevron_down"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_new_msg"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageButton
             android:id="@+id/btn_bottom"
