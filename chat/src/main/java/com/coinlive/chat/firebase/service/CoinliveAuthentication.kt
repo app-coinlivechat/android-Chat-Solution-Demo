@@ -1,3 +1,5 @@
+@file:Suppress("KDocUnresolvedReference")
+
 package com.coinlive.chat.firebase.service
 
 import com.coinlive.chat.exception.FirebaseIdTokenException
@@ -83,5 +85,16 @@ object CoinliveAuthentication {
     fun getFirebaseUuid(): String {
         val currentUser: FirebaseUser = Firebase.auth.currentUser ?: throw FirebaseIdTokenException("CoinliveAuthentication.getFirebaseUuid error")
         return currentUser.uid
+    }
+
+    /**
+     * Firebase Authentication 로그인 유저가 익명 로그인의 유무를 전달합니다.
+     * 이 function을 사용하기 위해서는 [signIn] 또는 [signInAnonymously]가 선행되어야 합니다.
+     * @return[Boolean] 현재 Firebase Authentication에 로그인된 유저가 익명 로그인의 유무를 전달합니다.
+     */
+    fun isAnonymously() : Boolean {
+        val currentUser: FirebaseUser = Firebase.auth.currentUser ?: throw FirebaseIdTokenException("CoinliveAuthentication.isAnonymously error")
+
+        return currentUser.isAnonymous
     }
 }
