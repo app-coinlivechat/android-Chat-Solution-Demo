@@ -144,7 +144,6 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
                 documentSnapshotList.addAll(documents)
                 val oldMessage = filterWithConvert(documents)
-                sort(oldMessage)
 
                 listener.oldMessages(oldMessage, false)
 
@@ -177,7 +176,6 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
 
         val documents = documentSnapshotList.toList()
         val oldMessage = filterWithConvert(documents)
-        sort(oldMessage)
         listener.oldMessages(oldMessage, true)
     }
 
@@ -206,10 +204,6 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
             exception.printStackTrace()
             return null
         }
-    }
-
-    private fun sort(chat: List<Chat>) {
-        chat.sortedByDescending { it.insertTime }
     }
 
     private fun filterWithConvert(documents: List<DocumentSnapshot>): ArrayList<Chat> {
