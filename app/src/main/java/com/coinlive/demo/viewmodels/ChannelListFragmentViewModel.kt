@@ -8,6 +8,7 @@ import com.coinlive.chat.api.CoinliveRestApi
 import com.coinlive.chat.api.ResponseCallback
 import com.coinlive.chat.api.model.*
 import com.coinlive.chat.exception.CoinliveException
+import com.coinlive.chat.firebase.service.CoinliveAuthentication
 import kotlinx.coroutines.launch
 
 
@@ -24,15 +25,18 @@ class ChannelListFragmentViewModel : ViewModel() {
     }
 
     private fun loadMyInfo() = viewModelScope.launch {
-        clApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
-            override fun onSuccess(value: CustomerUser) {
-                myInfo = value
-            }
 
-            override fun onFail(exception: CoinliveException) {
-                myInfo = null
-            }
-        })
+        if (!CoinliveAuthentication.isAnonymously()) {
+            clApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
+                override fun onSuccess(value: CustomerUser) {
+                    myInfo = value
+                }
+
+                override fun onFail(exception: CoinliveException) {
+                    myInfo = null
+                }
+            })
+        }
     }
 
     private fun getChannelList(customerName : String) = viewModelScope.launch {
