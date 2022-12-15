@@ -260,7 +260,8 @@ class MessageMenuView @JvmOverloads constructor(
                         marginStart = 0
                     }
                 }
-                messageBinding.rvList.apply {
+//                messageBinding.rvList.apply {
+                messageBinding.glList.apply {
                     layoutParams = (layoutParams as MarginLayoutParams).apply {
                         topMargin = 0
                         marginStart = 0
