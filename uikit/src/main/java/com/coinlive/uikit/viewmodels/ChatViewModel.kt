@@ -71,8 +71,12 @@ class ChatViewModel : ViewModel() {
         coinliveChat =
             CoinliveChat(channel.coinId, channel.coinSymbol, customerName, listener, cmNoticeListener, amaListener,
                 context)
-        loadReportType()
-        loadNotificationType()
+        if(myInfo != null) {
+            loadReportType()
+            loadNotificationType()
+        } else {
+            fetchMessage()
+        }
         startTimer()
     }
 
@@ -122,7 +126,8 @@ class ChatViewModel : ViewModel() {
     }
 
     private fun startTimer() {
-        if (channel == null) return
+        if (channel == null || myInfo == null) return
+
 
         timer = Timer()
         timer?.schedule(object : TimerTask() {

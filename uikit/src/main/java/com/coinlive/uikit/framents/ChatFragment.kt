@@ -249,7 +249,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         }
 
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
-        if (viewModel.myInfo != null && viewModel.channel != null) {
+        if (viewModel.channel != null) {
 
             binding!!.rvList.apply {
                 this.adapter = this@ChatFragment.adapter
@@ -380,6 +380,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                                     }))
                                 v.findNavController()
                                     .navigate(R.id.action_chatFragment_to_notificationSettingFragment, bundle)
+                            } else {
+                                LoggerHelper.di("익명 사용자는 알림 설정을 할 수 없습니다.")
                             }
                         }
                         R.id.m_tranlator -> v.findNavController()
