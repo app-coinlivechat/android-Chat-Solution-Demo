@@ -49,6 +49,8 @@ data class Asset(
      * 자산 인증한 코인 심볼 url
      */
     var iconUrl: String? = null,
+
+    var nft : Boolean? = false
 ) : Parcelable {
     constructor() : this("")
 }
