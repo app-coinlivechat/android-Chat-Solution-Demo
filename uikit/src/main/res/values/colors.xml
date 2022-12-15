@@ -47,7 +47,6 @@
     <color name="swipe_progress">#353C4A</color>
     <color name="new_message_background">#AEB7C1</color>
     <color name="profile_nickname">#E0000000</color>
-    <color name="profile_background">#FFFFFF</color>
     <color name="translator_item_background">#DADEE2</color>
     <color name="translator_bottom_sheet_background">#FFFFFF</color>
     <color name="dialog_description">#202025</color>
@@ -68,6 +67,8 @@
     <color name="progress_background">#99000000</color>
     <color name="fail_message_button_background">#DADEE2</color>
     <color name="toast_background">#AEB7C1</color>
+    <color name="input_hint">#8D94A1</color>
+    <color name="input_background">#DADEE2</color>
 
 
 </resources>

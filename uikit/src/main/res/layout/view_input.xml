@@ -49,6 +49,8 @@
             android:enabled="@{isLoginUser}"
             android:focusable="@{!isAMA}"
             android:focusableInTouchMode="@{!isAMA}"
+            android:textColorHint="@color/input_hint"
+            android:backgroundTint="@color/input_background"
             android:hint="@{isAMA ? @string/input_ama_hint : (isLoginUser ? (isActiveUser ? @string/input_hint : @string/input_block_hint) : @string/input_anonymously_hint)}"
             android:maxLines="5"
             android:paddingHorizontal="16dp"

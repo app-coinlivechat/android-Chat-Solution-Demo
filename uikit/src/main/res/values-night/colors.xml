@@ -22,19 +22,19 @@
     <color name="main_action_light">#71C0CB</color>
     <color name="main_action_dark">#267F8B</color>
 
-    <color name="background">#1E1E1E</color>
-    <color name="normal_text">#000000</color>
-    <color name="line_color">#FFFFFF</color>
+    <color name="background">#101010</color>
+    <color name="normal_text">#FFFFFF</color>
+    <color name="line_color">#1FFFFFFF</color>
     <color name="menu_line_color">#E4E4E6</color>
 
 
     <color name="chat_other_msg_background">#464650</color>
     <color name="chat_me_msg_background">@color/primary</color>
-    <color name="chat_msg_text">#1E1E1E</color>
+    <color name="chat_msg_text">#FFFFFF</color>
     <color name="chat_msg_time_text">#7E7E86</color>
     <color name="asset_chat_stroke">#63636D</color>
     <color name="asset_chat_background">#202025</color>
-    <color name="asset_chat_description">#464650</color>
+    <color name="asset_chat_description">#7E7E86</color>
     <color name="server_chat_background">#464650</color>
     <color name="server_chat_time">#7E7E86</color>
     <color name="switch_track_off">#464650</color>
@@ -44,7 +44,6 @@
     <color name="swipe_progress">#FFFFFF</color>
     <color name="new_message_background">#2B2B33</color>
     <color name="profile_nickname">#E0FFFFFF</color>
-    <color name="profile_background">#101010</color>
     <color name="translator_item_background">#464650</color>
     <color name="translator_bottom_sheet_background">#2B2B33</color>
     <color name="dialog_description">#FFFFFF</color>
@@ -64,6 +63,8 @@
     <color name="progress_background">#99000000</color>
     <color name="fail_message_button_background">#464650</color>
     <color name="toast_background">#464650</color>
+    <color name="input_hint">#7E7E86</color>
+    <color name="input_background">#464650</color>
 
 
 
