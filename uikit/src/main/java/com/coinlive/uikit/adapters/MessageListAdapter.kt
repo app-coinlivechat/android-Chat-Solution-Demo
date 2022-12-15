@@ -136,6 +136,8 @@ class MessageListAdapter(
     override fun getItem(position: Int): Chat? = if (position < 0) null else if (position > items.size - 1) null else
         items[position]
 
+    override fun getItemId(position: Int): Long =items[position].hashCode().toLong()
+
     override fun getTranslatorItem(messageId: String): String? = translatorItem[messageId]
     override fun setTranslatorItem(messageId: String, transMsg: String) {
         translatorItem[messageId] = transMsg

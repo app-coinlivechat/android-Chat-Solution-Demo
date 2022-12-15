@@ -210,6 +210,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         messageMenuView.setListener(messageMenuEventListener)
         adapter =
             MessageListAdapter(coinName = viewModel.channel!!.name!!, myInfo = viewModel.myInfo, eventListener = this)
+        adapter.setHasStableIds(true)
 
     }
 
@@ -253,10 +254,10 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 this.adapter = this@ChatFragment.adapter
                 val layoutManager = LinearLayoutManager(requireContext())
                 layoutManager.reverseLayout = true
-//                layoutManager.stackFromEnd = true
                 layoutManager.isItemPrefetchEnabled = true
                 this.layoutManager = layoutManager //레이아웃 매니저 연결
                 addOnScrollListener(scrollListener)
+                setItemViewCacheSize(200)
             }
             CoroutineScope(Dispatchers.IO).launch {
                 viewModel.getOldFailMessage()?.let {
@@ -316,6 +317,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 binding?.rvList?.scrollToPosition(adapter.itemCount)
             }
         }
+        binding?.refresh?.isRefreshing = false
     }
 
     override fun newMessages(chat: Chat) {
