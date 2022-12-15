@@ -1,6 +1,5 @@
 package com.coinlive.uikit.viewholders
 
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import com.coinlive.chat.Coinlive
@@ -33,11 +32,11 @@ class OtherTextMessageViewHolder(
     }
 
     private fun initClickListener() {
-        binding.clMaxMsg.setOnLongClickListener { onLonClick(it) }
+        binding.clMaxMsg.setOnLongClickListener { onLonClick(it,binding.isRoundMessage) }
 
-        binding.clTrans.setOnLongClickListener { onLonClick(it) }
+        binding.clTrans.setOnLongClickListener { onLonClick(it,binding.isRoundMessage) }
 
-        binding.tvMsg.setOnLongClickListener { onLonClick(it) }
+        binding.tvMsg.setOnLongClickListener { onLonClick(it,binding.isRoundMessage) }
 
         binding.clMaxMsg.setOnClickListener {
             it.findNavController().navigate(R.id.action_chatFragment_to_textFragment, bundleOf(Constants
@@ -75,8 +74,7 @@ class OtherTextMessageViewHolder(
                 val translator = Translation.getClient(options)
                 translator.translate(binding.originMsg!!).addOnSuccessListener { transMsg ->
                     itemListener!!.getItem(adapterPosition)?.let { chat->
-                        itemListener.setTranslatorItem(chat.messageId,transMsg)
-                        visibleTransLayout(chat.messageId)
+                        itemListener.setTranslatorItem(adapterPosition,chat.messageId,transMsg)
                     }
 
                     translator.close()
@@ -85,8 +83,8 @@ class OtherTextMessageViewHolder(
         }
     }
 
-    override fun bind(item: Chat, isSameDate: Boolean, isRoundMessage: Boolean) {
-        super.bind(item, isSameDate, isRoundMessage)
+    override fun bind(item: Chat, isSameDate: Boolean, isRoundMessage: Boolean, isShowTime: Boolean) {
+        super.bind(item, isSameDate, isRoundMessage,isShowTime)
 
         val transMsg = itemListener?.getTranslatorItem(item.messageId)
         val message = if (Coinlive.locale.language.equals("ko")) item.koMessage else item.enMessage ?: ""
@@ -98,34 +96,14 @@ class OtherTextMessageViewHolder(
         binding.enableTranslator = PreferenceHelper.defaultPreference(binding.root.context).enableTranslator &&
                 transMsg == null
         binding.transMsg = transMsg
+        binding.isShowTime = isShowTime
+
         binding.originMsg =
             if (myInfo != null && myInfo.blockUserMidList.contains(item.memberId))
                 binding.root.context.getString(R.string.blocked_user_message)
             else
                 super.messageParser(message!!)
-
         binding.emoji.setMyMid(myInfo?.id)
-
-        if (binding.originMsg!!.length > 400) {
-            val constraintSet = ConstraintSet()
-            constraintSet.clone(binding.clRoot)
-            constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.clMaxMsg.id, ConstraintSet.END)
-            constraintSet.connect(binding.tvTime.id,
-                ConstraintSet.BOTTOM,
-                binding.clMaxMsg.id,
-                ConstraintSet.BOTTOM)
-            constraintSet.connect(binding.ibtnTranslator.id,
-                ConstraintSet.START,
-                binding.clMaxMsg.id,
-                ConstraintSet.END)
-            constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.clMaxMsg.id, ConstraintSet.BOTTOM)
-            constraintSet.applyTo(binding.clRoot)
-        } else if (transMsg == null) {
-            goneTransLayout()
-        } else {
-            visibleTransLayout(item.messageId)
-        }
-
     }
 
     private fun moveTextFragment(description: String) {
@@ -136,26 +114,4 @@ class OtherTextMessageViewHolder(
                 Constants.argKeyAutoTranslator to true))
     }
 
-
-    private fun visibleTransLayout(messageId: String) {
-        binding.transMsg = itemListener?.getTranslatorItem(messageId)
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(binding.clRoot)
-        constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.clTrans.id, ConstraintSet.END)
-        constraintSet.connect(binding.tvTime.id, ConstraintSet.BOTTOM, binding.clTrans.id, ConstraintSet.BOTTOM)
-        constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.clTrans.id, ConstraintSet.BOTTOM)
-
-        constraintSet.applyTo(binding.clRoot)
-    }
-
-    private fun goneTransLayout() {
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(binding.clRoot)
-        constraintSet.connect(binding.tvTime.id, ConstraintSet.START, binding.tvMsg.id, ConstraintSet.END)
-        constraintSet.connect(binding.tvTime.id, ConstraintSet.BOTTOM, binding.tvMsg.id, ConstraintSet.BOTTOM)
-        constraintSet.connect(binding.ibtnTranslator.id, ConstraintSet.START, binding.tvMsg.id, ConstraintSet.END)
-        constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.tvMsg.id, ConstraintSet.BOTTOM)
-
-        constraintSet.applyTo(binding.clRoot)
-    }
 }

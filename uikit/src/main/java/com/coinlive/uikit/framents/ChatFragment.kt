@@ -87,6 +87,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                     binding?.btnBottom?.visibility = View.VISIBLE
                 } else if (visibleItemPosition == 0 && binding?.btnBottom?.visibility == View.VISIBLE) {
                     binding?.btnBottom?.visibility = View.GONE
+                    binding?.clNew?.visibility = View.GONE
                 }
             }
         }
@@ -328,6 +329,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             if (visibleItemPosition > 0) {
                 binding?.newMessage = chat
                 binding?.btnBottom?.visibility = View.GONE
+            } else {
+                binding?.rvList?.scrollToPosition(0)
             }
         }
     }
@@ -399,11 +402,11 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         KeyboardHelper.hideKeyboard(view)
     }
 
-    override fun onLongClick(item: Chat, view: View, viewType: Int) {
+    override fun onLongClick(item: Chat, view: View, viewType: Int, isRoundMessage: Boolean) {
 
         if (item.memberId != null) {
             binding?.rvList?.suppressLayout(true)
-            messageMenuView.addMessage(view, viewType, item, adapter)
+            messageMenuView.addMessage(view, viewType, item, adapter, isRoundMessage)
             messageMenuView.setChat(item)
             messageMenuView.setIsReadyBlock(viewModel.isBlockUser(item.memberId!!))
             messagePopupWindow.showAsDropDown(view)

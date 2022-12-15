@@ -32,6 +32,10 @@
             name="isMessageMenu"
             type="Boolean" />
 
+        <variable
+            name="isShowTime"
+            type="Boolean" />
+
     </data>
 
 
@@ -72,6 +76,7 @@
             style="@style/caption1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
             android:layout_marginStart="8dp"
             android:text="@{chat.userNickname}"
             android:textColor="@color/normal_text"
@@ -88,7 +93,6 @@
             android:text="@{chat.appName.toUpperCase()}"
             android:textColor="@color/grey_030"
             android:visibility="@{isMessageMenu ? View.GONE : (isRoundMessage ? View.GONE : View.VISIBLE)}"
-            app:layout_constraintBottom_toBottomOf="@id/tv_nickName"
             app:layout_constraintStart_toEndOf="@id/tv_nickName"
             app:layout_constraintTop_toTopOf="@id/tv_nickName" />
 
@@ -108,53 +112,53 @@
             tools:ignore="TextContrastCheck" />
 
 
-        <ImageView
-            android:id="@+id/iv_one"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:id="@+id/rl_image"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="60dp"
-            android:adjustViewBounds="true"
-            android:cropToPadding="false"
-            android:maxWidth="241dp"
-            android:visibility="@{isBlockUser ? View.VISIBLE :(chat.images.size() > 1 ? View.GONE : View.VISIBLE)}"
-            app:layout_constraintStart_toEndOf="@id/ibtn_profile"
-            app:layout_constraintTop_toBottomOf="@id/tv_nickName"
-            tools:ignore="ContentDescription" />
-
-
-        <GridLayout
-            android:id="@+id/gl_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="60dp"
-            android:alignmentMode="alignMargins"
-            android:orientation="horizontal"
-            android:useDefaultMargins="true"
-            android:visibility="@{isBlockUser ? View.GONE : (chat.images.size() > 1 ? View.VISIBLE : View.GONE)}"
+            android:gravity="start"
             app:layout_constraintBottom_toTopOf="@id/v_bottom"
             app:layout_constraintStart_toEndOf="@id/ibtn_profile"
-            app:layout_constraintTop_toBottomOf="@id/tv_nickName" />
+            app:layout_constraintTop_toBottomOf="@id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:maxWidth="241dp"
+                android:visibility="@{isBlockUser ? View.VISIBLE :(chat.images.size() > 1 ? View.GONE : View.VISIBLE)}"
+                tools:ignore="ContentDescription" />
 
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/rv_list"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="8dp"-->
-<!--            android:layout_marginTop="4dp"-->
-<!--            android:layout_marginEnd="60dp"-->
-<!--            android:clipChildren="false"-->
-<!--            android:clipToPadding="false"-->
-<!--            android:longClickable="true"-->
-<!--            android:padding="0dp"-->
-<!--            android:visibility="gone"-->
-<!--            app:layout_constraintBottom_toTopOf="@id/v_bottom"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toEndOf="@id/ibtn_profile"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/tv_nickName" />-->
+            <GridLayout
+                android:id="@+id/gl_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="241dp"
+                android:minHeight="75dp"
+                android:orientation="horizontal"
+                android:useDefaultMargins="false"
+                android:visibility="@{isBlockUser ? View.GONE : (chat.images.size() > 1 ? View.VISIBLE : View.GONE)}"/>
+
+            <!--        <androidx.recyclerview.widget.RecyclerView-->
+            <!--            android:id="@+id/rv_list"-->
+            <!--            android:layout_width="wrap_content"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:layout_marginStart="8dp"-->
+            <!--            android:layout_marginTop="4dp"-->
+            <!--            android:layout_marginEnd="60dp"-->
+            <!--            android:clipChildren="false"-->
+            <!--            android:clipToPadding="false"-->
+            <!--            android:longClickable="true"-->
+            <!--            android:padding="0dp"-->
+            <!--            android:visibility="gone"-->
+            <!--            app:layout_constraintBottom_toTopOf="@id/v_bottom"-->
+            <!--            app:layout_constraintEnd_toEndOf="parent"-->
+            <!--            app:layout_constraintStart_toEndOf="@id/ibtn_profile"-->
+            <!--            app:layout_constraintTop_toBottomOf="@id/tv_nickName" />-->
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_time"
@@ -163,27 +167,25 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:textColor="@color/chat_msg_time_text"
-            android:visibility="@{isMessageMenu ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="@id/gl_list"
-            app:layout_constraintStart_toEndOf="@id/gl_list"
+            android:visibility="@{isMessageMenu ? View.GONE : (isShowTime ? View.VISIBLE : View.GONE)}"
+            app:layout_constraintBottom_toBottomOf="@id/rl_image"
+            app:layout_constraintStart_toEndOf="@id/rl_image"
             app:setTime="@{chat.insertTime}" />
 
         <com.coinlive.uikit.views.EmojiView
             android:id="@+id/emoji"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
             android:visibility="@{isMessageMenu ? View.GONE : View.VISIBLE}"
             app:emojiMap="@{chat.emoji}"
             app:layout_constraintBottom_toTopOf="@id/v_bottom"
             app:layout_constraintStart_toEndOf="@id/ibtn_profile"
-            app:layout_constraintTop_toBottomOf="@id/iv_one" />
+            app:layout_constraintTop_toBottomOf="@id/rl_image" />
 
         <View
             android:id="@+id/v_bottom"
             android:layout_width="match_parent"
-            android:layout_height="16dp"
+            android:layout_height="@dimen/normal_message_bottom_margin"
             android:visibility="@{isMessageMenu ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

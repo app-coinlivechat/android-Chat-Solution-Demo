@@ -37,6 +37,10 @@
             type="Boolean" />
 
         <variable
+            name="isShowTime"
+            type="Boolean" />
+
+        <variable
             name="isEnableEmoji"
             type="Boolean" />
     </data>
@@ -78,6 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:paddingBottom="4dp"
             android:text="@{chat.userNickname}"
             android:textColor="@color/normal_text"
             android:visibility="@{isMessageMenu ? View.GONE :(isRoundMessage ? View.GONE : View.VISIBLE)}"
@@ -93,7 +98,6 @@
             android:text="@{chat.appName.toUpperCase()}"
             android:textColor="@color/grey_030"
             android:visibility="@{isMessageMenu ? View.GONE :(isRoundMessage ? View.GONE : View.VISIBLE)}"
-            app:layout_constraintBottom_toBottomOf="@id/tv_nickName"
             app:layout_constraintStart_toEndOf="@id/tv_nickName"
             app:layout_constraintTop_toTopOf="@id/tv_nickName" />
 
@@ -111,157 +115,154 @@
             app:layout_constraintStart_toEndOf="@id/tv_appName"
             app:layout_constraintTop_toTopOf="@id/tv_appName" />
 
-        <TextView
-            android:id="@+id/tv_msg"
-            style="@style/body2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:autoLink="web"
-            android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
-            android:gravity="start"
-            android:linksClickable="true"
-            android:maxWidth="246dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="8dp"
-            android:text="@{originMsg}"
-            android:textColor="@color/normal_text"
-            android:textColorLink="@color/sub_blue_500"
-            android:visibility="@{originMsg.length > 400 ? View.GONE :  (transMsg == null ? View.VISIBLE : View.GONE)}"
-            app:layout_constraintStart_toEndOf="@id/ibtn_profile"
-            app:layout_constraintTop_toBottomOf="@id/tv_nickName" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_max_msg"
+        <RelativeLayout
+            android:id="@+id/rl_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="8dp"
-            android:visibility="@{originMsg.length > 400 ? View.VISIBLE :View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/emoji"
             app:layout_constraintStart_toEndOf="@id/ibtn_profile"
             app:layout_constraintTop_toBottomOf="@id/tv_nickName">
 
             <TextView
-                android:id="@+id/tv_max_msg"
+                android:id="@+id/tv_msg"
                 style="@style/body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
-                android:ellipsize="end"
+                android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
+                android:gravity="start"
                 android:linksClickable="true"
-                android:maxWidth="222dp"
-                android:maxLength="400"
+                android:maxWidth="246dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
                 android:text="@{originMsg}"
                 android:textColor="@color/normal_text"
                 android:textColorLink="@color/sub_blue_500"
-                app:layout_constraintBottom_toTopOf="@id/tv_all"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_all"
-                style="@style/subtitle4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/read_all"
-                android:textColor="@color/normal_text"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_max_msg" />
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/icon_chevron_right"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_max_msg"
-                tools:ignore="ContentDescription" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_trans"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:maxWidth="246dp"
-            android:visibility="@{transMsg == null ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toTopOf="@id/emoji"
-            app:layout_constraintStart_toEndOf="@id/ibtn_profile"
-            app:layout_constraintTop_toBottomOf="@id/tv_nickName">
+                android:visibility="@{originMsg.length > 400 ? View.GONE :  (transMsg == null ? View.VISIBLE : View.GONE)}" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_trans_msg"
+                android:id="@+id/cl_max_msg"
                 android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
                 android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
+                android:maxWidth="246dp"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:visibility="@{originMsg.length > 400 ? View.VISIBLE :View.GONE, default = gone}">
 
                 <TextView
-                    android:id="@+id/tv_origin_msg"
+                    android:id="@+id/tv_max_msg"
                     style="@style/body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="web"
+                    android:ellipsize="end"
                     android:linksClickable="true"
+                    android:maxWidth="222dp"
+                    android:maxLength="400"
                     android:text="@{originMsg}"
                     android:textColor="@color/normal_text"
                     android:textColorLink="@color/sub_blue_500"
+                    app:layout_constraintBottom_toTopOf="@id/tv_all"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:id="@+id/v_divider"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/normal_text"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_origin_msg" />
-
                 <TextView
-                    android:id="@+id/tv_trans_msg"
-                    style="@style/body2"
+                    android:id="@+id/tv_all"
+                    style="@style/subtitle4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:autoLink="web"
-                    android:linksClickable="true"
-                    android:text="@{transMsg}"
+                    android:text="@string/read_all"
                     android:textColor="@color/normal_text"
-                    android:textColorLink="@color/sub_blue_500"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/v_divider" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_max_msg" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/icon_chevron_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_max_msg"
+                    tools:ignore="ContentDescription" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ImageView
-                android:id="@+id/iv_copy"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_trans"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:src="@drawable/img_translated_by_google"
-                android:visibility="@{isRoundMessage ? View.GONE : View.VISIBLE}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_trans_msg"
-                tools:ignore="ContentDescription" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:maxWidth="246dp"
+                android:visibility="@{transMsg == null ? View.GONE : View.VISIBLE,default=gone}">
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_trans_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tv_origin_msg"
+                        style="@style/body2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoLink="web"
+                        android:linksClickable="true"
+                        android:text="@{originMsg}"
+                        android:textColor="@color/normal_text"
+                        android:textColorLink="@color/sub_blue_500"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/v_divider"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@color/normal_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_origin_msg" />
+
+                    <TextView
+                        android:id="@+id/tv_trans_msg"
+                        style="@style/body2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:autoLink="web"
+                        android:linksClickable="true"
+                        android:text="@{transMsg}"
+                        android:textColor="@color/normal_text"
+                        android:textColorLink="@color/sub_blue_500"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/v_divider" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/img_translated_by_google"
+            android:visibility="@{isRoundMessage ? View.GONE : (transMsg == null ? View.GONE : View.VISIBLE), default=gone}"
+            app:layout_constraintStart_toStartOf="@id/rl_msg"
+            app:layout_constraintTop_toBottomOf="@id/rl_msg"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/tv_time"
@@ -271,9 +272,9 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="19dp"
             android:textColor="@color/chat_msg_time_text"
-            android:visibility="@{isRoundMessage ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="@id/tv_msg"
-            app:layout_constraintStart_toEndOf="@id/tv_msg"
+            android:visibility="@{!isShowTime ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@id/rl_msg"
+            app:layout_constraintStart_toEndOf="@id/rl_msg"
             app:setTime="@{chat.insertTime}" />
 
         <ImageButton
@@ -285,7 +286,7 @@
             android:src="@drawable/icon_translator_16"
             android:visibility="@{isMessageMenu ? View.GONE :(transMsg != null ? View.GONE : (enableTranslator ? View.VISIBLE : View.GONE))}"
             app:layout_constraintBottom_toTopOf="@id/tv_time"
-            app:layout_constraintStart_toEndOf="@id/tv_msg"
+            app:layout_constraintStart_toEndOf="@id/rl_msg"
             tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
 
@@ -293,13 +294,11 @@
             android:id="@+id/emoji"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
             android:visibility="@{isMessageMenu ? View.GONE : (isEnableEmoji ? View.VISIBLE : View.GONE)}"
             app:emojiMap="@{chat.emoji}"
             app:layout_constraintBottom_toTopOf="@id/v_bottom"
             app:layout_constraintStart_toEndOf="@id/ibtn_profile"
-            app:layout_constraintTop_toBottomOf="@id/tv_msg" />
+            app:layout_constraintTop_toBottomOf="@id/rl_msg" />
 
         <View
             android:id="@+id/v_bottom"

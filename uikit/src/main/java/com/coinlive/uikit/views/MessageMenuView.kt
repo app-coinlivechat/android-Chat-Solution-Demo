@@ -170,9 +170,9 @@ class MessageMenuView @JvmOverloads constructor(
         val viewRect = view.rect()
         LoggerHelper.de("view.rect(): ${view.rect().flattenToString()}")
 
-        if(viewRect.top < 219) {
+        if (viewRect.top < 219) {
             return MenuPosition.OVERLAY
-        }else if (viewRect.height() > (size.height / 2)) {
+        } else if (viewRect.height() > (size.height / 2)) {
             return MenuPosition.OVERLAY
         } else {
             if (viewRect.top > (size.height / 2)) {
@@ -183,7 +183,7 @@ class MessageMenuView @JvmOverloads constructor(
         return MenuPosition.BOTTOM
     }
 
-    fun addMessage(view: View, viewType: Int, item: Chat, adapter: MessageListAdapter) {
+    fun addMessage(view: View, viewType: Int, item: Chat, adapter: MessageListAdapter, isRoundMessage: Boolean) {
 
         binding.llMessage.removeAllViews()
         binding.llMessage.visibility = View.VISIBLE
@@ -199,20 +199,8 @@ class MessageMenuView @JvmOverloads constructor(
                 val messageBinding = ViewOtherTextMessageBinding.inflate(LayoutInflater.from(view.context), null,
                     false)
                 val holder = OtherTextMessageViewHolder(messageBinding, true, null, adapter)
-                holder.bind(item, isSameDate = true, isRoundMessage = true)
-                messageBinding.tvMsg.apply {
-                    layoutParams = (layoutParams as MarginLayoutParams).apply {
-                        topMargin = 0
-                        marginStart = 0
-                    }
-                }
-                messageBinding.clMaxMsg.apply {
-                    layoutParams = (layoutParams as MarginLayoutParams).apply {
-                        topMargin = 0
-                        marginStart = 0
-                    }
-                }
-                messageBinding.clTrans.apply {
+                holder.bind(item, isSameDate = true, isRoundMessage = isRoundMessage, isShowTime = false)
+                messageBinding.rlMsg.apply {
                     layoutParams = (layoutParams as MarginLayoutParams).apply {
                         topMargin = 0
                         marginStart = 0
@@ -229,11 +217,12 @@ class MessageMenuView @JvmOverloads constructor(
                 val messageBinding = ViewOtherAssetChatItemBinding.inflate(LayoutInflater.from(view.context), null,
                     false)
                 val holder = OtherAssetMessageViewHolder(messageBinding, true, null, adapter)
-                holder.bind(item, isSameDate = true, isRoundMessage = true)
+                holder.bind(item, isSameDate = true, isRoundMessage = isRoundMessage, isShowTime = false)
                 messageBinding.base.getTvMsg().apply {
                     layoutParams = (layoutParams as MarginLayoutParams).apply {
                         topMargin = 0
                         marginStart = 0
+                        bottomMargin = dpToPx(5F)
                     }
                 }
                 messageBinding.clAsset.apply {
@@ -245,7 +234,7 @@ class MessageMenuView @JvmOverloads constructor(
                 binding.llMessage.apply {
                     addView(holder.itemView)
                     layoutParams = (layoutParams as MarginLayoutParams).apply {
-                        topMargin = (screen[1] - dpToPx(70F))
+                        topMargin = (screen[1] - dpToPx(72F))
                     }
                 }
             }
@@ -253,15 +242,8 @@ class MessageMenuView @JvmOverloads constructor(
                 val messageBinding = ViewOtherImageChatItemBinding.inflate(LayoutInflater.from(view.context), null,
                     false)
                 val holder = OtherImageMessageViewHolder(messageBinding, true, null, adapter)
-                holder.bind(item, isSameDate = true, isRoundMessage = true)
-                messageBinding.ivOne.apply {
-                    layoutParams = (layoutParams as MarginLayoutParams).apply {
-                        topMargin = 0
-                        marginStart = 0
-                    }
-                }
-//                messageBinding.rvList.apply {
-                messageBinding.glList.apply {
+                holder.bind(item, isSameDate = true, isRoundMessage = isRoundMessage, isShowTime = false)
+                messageBinding.rlImage.apply {
                     layoutParams = (layoutParams as MarginLayoutParams).apply {
                         topMargin = 0
                         marginStart = 0
@@ -278,7 +260,7 @@ class MessageMenuView @JvmOverloads constructor(
                 val messageBinding = ViewMyTextMessageBinding.inflate(LayoutInflater.from(view.context), null,
                     false)
                 val holder = MyTextMessageViewHolder(messageBinding, true, null, null)
-                holder.bind(item, isSameDate = true, isRoundMessage = true)
+                holder.bind(item, isSameDate = true, isRoundMessage = isRoundMessage, isShowTime = false)
                 messageBinding.tvMsg.apply {
                     layoutParams = (layoutParams as MarginLayoutParams).apply {
                         topMargin = 0
@@ -326,10 +308,10 @@ class MessageMenuView @JvmOverloads constructor(
                 constraintSet.connect(binding.clMenu.id, ConstraintSet.BOTTOM, -1, ConstraintSet.TOP)
             }
             MenuPosition.OVERLAY -> {
-                binding.llMessage.getChildAt(0).visibility = View.INVISIBLE
+                binding.llMessage.removeAllViews()
                 binding.llMessage.apply {
                     layoutParams = (layoutParams as MarginLayoutParams).apply {
-                        topMargin -= (screen[1] / 2)
+                        topMargin = (screen[1] / 2)
                     }
                 }
             }

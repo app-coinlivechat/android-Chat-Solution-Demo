@@ -1,6 +1,5 @@
 package com.coinlive.uikit.viewholders
 
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import com.coinlive.chat.Coinlive
@@ -13,17 +12,17 @@ import com.coinlive.uikit.utils.Constants
 
 class MyTextMessageViewHolder(
     private val binding: ViewMyTextMessageBinding,
-    isMessageMenu : Boolean = false,
-    private val eventListener: MessageEventListener? = null,
+    isMessageMenu: Boolean = false,
+    private val eventListener: MessageEventListener?,
     private val itemListener: ItemListener?,
 ) : BaseViewHolder(binding, eventListener, itemListener) {
 
     init {
         binding.isMessageMenu = isMessageMenu
-        if(!isMessageMenu) {
-            binding.clMaxMsg.setOnLongClickListener { onLonClick(it) }
+        if (!isMessageMenu) {
+            binding.clMaxMsg.setOnLongClickListener { onLonClick(it, binding.isRoundMessage) }
 
-            binding.tvMsg.setOnLongClickListener { onLonClick(it) }
+            binding.tvMsg.setOnLongClickListener { onLonClick(it, binding.isRoundMessage) }
 
             binding.clMaxMsg.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_chatFragment_to_textFragment,
@@ -47,31 +46,12 @@ class MyTextMessageViewHolder(
 
     }
 
-    override fun bind(item: Chat, isSameDate: Boolean, isRoundMessage: Boolean) {
-        super.bind(item, isSameDate, isRoundMessage)
+    override fun bind(item: Chat, isSameDate: Boolean, isRoundMessage: Boolean, isShowTime: Boolean) {
+        super.bind(item, isSameDate, isRoundMessage, isShowTime)
         binding.chat = item
         binding.isRoundMessage = isRoundMessage
         binding.isSameDate = isSameDate
+        binding.isShowTime = isShowTime
         binding.message = if (Coinlive.locale.language.equals("ko")) item.koMessage else item.enMessage ?: ""
-
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(binding.clRoot)
-        if (binding.message!!.length > 400) {
-            constraintSet.connect(binding.tvTime.id, ConstraintSet.END, binding.clMaxMsg.id, ConstraintSet.START)
-            constraintSet.connect(binding.tvTime.id,
-                ConstraintSet.BOTTOM,
-                binding.clMaxMsg.id,
-                ConstraintSet.BOTTOM)
-            constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.clMaxMsg.id, ConstraintSet.BOTTOM)
-        } else {
-            constraintSet.connect(binding.tvTime.id, ConstraintSet.END, binding.tvMsg.id, ConstraintSet.START)
-            constraintSet.connect(binding.tvTime.id,
-                ConstraintSet.BOTTOM,
-                binding.clMaxMsg.id,
-                ConstraintSet.BOTTOM)
-            constraintSet.connect(binding.emoji.id, ConstraintSet.TOP, binding.tvMsg.id, ConstraintSet.BOTTOM)
-
-        }
-        constraintSet.applyTo(binding.clRoot)
     }
 }

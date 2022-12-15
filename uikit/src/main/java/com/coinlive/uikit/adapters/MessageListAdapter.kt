@@ -21,7 +21,7 @@ import kotlin.collections.HashMap
 
 interface MessageEventListener {
     fun onClick(item: Chat, view: View)
-    fun onLongClick(item: Chat, view: View, viewType: Int)
+    fun onLongClick(item: Chat, view: View, viewType: Int, isRoundMessage: Boolean)
     fun onProfileClick(item: Chat, view: View)
     fun addEmoji(item: Chat, emojiKey: String)
     fun deleteEmoji(item: Chat, emojiKey: String)
@@ -128,7 +128,8 @@ class MessageListAdapter(
 
         holder.bind(item,
             isPreviousMessageSameDate(item, previousChat),
-            isRoundMessage(item, nextChat, previousChat))
+            isRoundMessage(item, nextChat, previousChat),
+            isShowTime(item, nextChat, previousChat))
     }
 
     override fun getItemCount(): Int = items.size
@@ -136,11 +137,12 @@ class MessageListAdapter(
     override fun getItem(position: Int): Chat? = if (position < 0) null else if (position > items.size - 1) null else
         items[position]
 
-    override fun getItemId(position: Int): Long =items[position].hashCode().toLong()
+    override fun getItemId(position: Int): Long = items[position].hashCode().toLong()
 
     override fun getTranslatorItem(messageId: String): String? = translatorItem[messageId]
-    override fun setTranslatorItem(messageId: String, transMsg: String) {
+    override fun setTranslatorItem(position: Int, messageId: String, transMsg: String) {
         translatorItem[messageId] = transMsg
+        notifyItemChanged(position)
     }
 
     override fun getMyInfo(): CustomerUser? = myInfo
@@ -155,29 +157,39 @@ class MessageListAdapter(
     }
 
     private fun isRoundMessage(chat: Chat, nextChat: Chat?, previousChat: Chat?): Boolean {
-        return if (nextChat == null && previousChat == null) {
-            true
-        } else if (nextChat != null && previousChat == null) {
-            nextChat.memberId == chat.memberId && nextChat.insertTime - chat.insertTime > 60000
-        } else if (nextChat == null && previousChat != null) {
-            previousChat.memberId == chat.memberId && chat.insertTime - previousChat.insertTime > 60000
+        return if (nextChat == null) {
+            false
+        } else if (previousChat == null) {
+            false
+        } else if (previousChat.memberId != chat.memberId) {
+            false
         } else {
-            val previousTimeDiff = chat.insertTime - previousChat!!.insertTime
-            previousTimeDiff < 60000
+            chat.insertTime - previousChat.insertTime < (60 * 1000)
         }
     }
 
     private fun isShowTime(chat: Chat, nextChat: Chat?, previousChat: Chat?): Boolean {
-        return if (nextChat == null && previousChat == null) {
+
+        return if (nextChat == null) {
             true
-        } else if (nextChat != null && previousChat == null) {
-            nextChat.memberId == chat.memberId && nextChat.insertTime - chat.insertTime > 60000
-        } else if (nextChat == null && previousChat != null) {
-            previousChat.memberId == chat.memberId && chat.insertTime - previousChat.insertTime > 60000
+        } else if (previousChat == null) {
+            true
+        } else if (nextChat.memberId != chat.memberId) {    // 이전 채팅 유저랑 현재 유저랑 다른 유저일 경우
+            true
         } else {
-            val previousTimeDiff = chat.insertTime - previousChat!!.insertTime
-            previousTimeDiff < 60000
+            nextChat.insertTime - chat.insertTime > (60 * 1000)
         }
+
+//        return if (nextChat == null && previousChat == null) {
+//            true
+//        } else if (nextChat != null && previousChat == null) {
+//            nextChat.memberId == chat.memberId && nextChat.insertTime - chat.insertTime > 60000
+//        } else if (nextChat == null && previousChat != null) {
+//            previousChat.memberId == chat.memberId && chat.insertTime - previousChat.insertTime > 60000
+//        } else {
+//            val previousTimeDiff = chat.insertTime - previousChat!!.insertTime
+//            previousTimeDiff < 60000
+//        }
     }
 
 
@@ -208,7 +220,7 @@ class MessageListAdapter(
     fun addNewItem(chat: Chat) {
         val inputIndex = if (failMessageSize < 0) 0 else failMessageSize
         items.add(inputIndex, chat)
-        notifyItemRangeInserted(inputIndex, 1)
+        notifyItemInserted(0)
     }
 
     fun addFailItem(chat: Chat) {

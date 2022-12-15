@@ -8,16 +8,18 @@ import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.uikit.adapters.MessageEventListener
 
 interface ItemListener {
-    fun getItem(position: Int) : Chat?
-    fun getTranslatorItem(messageId : String): String?
-    fun setTranslatorItem(messageId : String, transMsg : String)
-    fun getMyInfo() : CustomerUser?
+    fun getItem(position: Int): Chat?
+    fun getTranslatorItem(messageId: String): String?
+    fun setTranslatorItem(position: Int,messageId: String, transMsg: String)
+    fun getMyInfo(): CustomerUser?
 }
 
 
-open class BaseViewHolder(private val binding: ViewDataBinding, private val eventListener: MessageEventListener? =
-    null, private val itemListener: ItemListener?) :
-    RecyclerView.ViewHolder(binding.root) {
+open class BaseViewHolder(
+    private val binding: ViewDataBinding,
+    private val eventListener: MessageEventListener?,
+    private val itemListener: ItemListener?,
+) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         binding.root.setOnClickListener {
@@ -27,12 +29,14 @@ open class BaseViewHolder(private val binding: ViewDataBinding, private val even
         }
     }
 
-    open fun bind(item: Chat, isSameDate: Boolean, isRoundMessage: Boolean) {
+    open fun bind(item: Chat, isSameDate: Boolean, isRoundMessage: Boolean, isShowTime: Boolean) {
     }
 
-    open fun onLonClick(view: View): Boolean {
+    open fun onLonClick(view: View, isRoundMessage: Boolean?): Boolean {
+
+
         itemListener?.getItem(adapterPosition)?.let {
-            eventListener?.onLongClick(it, view,itemViewType)
+            eventListener?.onLongClick(it, view, itemViewType, isRoundMessage ?: false)
         }
         return true
     }

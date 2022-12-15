@@ -32,6 +32,10 @@
             name="isMessageMenu"
             type="Boolean" />
 
+        <variable
+            name="isShowTime"
+            type="Boolean" />
+
     </data>
 
 
@@ -51,6 +55,7 @@
             app:isMessageMenu="@{isMessageMenu}"
             app:isRoundMessage="@{isRoundMessage}"
             app:isSameDate="@{isSameDate}"
+            app:isShowTime="@{isShowTime}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:originMsg="@{locale.equals(`ko`)? chat.koMessage : chat.enMessage}" />
@@ -59,8 +64,8 @@
             android:id="@+id/cl_asset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:layout_marginStart="56dp"
+            android:layout_marginTop="2dp"
             android:layout_marginEnd="19dp"
             android:background="@drawable/shape_asset_chatting_background"
             android:paddingHorizontal="12dp"
@@ -129,7 +134,6 @@
             android:id="@+id/emoji"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:visibility="@{isMessageMenu ? View.GONE : View.VISIBLE}"
             app:emojiMap="@{chat.emoji}"
             app:layout_constraintBottom_toTopOf="@id/v_bottom"

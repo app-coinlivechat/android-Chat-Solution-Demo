@@ -45,7 +45,11 @@ class OtherTextMessageView @JvmOverloads constructor(
         binding.isEnableEmoji = isEnableEmoji
     }
 
-    fun getTvMsg() : View = binding.tvMsg
+    fun setIsShowTime(isShowTime : Boolean) {
+        binding.isShowTime = isShowTime
+    }
+
+    fun getTvMsg() : View = binding.rlMsg
 
 
 }

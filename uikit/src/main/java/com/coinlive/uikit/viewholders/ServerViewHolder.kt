@@ -9,12 +9,12 @@ import com.coinlive.uikit.databinding.ViewServerChatItemBinding
 
 class ServerViewHolder(
     private val binding: ViewServerChatItemBinding,
-    private val coinName : String,
-    eventListener: MessageEventListener? = null,
+    private val coinName: String,
+    eventListener: MessageEventListener?,
     itemListener: ItemListener?,
 ) : BaseViewHolder(binding, eventListener, itemListener) {
-    override fun bind(item: Chat, isSameDate: Boolean, isRoundMessage: Boolean) {
-        super.bind(item, isSameDate, isRoundMessage)
+    override fun bind(item: Chat, isSameDate: Boolean, isRoundMessage: Boolean, isShowTime: Boolean) {
+        super.bind(item, isSameDate, isRoundMessage, isShowTime)
         binding.chat = item
         binding.locale = Coinlive.locale.language
         binding.coinName = coinName
