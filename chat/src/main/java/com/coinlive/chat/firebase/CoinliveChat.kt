@@ -45,7 +45,7 @@ import kotlin.collections.HashMap
  * 코인라이브는 일반적으로 하나의 채팅이 하나의 코인/토큰과 매칭되어 사용됩니다.
  *
  * Coinlive는 Firebase RealTimeDatabase 와 Cloud Firestore를 사용하기 때문에 반드시
- * [CoinliveAuthentication.signIn] 을 선행애햐 합니다.
+가 * [CoinliveAuthentication.signInWithCustomToken] 을 선행애햐 합니다.
  *
  * 마지막으로 채널간 전환/변경하거나 종료시 [close]를 호출해 object를 해제해주세요.
  * @param[coinId] 채널의 코인 아이디 ([CoinliveRestApi.getChannelList]를 통해 받아온 [Channel.coinId]를 이용하세요)

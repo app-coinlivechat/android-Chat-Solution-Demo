@@ -72,7 +72,7 @@ class CoinliveRestApi {
      * @param[password] customer password
      * @param[customerName] customer 이름
      * @return[CustomerUserSignUp] 사용자 uuid를 이용하여 Firebase Authentication에 로그인 할 수 있는 정보를 전달합니다.
-     * 전달받은 데이터를 이용하여 [CoinliveAuthentication.signIn] 또는 [customerUserSignUp]을 이용하는데 사용하십시요.
+     * 전달받은 데이터를 이용하여 [CoinliveAuthentication.signInWithCustomToken] 또는 [customerUserSignUp]을 이용하는데 사용하십시요.
      */
     suspend fun getCustomToken(
         password: String,
