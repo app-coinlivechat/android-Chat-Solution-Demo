@@ -1,14 +1,12 @@
 package com.coinlive.chat.api.model
 
-import com.coinlive.chat.api.model.enums.ResponseCode
-
 data class RestApiResponse<T>(
-    val code: ResponseCode,
+    val code: String,
     val msg:String,
     val d:T?
 ) {
     fun isSuccess() : Boolean {
-        return code == ResponseCode.SUCCESS
+        return code == "SUCCESS"
     }
 }
 

@@ -1,7 +1,6 @@
 package com.coinlive.chat.exception
 
 import androidx.annotation.Keep
-import com.coinlive.chat.api.model.enums.ResponseCode
 
 @Keep
 open class CoinliveException(message: String, val code: Int) : Exception(message)
@@ -31,8 +30,8 @@ class NetworkException(message: String) : CoinliveException(
         .code
 )
 @Keep
-class RequestFailException(message: String, respCode: ResponseCode, respMsg: String) : CoinliveException
-    ("RequestFailException : $respCode, $respMsg\n $message", Error.REQUEST_FAIL.code)
+class RequestFailException(respCode: String, respMsg: String) : CoinliveException
+    ("$respCode, $respMsg", Error.REQUEST_FAIL.code)
 @Keep
 class FirebaseIdTokenException(message: String) :
     CoinliveException("$message FirebaseAuthException : ${Error.NO_AUTH_USER.msg}", Error.NO_AUTH_USER.code)

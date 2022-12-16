@@ -7,10 +7,7 @@ import com.coinlive.chat.api.model.RestApiResponse
 import retrofit2.http.*
 
 interface NotificationService {
-    /*
-    /v2/notification [POST] // 노티 설정, [DELETE] // 노티 해제
-    /v2/notification/type [GET] // 채팅 알림 설정 타입 조회
-     */
+
     @POST("v2/notification")
     suspend fun setNotification(
         @Header("Authorization") auth: String,

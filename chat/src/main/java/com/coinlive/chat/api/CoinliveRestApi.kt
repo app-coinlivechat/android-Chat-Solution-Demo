@@ -18,9 +18,9 @@ class CoinliveRestApi {
     suspend fun getUserCount(coinId: String, callback: ResponseCallback<UserCount>) {
         try {
 
-            val firebaseUuid : String? = if(CoinliveAuthentication.isAnonymously()) CoinliveAuthentication
+            val firebaseUuid: String? = if (CoinliveAuthentication.isAnonymously()) CoinliveAuthentication
                 .getFirebaseUuid() else null
-            callback.onSuccess(channelRepo.getUserCount(coinId,firebaseUuid, getAuth()))
+            callback.onSuccess(channelRepo.getUserCount(coinId, firebaseUuid, getAuth()))
         } catch (e: CoinliveException) {
             callback.onFail(e)
         }
@@ -50,16 +50,9 @@ class CoinliveRestApi {
         }
     }
 
-    //    suspend fun customerUserSignUp(user: CustomerUserSignUpBody,callback: ResponseCallback<CustomerUserSignUp>) {
     suspend fun customerUserSignUp(user: CustomerUserSignUpBody, callback: ResponseCallback<Boolean>) {
         try {
-            val result = chattingMemberRepo.customerUserSignUp(getAuth(), user)
-            if (result.isSuccess()) {
-                callback.onSuccess(true)
-            } else {
-                callback.onFail(CoinliveException(result.code.name, result.code.ordinal))
-            }
-
+            callback.onSuccess(chattingMemberRepo.customerUserSignUp(getAuth(), user))
         } catch (e: CoinliveException) {
             callback.onFail(e)
         }
@@ -87,7 +80,7 @@ class CoinliveRestApi {
         }
     }
 
-    suspend fun isAvailableNickName(nickName: String, customerId: String, callback: ResponseCallback<String>) {
+    suspend fun isAvailableNickName(nickName: String, customerId: String, callback: ResponseCallback<Boolean>) {
         try {
             callback.onSuccess(memberRepo.isAvailableNickName(nickName, customerId))
         } catch (e: CoinliveException) {

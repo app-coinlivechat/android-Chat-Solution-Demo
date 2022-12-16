@@ -9,132 +9,119 @@ import com.coinlive.chat.exception.RequestFailException
 class MemberRepository {
     private val service: MemberService = RestApiClient.memberService
 
-    suspend fun isAvailableNickName(nickName: String, customerId: String): String {
+    suspend fun isAvailableNickName(nickName: String, customerId: String): Boolean {
+        val response: RestApiResponse<NickName>?
         try {
-            val response = service.isAvailableNickName(NickNameBody(nickName, customerId))
-
-            if (!response.isSuccess() && response.d == null) {
-                throw RequestFailException(
-                    "MemberRepository.isAvailableNickName fail. please check nickName or customerId",
-                    response.code, response.msg
-                )
-            }
-            return response.d!!.word
+            response = service.isAvailableNickName(NickNameBody(nickName, customerId))
         } catch (exception: Exception) {
             throw NetworkException("MemberRepository.isAvailableNickName error!")
+        }
+        return when {
+            response.isSuccess() -> {
+                true
+            }
+            else -> {
+                throw RequestFailException(response.code, response.msg)
+            }
         }
     }
 
     suspend fun setNickName(nickName: String, auth: String, customerId: String): String {
+        val response: RestApiResponse<NickName>
         try {
-            val response = service.setNickName(auth, NickNameBody(nickName, customerId))
-
-            if (!response.isSuccess() && response.d == null) {
-                throw RequestFailException(
-                    "MemberRepository.setNickName fail. please check nickName or auth, customerId",
-                    response.code, response.msg
-                )
-            }
-            return response.d!!.word
+            response = service.setNickName(auth, NickNameBody(nickName, customerId))
         } catch (exception: Exception) {
             throw NetworkException("MemberRepository.setNickName error!")
         }
+
+        if (!response.isSuccess() && response.d == null) {
+            throw RequestFailException(response.code, response.msg)
+        }
+        return response.d!!.word
     }
 
     suspend fun signupCheck(firebaseUuid: String): MemberSignupCheck {
+        val response: RestApiResponse<MemberSignupCheck>
         try {
-            val response = service.signupCheck(MemberSignupCheckBody(firebaseUuid))
-            if (!response.isSuccess() && response.d == null) {
-                throw RequestFailException(
-                    "MemberRepository.signupCheck fail. please check firebaseUuid",
-                    response.code, response.msg
-                )
-            }
-            return response.d!!
+            response = service.signupCheck(MemberSignupCheckBody(firebaseUuid))
         } catch (exception: Exception) {
             throw NetworkException("MemberRepository.signupCheck error!")
         }
+
+        if (!response.isSuccess() && response.d == null) {
+            throw RequestFailException(response.code, response.msg)
+        }
+        return response.d!!
     }
 
 
     suspend fun setBasicProfile(auth: String): Upload {
+        val response: RestApiResponse<Upload>
         try {
-            val response = service.setBasicProfile(auth)
-
-            if (!response.isSuccess() && response.d == null) {
-                throw RequestFailException(
-                    "MemberRepository.setBasicProfile fail. please check auth",
-                    response.code, response.msg
-                )
-            }
-            return response.d!!
+            response = service.setBasicProfile(auth)
         } catch (exception: Exception) {
             throw NetworkException("MemberRepository.setBasicProfile error!")
         }
+        if (!response.isSuccess() && response.d == null) {
+            throw RequestFailException(response.code, response.msg)
+        }
+        return response.d!!
     }
 
     suspend fun getReportType(auth: String): List<ReportType> {
+        val response: RestApiResponse<ReportTypeList>
         try {
-            val response = service.getReportType(auth)
-
-            if (!response.isSuccess() && response.d == null) {
-                throw RequestFailException(
-                    "MemberRepository.getReportType fail. please check auth",
-                    response.code, response.msg
-                )
-            }
-            return response.d!!.list
+            response = service.getReportType(auth)
         } catch (exception: Exception) {
             throw NetworkException("MemberRepository.getReportType error!")
         }
+        if (!response.isSuccess() && response.d == null) {
+            throw RequestFailException(response.code, response.msg)
+        }
+        return response.d!!.list
     }
 
     suspend fun setReport(auth: String, reportMid: String, reportTypeId: String): Boolean {
+        val response: RestApiResponse<Void>?
         try {
-            val response = service.setReport(auth, MemberReportBody(reportMid, reportTypeId))
-            return when {
-                response.isSuccess() -> {
-                    true
-                }
-                else -> {
-                    throw RequestFailException("MemberRepository.setReport fail. please check reportMid,reportTypeId or auth",
-                        response.code,
-                        response.msg)
-                }
-            }
+            response = service.setReport(auth, MemberReportBody(reportMid, reportTypeId))
         } catch (exception: Exception) {
             throw NetworkException("MemberRepository.setReport error!")
+        }
+        return when {
+            response.isSuccess() -> {
+                true
+            }
+            else -> {
+                throw RequestFailException(response.code, response.msg)
+            }
         }
     }
 
     suspend fun deleteBlock(auth: String, blockMid: String): ArrayList<String> {
+        val response: RestApiResponse<BlockList>
         try {
-            val response = service.deleteBlock(auth, blockMid)
-            if (!response.isSuccess() && response.d == null) {
-                throw RequestFailException(
-                    "MemberRepository.deleteBlock fail. please check blockMid or auth",
-                    response.code, response.msg
-                )
-            }
-            return response.d!!.mIds
+            response = service.deleteBlock(auth, blockMid)
         } catch (exception: Exception) {
             throw NetworkException("MemberRepository.deleteBlock error!")
         }
+        if (!response.isSuccess() && response.d == null) {
+            throw RequestFailException(response.code, response.msg)
+        }
+        return response.d!!.mIds
     }
 
     suspend fun addBlock(auth: String, blockMid: String): ArrayList<String> {
+        val response: RestApiResponse<BlockList>
         try {
-            val response = service.addBlock(auth, blockMid)
-            if (!response.isSuccess() && response.d == null) {
-                throw RequestFailException(
-                    "MemberRepository.addBlock fail. please check blockMid or auth",
-                    response.code, response.msg
-                )
-            }
-            return response.d!!.mIds
+            response = service.addBlock(auth, blockMid)
         } catch (exception: Exception) {
             throw NetworkException("MemberRepository.addBlock error!")
         }
+        if (!response.isSuccess() && response.d == null) {
+            throw RequestFailException(response.code, response.msg)
+        }
+        return response.d!!.mIds
     }
 
 

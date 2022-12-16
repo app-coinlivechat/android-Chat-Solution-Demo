@@ -4,7 +4,7 @@ import com.coinlive.chat.api.model.*
 import retrofit2.http.*
 
 interface MemberService {
-    @GET("v1/member/check/nickname")
+    @POST("v1/member/check/nickname")
     suspend fun isAvailableNickName(@Body nickName: NickNameBody): RestApiResponse<NickName>
 
     @PUT("v1/member/nickname")
