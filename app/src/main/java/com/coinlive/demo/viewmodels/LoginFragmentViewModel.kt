@@ -53,7 +53,7 @@ class LoginFragmentViewModel : ViewModel() {
     }
 
     suspend fun signInAnonymously() {
-        CoinliveAuthentication.signInAnonymously()
+        CoinliveAuthentication.signInWithUnknownUser()
     }
 
 
@@ -90,7 +90,7 @@ class LoginFragmentViewModel : ViewModel() {
 
     fun firebaseSignInWithCustomToken() = viewModelScope.launch{
         customToken?.let {
-                CoinliveAuthentication.signIn(it)
+                CoinliveAuthentication.signInWithCustomToken(it)
         } ?: run {
             Log.e(TAG, "customToken is null. please before call getCustomToken fun")
         }
@@ -115,7 +115,7 @@ class LoginFragmentViewModel : ViewModel() {
     }
 
     private suspend fun clSignUp(customToken: String, nickName: String) {
-        CoinliveAuthentication.signIn(customToken)
+        CoinliveAuthentication.signInWithCustomToken(customToken)
         signUpCustomerUser(nickName)
     }
 
