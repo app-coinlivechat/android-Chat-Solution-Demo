@@ -17,9 +17,6 @@
 
     <string name="notification_setting_title">알림 설정</string>
     <string name="notification_all">전체 알림</string>
-    <string name="notification_twitter">트위터 알림</string>
-    <string name="notification_futures">청산 알림</string>
-    <string name="notification_medium">미디움 알림</string>
 
     <string name="translator_ko">한국어</string>
     <string name="translator_en">English</string>
@@ -42,11 +39,9 @@
     <string name="take_over">접수</string>
     <string name="cm_close">접어두기</string>
     <string name="cm">공지</string>
-    <string name="gallery">갤러리</string>
-    <string name="camera">카메라</string>
 
     <string name="blocked_user_message">차단 사용자의 메세지입니다.</string>
-    <string name="new_message">새로운 메세지!</string>
+    <string name="new_message">신규메시지 도착!</string>
 
 
     <string name="max_test" translatable="false">로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토로렘 입숨(lorem ipsum; 줄여서 립숨lip로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 로렘 입숨(lorem ipsum; 줄여서 립숨lip로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 로렘 입숨(lorem ipsum; 줄여서 립숨lip로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 로렘 입숨(lorem ipsum; 줄여서 립숨lip 로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토로렘 입숨(lorem ipsum; 줄여서 립숨lipsum)은 출판이나 그래픽 사토시나카모토 입숨(lorem ipsum; 줄여서 립숨

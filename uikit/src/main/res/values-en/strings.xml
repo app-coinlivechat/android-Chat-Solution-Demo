@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="input_hint">채팅을 입력하세요</string>
+    <string name="input_hint">Chat here</string>
     <string name="input_block_hint">다수의 신고로 채팅 사용이 제한됩니다.</string>
     <string name="input_anonymously_hint">채팅을 하려면 로그인을 해주세요</string>
     <string name="input_ama_hint">AMA 진행 시 채팅이 불가합니다.</string>
     <string name="asset_description">Coinlive에서 자산인증을 검증한 메시지입니다.</string>
-    <string name="twitter_chat_title">%1$s(%2$s) 트위터</string>
-    <string name="medium_chat_title">%1$s(%2$s) 미디움</string>
+    <string name="twitter_chat_title">%1$s(%2$s) Twitter</string>
+    <string name="medium_chat_title">%1$s(%2$s) Medium</string>
     <string name="price_jump_chat_title">급등알림</string>
     <string name="price_drop_chat_title">급락알림</string>
     <string name="buy_futures_chat_title">숏 청산(BINANCE FUTURES)</string>
@@ -18,33 +18,28 @@
 
     <string name="notification_setting_title">알림 설정</string>
     <string name="notification_all">전체 알림</string>
-    <string name="notification_twitter">트위터 알림</string>
-    <string name="notification_futures">청산 알림</string>
-    <string name="notification_medium">미디움 알림</string>
 
     <string name="translator_ko">Korea</string>
     <string name="translator_en">English</string>
     <string name="translator_zh">中文 (简体)</string>
 
     <string name="cancel">Cancel</string>
-    <string name="confirm">OK</string>
+    <string name="confirm">Confirm</string>
     <string name="translator_download">번역을 위한 리소스 다운로드가 진행됩니다.\n다운로드 하시겠습니까?\n(예상 리소스 파일크기 30MB)</string>
     <string name="read_all">전체보기</string>
 
-    <string name="message_menu_duplicate">복사</string>
-    <string name="message_menu_report">신고</string>
-    <string name="message_menu_block">차단</string>
-    <string name="message_menu_block_delete">차단 해제</string>
-    <string name="message_menu_delete">삭제</string>
+    <string name="message_menu_duplicate">Copy</string>
+    <string name="message_menu_report">Report</string>
+    <string name="message_menu_block">Add block</string>
+    <string name="message_menu_block_delete">Delete block</string>
+    <string name="message_menu_delete">Delete</string>
     <string name="block_description">차단 하시겠습니까?</string>
     <string name="block_delete_description">차단 하시겠습니까?</string>
-    <string name="take_over">접수</string>
-    <string name="cm_close">접어두기</string>
-    <string name="cm">공지</string>
-    <string name="gallery">갤러리</string>
-    <string name="camera">카메라</string>
-    <string name="blocked_user_message">"차단 사용자의 메세지입니다."</string>
-    <string name="new_message">"새로운 메세지!"</string>
+    <string name="take_over">Received</string>
+    <string name="cm_close">Fold</string>
+    <string name="cm">Announcement</string>
+    <string name="blocked_user_message">차단 사용자의 메세지입니다.</string>
+    <string name="new_message">New Message!</string>
 
 
 
