@@ -15,7 +15,10 @@ class CoinliveRestApi {
 
     suspend fun getUserCount(coinId: String, callback: ResponseCallback<UserCount>) {
         try {
-            callback.onSuccess(channelRepo.getUserCount(coinId, getAuth()))
+
+            val firebaseUuid : String? = if(CoinliveAuthentication.isAnonymously()) CoinliveAuthentication
+                .getFirebaseUuid() else null
+            callback.onSuccess(channelRepo.getUserCount(coinId,firebaseUuid, getAuth()))
         } catch (e: CoinliveException) {
             callback.onFail(e)
         }

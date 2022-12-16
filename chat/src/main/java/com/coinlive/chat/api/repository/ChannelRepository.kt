@@ -9,9 +9,9 @@ import com.coinlive.chat.exception.RequestFailException
 class ChannelRepository {
     private val service: ChannelService = RestApiClient.channelService
 
-    suspend fun getUserCount(coinId: String, auth: String): UserCount {
+    suspend fun getUserCount(coinId: String,firebaseUuid : String?, auth: String): UserCount {
         try {
-            val response = service.getUserCount(coinId, auth)
+            val response = service.getUserCount(coinId,firebaseUuid, auth)
 
             if (!response.isSuccess() && response.d == null) {
                 throw RequestFailException(
