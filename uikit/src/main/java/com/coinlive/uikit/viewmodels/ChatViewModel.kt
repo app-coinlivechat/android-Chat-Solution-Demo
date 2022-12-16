@@ -126,7 +126,7 @@ class ChatViewModel : ViewModel() {
     }
 
     private fun startTimer() {
-        if (channel == null || myInfo == null) return
+        if (channel == null) return
 
 
         timer = Timer()
