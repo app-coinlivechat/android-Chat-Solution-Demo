@@ -1,11 +1,13 @@
 package com.coinlive.chat.firebase.listener
 
+import androidx.annotation.Keep
 import com.coinlive.chat.firebase.CoinliveChat
 import com.coinlive.chat.firebase.model.Ama
 
 /**
  * [CoinliveChat.coinId]의 AMA 진행 상태를 확인 하기 위한 Listener
  */
+@Keep
 interface AmaListener{
     /**
      * [CoinliveChat.coinId]의 AMA 진행 상태를 전달합니다.

@@ -1,6 +1,7 @@
 package com.coinlive.chat.api.model
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -8,6 +9,7 @@ import kotlinx.parcelize.Parcelize
  * 코인라이브의 개별 코인 정보를 관리하는 data class 입니다.
  */
 @Parcelize
+@Keep
 data class Coin(
     /**
      * 코인의 id 입니다.

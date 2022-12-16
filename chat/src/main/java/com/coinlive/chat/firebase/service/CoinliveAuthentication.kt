@@ -2,6 +2,7 @@
 
 package com.coinlive.chat.firebase.service
 
+import androidx.annotation.Keep
 import com.coinlive.chat.exception.FirebaseIdTokenException
 import com.coinlive.chat.exception.UnknwonExecption
 import com.google.firebase.auth.FirebaseUser
@@ -13,6 +14,7 @@ import kotlinx.coroutines.tasks.await
  * Coinlive Firebase Authentication와 관련된 class입니다.
  */
 //TODO ios와 메소드 주석 맞추기
+@Keep
 object CoinliveAuthentication {
 
 

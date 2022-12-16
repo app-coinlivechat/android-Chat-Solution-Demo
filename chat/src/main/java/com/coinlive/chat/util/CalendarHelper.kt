@@ -1,7 +1,9 @@
 package com.coinlive.chat.util
 
+import androidx.annotation.Keep
 import java.util.*
 
+@Keep
 object CalendarHelper {
 
     /**

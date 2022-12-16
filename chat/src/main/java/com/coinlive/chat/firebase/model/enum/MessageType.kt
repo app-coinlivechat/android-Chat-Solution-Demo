@@ -1,11 +1,13 @@
 package com.coinlive.chat.firebase.model.enum
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
 
 /**
  * [Chat] 메세지 타입.
  */
+@Keep
 @Parcelize
 enum class MessageType : Parcelable {
     /**

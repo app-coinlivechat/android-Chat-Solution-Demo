@@ -1,8 +1,11 @@
 package com.coinlive.chat.api.model.enums
 
+import androidx.annotation.Keep
+
 /**
  * 코인라이브 채팅의 메세지를 필터링 하기 위한 enum class입니다.
  */
+@Keep
 enum class CoinNotiType {
     /**
      * 코인라이브 채팅 메세지 중 Twitter 메세지에 해당합니다.

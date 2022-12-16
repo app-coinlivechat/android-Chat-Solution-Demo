@@ -1,8 +1,10 @@
 package com.coinlive.chat.util
 
 import android.util.Log
+import androidx.annotation.Keep
 import com.coinlive.chat.BuildConfig
 
+@Keep
 object LoggerHelper {
     const val TAG = "COINLIVE-CHAT"
     fun d(msg:String) {

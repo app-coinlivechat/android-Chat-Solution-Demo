@@ -1,11 +1,13 @@
 package com.coinlive.chat.firebase.listener
 
+import androidx.annotation.Keep
 import com.coinlive.chat.firebase.CoinliveChat
 import com.coinlive.chat.firebase.model.Chat
 
 /**
  * [CoinliveChat.coinId]의 신규,삭제,수정,로드 등 메세지들의 이벤트 listener
  */
+@Keep
 interface MessageListener {
     /**
      * 로드된 메세지 중 삭제된 메세지를 전달합니다.

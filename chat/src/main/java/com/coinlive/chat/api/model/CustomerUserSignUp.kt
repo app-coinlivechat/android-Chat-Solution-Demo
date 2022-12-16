@@ -1,7 +1,9 @@
 package com.coinlive.chat.api.model
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class CustomerUserSignUpBody(
     @SerializedName("ccid") val customerId:String,
     @SerializedName("img") val profileUrl:String,
@@ -11,6 +13,7 @@ data class CustomerUserSignUpBody(
 /**
  * 코인라이브 채팅에 가입한 정보를 관리하는 data class 입니다.
  */
+@Keep
 data class CustomerUserSignUp(
     /**
      * Firebase UUID입니다.

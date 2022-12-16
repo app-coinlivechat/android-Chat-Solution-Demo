@@ -1,12 +1,14 @@
 package com.coinlive.chat.api.model.enums
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
 
 /**
  * 코인라이브 채팅 사용자의 상태를 표시하는 enum class입니다.
  */
 @Parcelize
+@Keep
 enum class UserStatus : Parcelable {
     /**
      * 활성화된 사용자입니다.

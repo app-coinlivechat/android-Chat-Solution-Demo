@@ -2,6 +2,7 @@ package com.coinlive.chat.firebase
 
 import android.content.Context
 import android.net.Uri
+import androidx.annotation.Keep
 import androidx.room.Room
 import com.coinlive.chat.Coinlive
 import com.coinlive.chat.api.model.CustomerUser
@@ -55,6 +56,7 @@ import kotlin.collections.HashMap
  * @param[amaListener] AMA 상태를 전달 받기 위한 Listener
  * @param[context] 전송 실패 메세지를 로컬 DB에 저장하기 위한 context
  */
+@Keep
 class CoinliveChat(
     private val coinId: String,
     private val coinSymbol: String,

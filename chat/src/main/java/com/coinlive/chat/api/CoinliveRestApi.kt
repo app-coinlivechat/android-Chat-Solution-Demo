@@ -1,11 +1,13 @@
 package com.coinlive.chat.api
 
+import androidx.annotation.Keep
 import com.coinlive.chat.api.model.*
 import com.coinlive.chat.api.repository.*
 import com.coinlive.chat.exception.*
 import com.coinlive.chat.firebase.service.CoinliveAuthentication
 import okhttp3.MultipartBody
 
+@Keep
 class CoinliveRestApi {
     private val channelRepo = ChannelRepository()
     private val chattingMemberRepo = ChattingMemberRepository()

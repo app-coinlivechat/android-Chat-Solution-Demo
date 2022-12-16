@@ -1,9 +1,11 @@
 package com.coinlive.chat
 
+import androidx.annotation.Keep
 import java.util.*
 
+@Keep
 class Coinlive {
-    companion object {
+    @Keep companion object {
         /**
          * 테스트 환경을 위해 현재 build mode를 설정합니다.
          * 디폴트 값은 true 입니다.

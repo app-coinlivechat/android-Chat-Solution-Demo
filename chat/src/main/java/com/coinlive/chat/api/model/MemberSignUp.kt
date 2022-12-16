@@ -1,11 +1,13 @@
 package com.coinlive.chat.api.model
 
+import androidx.annotation.Keep
 import com.coinlive.chat.api.model.enums.UserStatus
 import com.google.gson.annotations.SerializedName
 
 /**
  * 코인라이브 채팅에 Firebase uid 를 가지고 있는 멤버가 존재하는지 확인하는 data class 입니다.
  */
+@Keep
 data class MemberSignupCheck (
     /**
      * 사용자의 상태를 표시합니다.

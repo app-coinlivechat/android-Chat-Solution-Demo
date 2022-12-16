@@ -1,6 +1,7 @@
 package com.coinlive.chat.api.model
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -15,6 +16,7 @@ data class ChannelList(
 )
 
 @Parcelize
+@Keep
 data class Channel(
     @SerializedName("cid") val coinId:String,
     @SerializedName("ico") val coinUrl:String?,
