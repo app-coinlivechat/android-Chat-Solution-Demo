@@ -1,19 +1,36 @@
 package com.coinlive.demo.fragments
 
+import android.Manifest
 import android.app.Dialog
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.provider.MediaStore
+import android.text.Spannable
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.coinlive.chat.api.model.enums.UserStatus
+import com.coinlive.chat.util.CalendarHelper
+import com.coinlive.demo.DemoApplication
 import com.coinlive.demo.R
 import com.coinlive.demo.databinding.FragmentLoginBinding
 import com.coinlive.demo.dialogs.LoginResultDialog
 import com.coinlive.demo.dialogs.OkCallback
+import com.coinlive.demo.utils.MultipartHelper
+import com.coinlive.demo.utils.RandomStringHelper
 import com.coinlive.demo.viewmodels.LoginFragmentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,6 +49,27 @@ class LoginFragment : Fragment(), OkCallback {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private val galleryReqLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                displayGalleryFragment()
+            } else {
+                Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    private val galleryLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            result.data?.data?.let { uri ->
+                val input = requireContext().contentResolver.openInputStream(uri)
+                val img: Bitmap = BitmapFactory.decodeStream(input)
+                input?.close()
+                val fileName = "${CalendarHelper.nowCalendar().timeInMillis}_image.png"
+                viewModel.setProfileImage(MultipartHelper.buildBitmapBodyPart(fileName, img, requireContext()))
+                binding.tvProfile.text = fileName
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -48,25 +86,37 @@ class LoginFragment : Fragment(), OkCallback {
             } else {
                 showLoginResultDialog(it.name)
             }
-
         }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+        val spannable = binding.tvTitle.text as Spannable
+        spannable.setSpan(ForegroundColorSpan(requireContext().getColor(R.color.blue_text)), 9, 13, Spanned
+            .SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.appName = DemoApplication.appName
+        binding.etUuId.setText("etgkqo")
+        binding.etNickname.setText("etgkqo")
 
+        binding.btnImage.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+            ) {
+                galleryReqLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            } else {
+                displayGalleryFragment()
+            }
+        }
+        binding.ibtnRefresh.setOnClickListener {
+            binding.etUuId.setText(RandomStringHelper.generateString())
+        }
         binding.bSignUp.setOnClickListener {
             viewModel.signUp(binding.etUuId.text.toString(), binding.etNickname.text.toString())
         }
         binding.bLogIn.setOnClickListener {
-            val result = viewModel.loginCheck()
-            if (!result) {
-                viewModel.firebaseSignInWithCustomToken()
-            }
-            viewModel.signUpCheck()
-
-
+            viewModel.logIn(binding.etUuId.text.toString())
         }
         binding.bAnonymouslyLogIn.setOnClickListener {
             lifecycleScope.launch(Dispatchers.Main) {
@@ -79,6 +129,12 @@ class LoginFragment : Fragment(), OkCallback {
             }
 
         }
+    }
+
+    private fun displayGalleryFragment() {
+        galleryLauncher.launch(Intent(Intent.ACTION_PICK).apply {
+            setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+        })
     }
 
     private fun showLoginResultDialog(message: String) {
@@ -96,7 +152,7 @@ class LoginFragment : Fragment(), OkCallback {
 //            .add(R.id.nav_host_fragment_content_main, ChannelListFragment::class.java, bundle)
 //            .addToBackStack(null)
 //            .commit()
-        findNavController().navigate(R.id.action_LoginFragment_to_ChannelListFragment,bundle)
+        findNavController().navigate(R.id.action_LoginFragment_to_ChannelListFragment, bundle)
     }
 
     override fun onDestroyView() {

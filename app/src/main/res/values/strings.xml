@@ -10,4 +10,7 @@
 
     <string name="login_title">coinlive\nCHAT solution\nSample</string>
     <string name="menu_confirm">확인</string>
+    <string name="login_description">익명 접속 테스트를 원하신다면 위 버튼을 눌러주세요.문의사항은 메일로 발송해주세요. app@coinlive.net</string>
+    <string name="login_nickname_hit">최대 10자, 중복불가</string>
+    <string name="login_band_id_hit" translatable="false">Email</string>
 </resources>

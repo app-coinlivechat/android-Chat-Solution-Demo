@@ -35,6 +35,16 @@
     <color name="background">#FFFFFF</color>
     <color name="dialog_background">#FFFFFF</color>
     <color name="blue_text">#32A4B3</color>
+    <color name="primary_press">#267F8B</color>
     <color name="channel_item_background">@color/grey_080</color>
+    <color name="login_input_border">#AEB7C1</color>
+    <color name="login_input_solid">#FFFFFF</color>
+    <color name="login_input_hint">#C3C3C7</color>
+    <color name="normal_text">#000000</color>
+    <color name="divider">#1F000000</color>
+    <color name="profile_input_border">#AEB7C1</color>
+    <color name="profile_input_solid">#DADEE2</color>
+    <color name="profile_input_text">#8D94A1</color>
+    <color name="btn_grey">#353C4A</color>
 
 </resources>

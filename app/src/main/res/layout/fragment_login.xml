@@ -1,274 +1,310 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/background"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="appName"
+            type="String" />
+    </data>
+
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="16dp"
-        tools:context=".fragments.LoginFragment">
+        android:background="@color/background">
 
-        <TextView
-            android:id="@+id/tv_title"
-            style="@style/header1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="74dp"
-            android:bufferType="spannable"
-            android:text="@string/login_title"
-            android:textColor="@color/grey_090"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/ll_input"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_title">
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="16dp"
+            tools:context=".fragments.LoginFragment">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <TextView
+                android:id="@+id/tv_title"
+                style="@style/header1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="74dp"
+                android:bufferType="spannable"
+                android:text="@string/login_title"
+                android:textColor="@color/grey_090"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/ll_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    style="@style/body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:text="BAND ID"
-                    android:textColor="@color/grey_090"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/et_bandId"
-                    style="@style/body2"
-                    android:layout_width="263dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/login_editext_outline"
-                    android:gravity="center_vertical"
-                    android:hint="Email"
-                    android:text="testsite.com"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingHorizontal="16dp"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="#C3C3C7"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    style="@style/body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="43dp"
-                    android:text="UUID"
-                    android:textColor="@color/grey_090"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/et_uuId"
-                    style="@style/body2"
-                    android:layout_width="263dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/login_editext_outline"
-                    android:gravity="center_vertical"
-                    android:hint="Email"
-                    android:text="etgkqo"
-                    android:maxLines="1"
-                    android:inputType="text"
-                    android:paddingHorizontal="16dp"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="#C3C3C7"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    style="@style/body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nickname"
-                    android:textColor="@color/grey_090"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/et_nickname"
-                    style="@style/body2"
-                    android:layout_width="263dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/login_editext_outline"
-                    android:gravity="center_vertical"
-                    android:hint="최대 10자, 중복불가"
-                    android:text="etgkqo"
-                    android:maxLines="1"
-                    android:inputType="text"
-                    android:paddingHorizontal="16dp"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="#C3C3C7"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    style="@style/body1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Profile"
-                    android:textColor="@color/grey_090"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginTop="24dp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_title">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="263dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/login_profile_outline"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
-                        style="@style/body2"
+                        style="@style/body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="최대 15MB (jpeg, png)"
-                        android:textColor="#C3C3C7"
+                        android:layout_marginEnd="20dp"
+                        android:text="BAND ID"
+                        android:textColor="@color/normal_text"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Button
-                        style="@style/caption1"
-                        android:minHeight="0dp"
-                        android:minWidth="0dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <EditText
+                        android:id="@+id/et_bandId"
+                        style="@style/body2"
+                        android:layout_width="263dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/login_editext_outline"
+                        android:gravity="center_vertical"
+                        android:hint="@string/login_band_id_hit"
+                        android:inputType="text"
+                        android:maxLines="1"
                         android:paddingHorizontal="16dp"
-                        android:text="선택"
-                        android:textColor="#C3C3C7"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:text="@{appName}"
+                        android:textColor="@color/normal_text"
+                        android:textColorHint="@color/login_input_hint"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="Autofill,TouchTargetSizeCheck"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp">
 
-        <LinearLayout
-            android:id="@+id/ll_sign"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ll_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+                    <TextView
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="43dp"
+                        android:text="UUID"
+                        android:textColor="@color/grey_090"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/et_uuId"
+                        style="@style/body2"
+                        android:layout_width="263dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/login_editext_outline"
+                        android:gravity="center_vertical"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/normal_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="Autofill,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+                    <ImageButton
+                        android:id="@+id/ibtn_refresh"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/icon_refresh"
+                        app:layout_constraintBottom_toBottomOf="@id/et_uuId"
+                        app:layout_constraintEnd_toEndOf="@id/et_uuId"
+                        app:layout_constraintTop_toTopOf="@id/et_uuId"
+                        tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nickname"
+                        android:textColor="@color/grey_090"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/et_nickname"
+                        style="@style/body2"
+                        android:layout_width="263dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/login_editext_outline"
+                        android:gravity="center_vertical"
+                        android:hint="@string/login_nickname_hit"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/normal_text"
+                        android:textColorHint="@color/login_input_hint"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="TouchTargetSizeCheck" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Profile"
+                        android:textColor="@color/grey_090"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="263dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/login_profile_outline"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/tv_profile"
+                            style="@style/body2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="최대 15MB (jpeg, png)"
+                            android:textColor="@color/profile_input_text"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <Button
+                            android:id="@+id/btn_image"
+                            style="@style/caption1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/select_blue_button_background"
+                            android:minWidth="0dp"
+                            android:minHeight="0dp"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="5dp"
+                            android:text="선택"
+                            android:textColor="@android:color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="TouchTargetSizeCheck" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_input">
+
+                <Button
+                    android:id="@+id/b_signUp"
+                    style="@style/subtitle3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/select_grey_button_background"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="10dp"
+                    android:text="가입"
+                    android:textColor="@android:color/white"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <Button
+                    android:id="@+id/b_logIn"
+                    style="@style/subtitle3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/select_blue_button_background"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="10dp"
+                    android:text="회원접속"
+                    android:textColor="@android:color/white"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/v"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:background="@color/divider"
+                app:layout_constraintTop_toBottomOf="@id/ll_sign" />
 
             <Button
-                android:id="@+id/b_signUp"
-                android:text="가입"
+                android:id="@+id/b_anonymouslyLogIn"
                 style="@style/subtitle3"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:paddingVertical="10dp"
-                android:paddingHorizontal="16dp"
-                android:layout_marginEnd="12dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <Button
-                android:id="@+id/b_logIn"
-                android:text="회원접속"
-                style="@style/subtitle3"
-                android:minHeight="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/select_grey_button_background"
                 android:minWidth="0dp"
-                android:paddingVertical="10dp"
+                android:minHeight="0dp"
                 android:paddingHorizontal="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+                android:paddingVertical="10dp"
+                android:text="익명접속"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/v"
+                tools:ignore="TouchTargetSizeCheck" />
 
-        <View
-            android:id="@+id/v"
-            android:background="@android:color/black"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/ll_sign"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            <TextView
+                android:id="@+id/v_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="25dp"
+                android:layout_marginTop="16dp"
+                android:autoLink="email"
+                android:bufferType="spannable"
+                android:gravity="center"
+                android:linksClickable="true"
+                android:text="@string/login_description"
+                android:textColor="@color/grey_090"
+                android:textColorLink="@color/sub_blue_500"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/b_anonymouslyLogIn"
+                tools:ignore="TouchTargetSizeCheck" />
 
-        <Button
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/v"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/b_anonymouslyLogIn"
-            android:text="익명접속"
-            style="@style/subtitle3"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:paddingVertical="10dp"
-            android:paddingHorizontal="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="215dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/v_desc" />
 
-        <TextView
-            android:gravity="center"
-            android:id="@+id/v_desc"
-            android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="25dp"
-            android:bufferType="spannable"
-            android:textColor="@color/grey_090"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/b_anonymouslyLogIn"
-            android:text="익명 접속 테스트를 원하신다면 위 버튼을 눌러주세요.
-문의사항은 메일로 발송해주세요. app@coinlive.net"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        
-        <View
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/v_desc"
-            android:layout_width="match_parent"
-            android:layout_height="215dp"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
-
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

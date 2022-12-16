@@ -1,11 +1,10 @@
-package com.coinlive.uikit.utils
+package com.coinlive.demo.utils
 
 import android.content.Context
 import android.graphics.Bitmap
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.*
-
 
 object MultipartHelper {
 

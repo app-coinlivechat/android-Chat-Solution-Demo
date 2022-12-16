@@ -9,6 +9,7 @@ import com.coinlive.chat.api.ResponseCallback
 import com.coinlive.chat.api.model.*
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.firebase.service.CoinliveAuthentication
+import com.coinlive.demo.DemoApplication
 import kotlinx.coroutines.launch
 
 
@@ -21,7 +22,7 @@ class ChannelListFragmentViewModel : ViewModel() {
 
     init {
         loadMyInfo()
-        getChannelList("testsite")
+        getChannelList()
     }
 
     private fun loadMyInfo() = viewModelScope.launch {
@@ -39,8 +40,8 @@ class ChannelListFragmentViewModel : ViewModel() {
         }
     }
 
-    private fun getChannelList(customerName : String) = viewModelScope.launch {
-        clApi.getChannelList(customerName,object : ResponseCallback<List<Channel>>{
+    private fun getChannelList() = viewModelScope.launch {
+        clApi.getChannelList(DemoApplication.appName,object : ResponseCallback<List<Channel>>{
             override fun onSuccess(value: List<Channel>) {
                 itemList.value = value
             }

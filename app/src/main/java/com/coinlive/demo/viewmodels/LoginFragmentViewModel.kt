@@ -10,35 +10,35 @@ import com.coinlive.chat.api.model.*
 import com.coinlive.chat.api.model.enums.UserStatus
 import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.firebase.service.CoinliveAuthentication
+import com.coinlive.chat.util.LoggerHelper
+import com.coinlive.demo.DemoApplication
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 
 
 class LoginFragmentViewModel : ViewModel() {
     private val TAG = LoginFragmentViewModel::class.java.simpleName
-
-    private val customerName = "testsite"
-    private val password = "testsite"
     private val clApi = CoinliveRestApi()
+
     var customer: Customer? = null
         get() = field
         private set(value) {
             field = value
         }
 
-    var customToken: String? = null
-
     var loginResultMsg: MutableLiveData<String> = MutableLiveData()
     var memberCheckMsg: MutableLiveData<UserStatus> = MutableLiveData()
-//    var loginResultCode: MutableLiveData<String> = MutableLiveData()
+    var profile: MultipartBody.Part? = null
 
     fun getCustomerInfo() = viewModelScope.launch {
-        clApi.getCustomerInfo(customerName,object : ResponseCallback<Customer> {
+        clApi.getCustomerInfo(DemoApplication.appName, object : ResponseCallback<Customer> {
             override fun onSuccess(value: Customer) {
                 customer = value
             }
 
             override fun onFail(exception: CoinliveException) {
                 customer = null
+                exception.printStackTrace()
             }
         })
     }
@@ -48,8 +48,99 @@ class LoginFragmentViewModel : ViewModel() {
             loginResultMsg.value = "customer 정보를 불러오지 못했습니다."
             Log.e(TAG, "customer 정보를 불러오지 못했습니다.")
         } else {
-            getCustomToken(uuid, nickName,continueSignUp = true)
+            //1. 닉네임 체크
+            //2. 커스텀 토큰 get
+            //3. 중복 유저 체크
+            //4. 프로필 사진 업로드
+            //6. 가입
+
+            clApi.isAvailableNickName(nickName, customer!!.id, object : ResponseCallback<Boolean> {
+                override fun onSuccess(value: Boolean) {
+                    viewModelScope.launch {
+                        clApi.getCustomToken(DemoApplication.password, DemoApplication.appName, uuid, object : ResponseCallback<CustomerUserSignUp> {
+                                override fun onSuccess(value: CustomerUserSignUp) {
+                                    viewModelScope.launch {
+                                        val firebaseUuid =
+                                            CoinliveAuthentication.signInWithCustomToken(value.customToken)
+                                        clApi.signupCheck(firebaseUuid, object : ResponseCallback<MemberSignupCheck> {
+                                            override fun onSuccess(value: MemberSignupCheck) {
+                                                when(value.status) {
+                                                    UserStatus.ACTIVE -> loginResultMsg.value = "등록되어 있는 유저입니다"
+                                                    UserStatus.BLOCK -> loginResultMsg.value = "정지 대상 유저입니다"
+                                                    UserStatus.DORMANT -> loginResultMsg.value = "휴면 유저입니다"
+                                                    UserStatus.INACTIVE -> loginResultMsg.value = "비활성화된 유저입니다"
+                                                    UserStatus.NONE -> {
+                                                        if (profile != null) {
+                                                            viewModelScope.launch {
+                                                                clApi.uploadProfileImage(profile!!, object :
+                                                                    ResponseCallback<String> {
+                                                                    override fun onSuccess(value: String) {
+                                                                        viewModelScope.launch {
+                                                                            signUpCustomerUser(nickName, value)
+                                                                        }
+                                                                    }
+
+                                                                    override fun onFail(exception: CoinliveException) {
+                                                                        loginResultMsg.value = exception.message
+                                                                    }
+                                                                })
+                                                            }
+                                                        } else {
+                                                            viewModelScope.launch {
+                                                                signUpCustomerUser(nickName, null)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+
+                                            override fun onFail(exception: CoinliveException) {
+                                                loginResultMsg.value = exception.message
+                                            }
+                                        })
+                                    }
+                                }
+                                override fun onFail(exception: CoinliveException) {
+                                    Log.e(TAG, "${exception.stackTrace}")
+                                    loginResultMsg.value = exception.message
+                                }
+
+                            })
+                    }
+                }
+
+                override fun onFail(exception: CoinliveException) {
+                    LoggerHelper.de("exception code : ${exception.code}, message : ${exception.message}")
+                    loginResultMsg.value = exception.message
+                }
+            })
         }
+    }
+
+    fun logIn(uuid: String) = viewModelScope.launch {
+        clApi.getCustomToken(DemoApplication.password, DemoApplication.appName, uuid, object :
+            ResponseCallback<CustomerUserSignUp> {
+            override fun onSuccess(value: CustomerUserSignUp) {
+                viewModelScope.launch {
+                    val firebaseUuid = CoinliveAuthentication.signInWithCustomToken(value.customToken)
+                    clApi.signupCheck(firebaseUuid, object : ResponseCallback<MemberSignupCheck> {
+                        override fun onSuccess(value: MemberSignupCheck) {
+                            memberCheckMsg.value = value.status
+                        }
+
+                        override fun onFail(exception: CoinliveException) {
+                            memberCheckMsg.value = UserStatus.NONE
+                        }
+                    })
+                }
+            }
+
+            override fun onFail(exception: CoinliveException) {
+                Log.e(TAG, "${exception.stackTrace}")
+                loginResultMsg.value = exception.message
+            }
+        })
     }
 
     suspend fun signInAnonymously() {
@@ -57,79 +148,21 @@ class LoginFragmentViewModel : ViewModel() {
     }
 
 
-    fun signUpCheck() = viewModelScope.launch {
-
-        try{
-            val fId = CoinliveAuthentication.getFirebaseUuid()
-            clApi.signupCheck(fId, object : ResponseCallback<MemberSignupCheck> {
-                override fun onSuccess(value: MemberSignupCheck) {
-                    memberCheckMsg.value = value.status
-                }
-
-                override fun onFail(exception: CoinliveException) {
-                    Log.e(TAG, "${exception.message}\n${exception.stackTrace}")
-                    memberCheckMsg.value = UserStatus.NONE
-                }
-
-            })
-        }catch (exception : Exception) {
-            Log.e(TAG, "${exception.message}\n${exception.stackTrace}")
-            memberCheckMsg.value = UserStatus.NONE
-        }
+    fun setProfileImage(multiPart: MultipartBody.Part) {
+        profile = multiPart
     }
 
-
-    fun loginCheck() : Boolean {
-        return try {
-            CoinliveAuthentication.getFirebaseUuid()
-            true
-        }catch (e:Exception) {
-            false
-        }
-    }
-
-    fun firebaseSignInWithCustomToken() = viewModelScope.launch{
-        customToken?.let {
-                CoinliveAuthentication.signInWithCustomToken(it)
-        } ?: run {
-            Log.e(TAG, "customToken is null. please before call getCustomToken fun")
-        }
-    }
-
-
-    private suspend fun signUpCustomerUser(nickName: String) = viewModelScope.launch {
-
-        clApi.customerUserSignUp(CustomerUserSignUpBody(customer!!.id, customer!!.defaultImageUrl, nickName), object
+    private suspend fun signUpCustomerUser(nickName: String, profileUrl: String?) = viewModelScope.launch {
+        clApi.customerUserSignUp(CustomerUserSignUpBody(customer!!.id, profileUrl ?: customer!!.defaultImageUrl, nickName), object
             : ResponseCallback<Boolean> {
-            override fun onSuccess(value: Boolean) {
-                loginResultMsg.value = "가입완료"
-                Log.d(TAG, if (value) "가입완료!!!!!!" else "가입 실패!!!!!!!!!")
-            }
 
             override fun onFail(exception: CoinliveException) {
                 Log.e(TAG, "가입 실패!!!!!!!!! ${exception.message}")
                 loginResultMsg.value = exception.message
             }
 
-        })
-    }
-
-    private suspend fun clSignUp(customToken: String, nickName: String) {
-        CoinliveAuthentication.signInWithCustomToken(customToken)
-        signUpCustomerUser(nickName)
-    }
-
-    private suspend fun getCustomToken(uuid: String, nickName: String, continueSignUp : Boolean = false) {
-        clApi.getCustomToken(password,customerName, uuid, object : ResponseCallback<CustomerUserSignUp> {
-            override fun onSuccess(value: CustomerUserSignUp) {
-                Log.d(TAG, "customToken : ${value.customToken}")
-                customToken = value.customToken
-                viewModelScope.launch { clSignUp(customToken = value.customToken, nickName = nickName) }
-            }
-
-            override fun onFail(exception: CoinliveException) {
-                Log.e(TAG, "${exception.stackTrace}")
-                loginResultMsg.value = exception.message
+            override fun onSuccess(value: Boolean) {
+                loginResultMsg.value = "가입완료"
             }
 
         })

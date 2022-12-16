@@ -6,6 +6,12 @@ import java.util.*
 
 class DemoApplication : Application() {
 
+
+    companion object {
+        val appName = "testsite"
+        val password = "testsite"
+    }
+
     override fun onCreate() {
         super.onCreate()
 
