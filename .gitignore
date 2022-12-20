@@ -83,3 +83,7 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+/keystore.properties
+/appkey/
+/private_key.pepk
+/app/release/
