@@ -1,11 +1,11 @@
 package com.coinlive.demo.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -26,13 +26,19 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
     private var _binding: FragmentChannelListBinding? = null
     private lateinit var viewModel: ChannelListFragmentViewModel
     private var customerName: String? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
     private var selectItem: Channel? = null
     private val adapter: ChannelListAdapter by lazy {
         ChannelListAdapter()
+    }
+
+    private val callback: OnBackPressedCallback by lazy {
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+
+                moveLoginFragment()
+            }
+        }
     }
 
 
@@ -43,6 +49,16 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
             customerName = it.getString("customerName")
         }
         viewModel = ViewModelProvider(this)[ChannelListFragmentViewModel::class.java]
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callback.remove()
     }
 
     override fun onCreateView(
@@ -91,10 +107,16 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
         }
 
         binding.ibtnBack.setOnClickListener {
+            moveLoginFragment()
+        }
+    }
+
+    private fun moveLoginFragment() {
+        if(::viewModel.isInitialized) {
             viewModel.logout()
-            findNavController().navigate(R.id.action_ChannelListFragment_to_LoginFragment)
         }
 
+        findNavController().navigate(R.id.action_ChannelListFragment_to_LoginFragment)
     }
 
     override fun onDestroyView() {

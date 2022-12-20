@@ -2,6 +2,7 @@ package com.coinlive.demo.fragments
 
 import android.Manifest
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -16,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -32,12 +34,15 @@ import com.coinlive.demo.dialogs.OkCallback
 import com.coinlive.demo.utils.MultipartHelper
 import com.coinlive.demo.utils.RandomStringHelper
 import com.coinlive.demo.viewmodels.LoginFragmentViewModel
+import com.coinlive.uikit.views.CoinLiveToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 class LoginFragment : Fragment(), OkCallback {
     lateinit var viewModel: LoginFragmentViewModel
     private var _binding: FragmentLoginBinding? = null
+    var waitTime = 0L
 
     private val binding get() = _binding!!
 
@@ -61,6 +66,30 @@ class LoginFragment : Fragment(), OkCallback {
                 binding.tvProfile.text = fileName
             }
         }
+
+    private val callback: OnBackPressedCallback by lazy {
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(System.currentTimeMillis() - waitTime >=1500 ) {
+                    waitTime = System.currentTimeMillis()
+                    CoinLiveToast.make(binding.root,"뒤로가기 버튼을 한번 더 누르면 종료됩니다.").show()
+                } else {
+                    activity?.finishAffinity()
+                    exitProcess(0)
+                }
+            }
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callback.remove()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
