@@ -1,5 +1,8 @@
 package com.coinlive.chat.api.model.enums
 
+import androidx.annotation.Keep
+
+@Keep
 enum class ResponseCode {
     SUCCESS,
     FAIL,
