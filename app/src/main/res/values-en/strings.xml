@@ -5,13 +5,18 @@
     <!-- Strings used for fragments for navigation -->
     <string name="login_fragment_label">Login</string>
     <string name="channel_list_fragment_label">Channel List</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
     <string name="login_title">coinlive\nCHAT solution\nSample</string>
     <string name="menu_confirm">confirm</string>
-    <string name="login_description">익명 접속 테스트를 원하신다면 위 버튼을 눌러주세요.문의사항은 메일로 발송해주세요. app@coinlive.net</string>
-    <string name="login_nickname_hit">최대 10자, 중복불가</string>
+    <string name="login_description">Please click \'Guest log in\' if you wish to log in as a guest. Please contact
+        app@coinlive.net if you need any support.</string>
+    <string name="login_nickname_hit">Max 10 characters </string>
+    <string name="login_profile_hit">Max 15MB (jpeg, png)</string>
+
+    <string name="sign_up">Join Coinlive</string>
+    <string name="connect_cl">CL user log in </string>
+    <string name="select">Select</string>
+    <string name="guest_log_in">Guest log in</string>
+    <string name="channel_list_title">Select Channel</string>
 
 </resources>

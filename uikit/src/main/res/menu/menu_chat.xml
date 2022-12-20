@@ -4,14 +4,14 @@
     <item
         android:id="@+id/m_shared"
         android:icon="@drawable/icon_share"
-        android:title="채널 공유하기" />
+        android:title="@string/shared_cl_chatting" />
     <item
         android:id="@+id/m_notification"
         android:icon="@drawable/icon_settings"
-        android:title="알림 설정" />
+        android:title="@string/notification_setting_title" />
     <item
         android:id="@+id/m_tranlator"
         android:icon="@drawable/icon_translator"
-        android:title="번역 설정" />
+        android:title="@string/translator_setting_title" />
 
 </menu>

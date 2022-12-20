@@ -135,7 +135,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             messageMenuDismiss()
             (if (Coinlive.locale.language.equals("ko")) chat.koMessage else chat.enMessage)?.let {
                 setClipboard(it)
-                showToast("복사 되었습니다.")
+                showToast(getString(R.string.copied_text))
             }
         }
 
@@ -468,7 +468,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun onSuccess(uri: Uri) {
         setClipboard(uri.toString())
-        showToast("URL이 복사 완료 되었습니다.")
+        showToast(getString(R.string.copied_url))
 
     }
 
@@ -486,7 +486,6 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     private fun showToast(msg: String) {
         binding?.rvList?.let {
             CoinLiveToast.make(it, msg).show()
-
         }
     }
 

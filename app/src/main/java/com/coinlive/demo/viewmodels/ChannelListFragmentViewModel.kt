@@ -51,6 +51,10 @@ class ChannelListFragmentViewModel : ViewModel() {
         })
     }
 
+    fun logout() {
+        CoinliveAuthentication.signOutFirebase()
+    }
+
 
 
 }

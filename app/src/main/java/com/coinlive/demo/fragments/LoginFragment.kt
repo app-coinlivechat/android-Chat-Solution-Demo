@@ -35,18 +35,10 @@ import com.coinlive.demo.viewmodels.LoginFragmentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class LoginFragment : Fragment(), OkCallback {
-    private val TAG = LoginFragment::class.java.simpleName
-
-
     lateinit var viewModel: LoginFragmentViewModel
     private var _binding: FragmentLoginBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     private val galleryReqLauncher =

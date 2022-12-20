@@ -1,46 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="input_hint">Chat here</string>
-    <string name="input_block_hint">다수의 신고로 채팅 사용이 제한됩니다.</string>
-    <string name="input_anonymously_hint">채팅을 하려면 로그인을 해주세요</string>
-    <string name="input_ama_hint">AMA 진행 시 채팅이 불가합니다.</string>
-    <string name="asset_description">Coinlive에서 자산인증을 검증한 메시지입니다.</string>
+    <string name="input_hint">Start Chattting!</string>
+    <string name="input_block_hint">Chatting will be suspended due to multiple reports</string>
+    <string name="input_anonymously_hint">Please log in to Chat </string>
+    <string name="input_ama_hint">Chatting is not available during AMA</string>
+    <string name="asset_description">This message contains HODL verified by Coinlive</string>
     <string name="twitter_chat_title">%1$s(%2$s) Twitter</string>
     <string name="medium_chat_title">%1$s(%2$s) Medium</string>
-    <string name="price_jump_chat_title">급등알림</string>
-    <string name="price_drop_chat_title">급락알림</string>
-    <string name="buy_futures_chat_title">숏 청산(BINANCE FUTURES)</string>
-    <string name="sell_futures_chat_title">롱 청산(BINANCE FUTURES)</string>
+    <string name="price_jump_chat_title">Price Spike Alert</string>
+    <string name="price_drop_chat_title">Price drop Alert</string>
+    <string name="buy_futures_chat_title">Long liquidation(BINANCE FUTURES)</string>
+    <string name="sell_futures_chat_title">Short liquidation(BINANCE FUTURES)</string>
 
-    <string name="translator_setting_title">번역 설정</string>
-    <string name="translator">번역</string>
-    <string name="translator_result_language">결과 언어</string>
+    <string name="translator_setting_title">Language setting</string>
+    <string name="translator">Translation</string>
+    <string name="translator_result_language">Language options</string>
 
-    <string name="notification_setting_title">알림 설정</string>
-    <string name="notification_all">전체 알림</string>
+    <string name="notification_setting_title">Notification setting</string>
+    <string name="notification_all">Notifications</string>
 
-    <string name="translator_ko">Korea</string>
+    <string name="translator_ko">Korean</string>
     <string name="translator_en">English</string>
     <string name="translator_zh">中文 (简体)</string>
 
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
-    <string name="translator_download">번역을 위한 리소스 다운로드가 진행됩니다.\n다운로드 하시겠습니까?\n(예상 리소스 파일크기 30MB)</string>
-    <string name="read_all">전체보기</string>
+    <string name="translator_download">Resources downloader will be installed. \n Do you wish to download? \n(apporximate file size 30MB)</string>
+    <string name="read_all">View all</string>
 
     <string name="message_menu_duplicate">Copy</string>
     <string name="message_menu_report">Report</string>
     <string name="message_menu_block">Add block</string>
     <string name="message_menu_block_delete">Delete block</string>
     <string name="message_menu_delete">Delete</string>
-    <string name="block_description">차단 하시겠습니까?</string>
-    <string name="block_delete_description">차단 하시겠습니까?</string>
+    <string name="block_description">Do you wish to block this user?</string>
     <string name="take_over">Received</string>
     <string name="cm_close">Fold</string>
     <string name="cm">Announcement</string>
-    <string name="blocked_user_message">차단 사용자의 메세지입니다.</string>
+    <string name="blocked_user_message">Message from blocked user</string>
     <string name="new_message">New Message!</string>
+    <string name="shared_cl_chatting">CL chat sharing</string>
 
+    <string name="copied_url">URL copied</string>
+    <string name="copied_text">Paste</string>
 
 
 

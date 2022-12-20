@@ -187,7 +187,7 @@
                             style="@style/body2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="최대 15MB (jpeg, png)"
+                            android:text="@string/login_profile_hit"
                             android:textColor="@color/profile_input_text"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -203,7 +203,7 @@
                             android:minHeight="0dp"
                             android:paddingHorizontal="10dp"
                             android:paddingVertical="5dp"
-                            android:text="선택"
+                            android:text="@string/select"
                             android:textColor="@android:color/white"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -235,7 +235,7 @@
                     android:minHeight="0dp"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="10dp"
-                    android:text="가입"
+                    android:text="@string/sign_up"
                     android:textColor="@android:color/white"
                     tools:ignore="TouchTargetSizeCheck" />
 
@@ -249,7 +249,7 @@
                     android:minHeight="0dp"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="10dp"
-                    android:text="회원접속"
+                    android:text="@string/connect_cl"
                     android:textColor="@android:color/white"
                     tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
@@ -273,7 +273,7 @@
                 android:minHeight="0dp"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="10dp"
-                android:text="익명접속"
+                android:text="@string/guest_log_in"
                 android:textColor="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -297,13 +297,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/b_anonymouslyLogIn"
                 tools:ignore="TouchTargetSizeCheck" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="215dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/v_desc" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

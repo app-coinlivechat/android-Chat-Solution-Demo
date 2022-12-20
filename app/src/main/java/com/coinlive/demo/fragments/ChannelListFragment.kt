@@ -35,39 +35,6 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
         ChannelListAdapter()
     }
 
-    private val menuProvider = object : MenuProvider {
-        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-            menuInflater.inflate(R.menu.channel_list_menu, menu)
-        }
-
-        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-            return when (menuItem.itemId) {
-                R.id.m_confirm -> {
-                    selectItem?.let {
-                        val bundle = Bundle()
-                        customerName?.let {
-                            bundle.putString("customerName", it)
-                        }
-                        bundle.putParcelable("channel", selectItem)
-                        bundle.putParcelable("myInfo", viewModel.myInfo)
-
-                        // use FragmentManager
-//                        val manager = requireActivity().supportFragmentManager
-//                        manager.beginTransaction()
-//                            .add(R.id.nav_host_fragment_content_main, ChattingFragment::class.java, bundle)
-//                            .addToBackStack(null)
-//                            .commit()
-
-                        findNavController().navigate(R.id.action_ChannelListFragment_to_ChatFragment, bundle)
-                    }
-
-                    true
-                }
-                else -> false
-
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,8 +54,6 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
         _binding = FragmentChannelListBinding.inflate(inflater, container, false)
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
 
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(menuProvider)
         return binding.root
     }
 
@@ -105,6 +70,30 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
                 adapter.notifyItemRangeInserted(0, it.size)
             }
         }
+        binding.tvConfirm.setOnClickListener {
+            selectItem?.let {
+                val bundle = Bundle()
+                customerName?.let {
+                    bundle.putString("customerName", it)
+                }
+                bundle.putParcelable("channel", selectItem)
+                bundle.putParcelable("myInfo", viewModel.myInfo)
+
+                // use FragmentManager
+//                        val manager = requireActivity().supportFragmentManager
+//                        manager.beginTransaction()
+//                            .add(R.id.nav_host_fragment_content_main, ChattingFragment::class.java, bundle)
+//                            .addToBackStack(null)
+//                            .commit()
+
+                findNavController().navigate(R.id.action_ChannelListFragment_to_ChatFragment, bundle)
+            }
+        }
+
+        binding.ibtnBack.setOnClickListener {
+            viewModel.logout()
+            findNavController().navigate(R.id.action_ChannelListFragment_to_LoginFragment)
+        }
 
     }
 
@@ -113,12 +102,11 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
 
         super.onDestroyView()
         _binding = null
-        val menuHost: MenuHost = requireActivity()
-        menuHost.removeMenuProvider(menuProvider)
     }
 
     override fun onClick(item: Channel) {
         selectItem = item
+        binding.tvConfirm.setTextColor(requireContext().getColor(R.color.blue_text))
     }
 }
 

@@ -42,7 +42,7 @@ class BlockDialog : AppCompatDialogFragment() {
         arguments?.let {
             val isReadyBlock = it.getBoolean(Constants.argKeyIsReadyBlock)
             binding!!.dialog.setDescription(if (isReadyBlock) binding!!.root.context.getString(R.string
-                .block_delete_description) else binding!!.root.context.getString(R.string
+                .block_description) else binding!!.root.context.getString(R.string
                 .block_description))
         }
 
