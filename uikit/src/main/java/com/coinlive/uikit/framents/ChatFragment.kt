@@ -153,7 +153,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 val isConfirmClick = bundle.getBoolean(Constants.argKeyIsConfirmClick)
                 if (isConfirmClick) {
                     val selectType = bundle.getParcelable<ReportType>(Constants.argKeyReportType) ?: run {
-                        Log.e(TAG, "selectType is null!!!!!")
+                        LoggerHelper.e("selectType is null!!!!!")
                         return@setFragmentResultListener
                     }
                     viewModel.report(selectType, chat.memberId!!, object : ResponseCallback<Boolean> {
@@ -456,7 +456,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             //show keyboard
             val linearLayoutManager: LinearLayoutManager = this.binding?.rvList?.layoutManager!! as LinearLayoutManager
             val visibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
-            Log.e(TAG, "visible position : $visibleItemPosition")
+            LoggerHelper.e("visible position : $visibleItemPosition")
             if (visibleItemPosition in 1..7) {
                 binding?.rvList?.scrollToPosition(0)
             }

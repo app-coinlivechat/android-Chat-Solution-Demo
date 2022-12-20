@@ -1,7 +1,6 @@
 package com.coinlive.uikit.framents
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
+import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.R
 import com.coinlive.uikit.databinding.FragmentTranslatorSettingBinding
 import com.coinlive.uikit.utils.Constants
@@ -20,7 +20,6 @@ import com.google.mlkit.common.model.RemoteModelManager
 import com.google.mlkit.nl.translate.*
 
 class TranslatorSettingFragment : BaseFragment() {
-    private val TAG = TranslatorSettingFragment::class.java.simpleName
 
     private var binding: FragmentTranslatorSettingBinding? = null
     private val koTranslateRemoteModel by lazy {
@@ -100,11 +99,11 @@ class TranslatorSettingFragment : BaseFragment() {
                 binding!!.selectLanguage =
                     getLanguageString(PreferenceHelper.defaultPreference(requireContext()).translatorLanguage)
                 binding?.clSelectLanguage?.visibility = View.VISIBLE
-                Log.e(TAG, "download 성공")
+                LoggerHelper.e("download 성공")
 
             }.addOnFailureListener {
                 binding?.clProgress?.visibility = View.GONE
-                Log.e(TAG, "download 실패")
+                LoggerHelper.e("download 실패")
             }
     }
 
@@ -114,7 +113,7 @@ class TranslatorSettingFragment : BaseFragment() {
             binding?.sTranslator?.isChecked = false
             return
         }
-        Log.e(TAG, "selectLanguage : $selectLanguage")
+        LoggerHelper.e("selectLanguage : $selectLanguage")
         RemoteModelManager.getInstance().getDownloadedModels(TranslateRemoteModel::class.java)
             .addOnSuccessListener {
                 var isContain = false
