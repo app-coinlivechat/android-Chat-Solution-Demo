@@ -10,6 +10,7 @@ data class MemberReportBody(
     @SerializedName("rtid") val reportTypeId: String,
 )
 
+@Keep
 data class ReportTypeList(
     val list: ArrayList<ReportType>,
 )

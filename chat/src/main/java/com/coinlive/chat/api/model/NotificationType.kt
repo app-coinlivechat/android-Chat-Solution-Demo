@@ -8,6 +8,7 @@ import kotlinx.parcelize.Parcelize
 /**
  * 코인라이브 채팅의 필터링 정보 리스트를 관리하는 data class 입니다.
  */
+@Keep
 data class NotificationTypeList(
     /**
      * 채팅의 필터링 정보 리스트입니다.
@@ -39,6 +40,7 @@ data class NotificationType(
     @SerializedName("ntid") val id: String,
 ):Parcelable
 
+@Keep
 data class NotificationMap(
     @SerializedName("noti") val notiMap: HashMap<String, Boolean>,
 )
