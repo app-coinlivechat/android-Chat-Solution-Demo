@@ -15,8 +15,8 @@ class DemoApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // coinlive
-        Coinlive.isDebug = BuildConfig.DEBUG
+        // coinlive setting
+        Coinlive.isDebug = true
         Coinlive.locale = Locale.getDefault()
     }
 }
