@@ -1,5 +1,8 @@
 package com.coinlive.chat.exception
 
+import androidx.annotation.Keep
+
+@Keep
 enum class Error(val msg: String,val code: Int) {
 
     UNKNOWN("unknown reason",200),
