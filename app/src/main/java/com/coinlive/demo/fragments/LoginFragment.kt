@@ -68,7 +68,6 @@ class LoginFragment : Fragment(), OkCallback {
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[LoginFragmentViewModel::class.java]
-        viewModel.getCustomerInfo()
         viewModel.loginResultMsg.observe(viewLifecycleOwner) {
             LoginResultDialog(requireContext(), this, it).show()
         }
@@ -105,10 +104,11 @@ class LoginFragment : Fragment(), OkCallback {
             binding.etUuId.setText(RandomStringHelper.generateString())
         }
         binding.bSignUp.setOnClickListener {
-            viewModel.signUp(binding.etUuId.text.toString(), binding.etNickname.text.toString())
+            viewModel.signUp(binding.etBandId.text.toString(), binding.etUuId.text.toString(), binding.etNickname.text
+                .toString())
         }
         binding.bLogIn.setOnClickListener {
-            viewModel.logIn(binding.etUuId.text.toString())
+            viewModel.logIn(binding.etBandId.text.toString(), binding.etUuId.text.toString())
         }
         binding.bAnonymouslyLogIn.setOnClickListener {
             lifecycleScope.launch(Dispatchers.Main) {
