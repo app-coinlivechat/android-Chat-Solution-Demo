@@ -72,7 +72,7 @@ class LoginFragment : Fragment(), OkCallback {
             override fun handleOnBackPressed() {
                 if(System.currentTimeMillis() - waitTime >=1500 ) {
                     waitTime = System.currentTimeMillis()
-                    CoinLiveToast.make(binding.root,"뒤로가기 버튼을 한번 더 누르면 종료됩니다.").show()
+                    CoinLiveToast.make(binding.root,getString(R.string.please_back_press)).show()
                 } else {
                     activity?.finishAffinity()
                     exitProcess(0)

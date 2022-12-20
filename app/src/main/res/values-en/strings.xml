@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">chat_solution_demo</string>
-    <string name="title_activity_main">MainActivity</string>
-    <!-- Strings used for fragments for navigation -->
+    <string name="app_name">Coinlive CHAT Solution Demo</string>
     <string name="login_fragment_label">Login</string>
     <string name="channel_list_fragment_label">Channel List</string>
 
@@ -18,5 +16,6 @@
     <string name="select">Select</string>
     <string name="guest_log_in">Guest log in</string>
     <string name="channel_list_title">Select Channel</string>
+    <string name="please_back_press">Press back button again to Exit.</string>
 
 </resources>
