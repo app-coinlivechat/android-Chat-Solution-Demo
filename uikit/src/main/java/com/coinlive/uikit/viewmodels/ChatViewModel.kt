@@ -324,7 +324,13 @@ class ChatViewModel : ViewModel() {
     fun editProfile(multipart: MultipartBody.Part?, nickName: String?, callback: ResponseCallback<Boolean>) = viewModelScope.launch {
         if (customer == null || myInfo == null) return@launch
 
-        if (nickName != null && myInfo!!.nickName != nickName) {
+        if (nickName != null) {
+
+            if(myInfo!!.nickName == nickName) {
+                callback.onSuccess(false)
+                return@launch
+            }
+
             coinliveApi.isAvailableNickName(nickName, customer!!.id, object : ResponseCallback<Boolean> {
                 override fun onSuccess(value: Boolean) {
                     viewModelScope.launch {

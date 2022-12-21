@@ -3,6 +3,7 @@ package com.coinlive.uikit.framents
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
@@ -20,6 +21,7 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.PopupWindow
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -79,6 +81,32 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             overlapAnchor = true
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
+    }
+
+    private val callback: OnBackPressedCallback by lazy {
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                binding?.clProgress?.let {
+                    if(it.visibility == View.VISIBLE){
+                        LoggerHelper.di("작업 중 화면을 나갈수 없습니다.")
+                    } else {
+                        popFragment()
+                    }
+                } ?: run{
+                    popFragment()
+                }
+            }
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callback.remove()
     }
 
     private val scrollListener: RecyclerView.OnScrollListener = object : RecyclerView.OnScrollListener() {
@@ -560,8 +588,6 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
                     })
                 }
-
-
             }
         }
     }

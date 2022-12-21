@@ -1,9 +1,11 @@
 package com.coinlive.uikit.framents
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
@@ -34,7 +36,31 @@ class TranslatorSettingFragment : BaseFragment() {
     }
 
     private var oldSelectLanguage : String? = null
+    private val callback: OnBackPressedCallback by lazy {
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                binding?.clProgress?.let {
+                    if(it.visibility == View.VISIBLE){
+                        LoggerHelper.di("다운로드 중 화면을 나갈수 없습니다.")
+                    } else {
+                        popFragment()
+                    }
+                } ?: run{
+                    popFragment()
+                }
+            }
+        }
+    }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callback.remove()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentTranslatorSettingBinding.inflate(inflater, container, false)
