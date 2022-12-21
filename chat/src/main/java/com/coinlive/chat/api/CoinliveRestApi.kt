@@ -88,7 +88,7 @@ class CoinliveRestApi {
         }
     }
 
-    suspend fun setNickName(nickName: String, customerId: String, callback: ResponseCallback<String>) {
+    suspend fun setNickName(nickName: String, customerId: String, callback: ResponseCallback<Boolean>) {
         try {
             callback.onSuccess(memberRepo.setNickName(nickName, getAuth(), customerId))
         } catch (e: CoinliveException) {

@@ -27,6 +27,12 @@
         <action
             android:id="@+id/action_chatFragment_to_reportDialog"
             app:destination="@id/reportDialog" />
+        <action
+            android:id="@+id/action_chatFragment_to_profileDialog"
+            app:destination="@id/profileDialog" />
+        <action
+            android:id="@+id/action_chatFragment_to_infoDialog"
+            app:destination="@id/infoDialog" />
 
     </fragment>
     <fragment
@@ -87,4 +93,14 @@
         tools:layout="@layout/dialog_report"
         android:name="com.coinlive.uikit.framents.ReportDialog"
         android:label="ReportDialog" />
+    <dialog
+        android:id="@+id/profileDialog"
+        tools:layout="@layout/dialog_profile"
+        android:name="com.coinlive.uikit.framents.ProfileDialog"
+        android:label="ProfileDialog" />
+    <dialog
+        android:id="@+id/infoDialog"
+        tools:layout="@layout/dialog_info"
+        android:name="com.coinlive.uikit.framents.InfoDialog"
+        android:label="InfoDialog" />
 </navigation>

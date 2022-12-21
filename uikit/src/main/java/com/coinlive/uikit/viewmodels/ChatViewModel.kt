@@ -23,6 +23,7 @@ import com.coinlive.uikit.models.Notification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -38,6 +39,7 @@ class ChatViewModel : ViewModel() {
     val reportType = ArrayList<ReportType>()
     var standardSize = 50
     var timer: Timer? = null
+    var customer: Customer? = null
 
     var channel: Channel? = null
         private set(value) {
@@ -53,13 +55,14 @@ class ChatViewModel : ViewModel() {
         myInfo: CustomerUser?,
         standardSize: Int?,
         channel: Channel,
-        customerName: String,
+        customer: Customer,
         listener: MessageListener,
         cmNoticeListener: CmNoticeListener,
         amaListener: AmaListener,
         context: Context,
     ) {
         this.channel = channel
+        this.customer = customer
         myInfo?.let {
             this.myInfo = it
             this.userStatus.value = it.status
@@ -69,9 +72,9 @@ class ChatViewModel : ViewModel() {
             this.standardSize = standardSize
         }
         coinliveChat =
-            CoinliveChat(channel.coinId, channel.coinSymbol, customerName, listener, cmNoticeListener, amaListener,
+            CoinliveChat(channel.coinId, channel.coinSymbol, customer.name, listener, cmNoticeListener, amaListener,
                 context)
-        if(myInfo != null) {
+        if (myInfo != null) {
             loadReportType()
             loadNotificationType()
         } else {
@@ -97,7 +100,7 @@ class ChatViewModel : ViewModel() {
                 val result = ArrayList<Notification>()
                 list.forEach { type ->
                     val enable: Boolean? = value[type.type]
-                    if(enable != null && type.tag == "CHAT") {
+                    if (enable != null && type.tag == "CHAT") {
                         result.add(Notification(type.type, type.name, enable))
                     }
                 }
@@ -315,6 +318,57 @@ class ChatViewModel : ViewModel() {
             EmojiType.ROCKET.key -> EmojiType.ROCKET
             EmojiType.CRY.key -> EmojiType.CRY
             else -> EmojiType.ASTONISHED
+        }
+    }
+
+    fun editProfile(multipart: MultipartBody.Part?, nickName: String?, callback: ResponseCallback<Boolean>) = viewModelScope.launch {
+        if (customer == null || myInfo == null) return@launch
+
+        if (nickName != null && myInfo!!.nickName != nickName) {
+            coinliveApi.isAvailableNickName(nickName, customer!!.id, object : ResponseCallback<Boolean> {
+                override fun onSuccess(value: Boolean) {
+                    viewModelScope.launch {
+                        coinliveApi.setNickName(nickName, customer!!.id, object : ResponseCallback<Boolean> {
+                            override fun onSuccess(value: Boolean) {
+                                myInfo = myInfo?.copy(nickName = nickName)
+                                callback.onSuccess(true)
+                            }
+
+                            override fun onFail(exception: CoinliveException) {
+                                exception.printStackTrace()
+                                LoggerHelper.de(exception.message ?: "")
+                                callback.onFail(exception)
+                            }
+
+                        })
+                    }
+                }
+
+                override fun onFail(exception: CoinliveException) {
+                    exception.printStackTrace()
+                    LoggerHelper.de(exception.message ?: "")
+                    callback.onFail(exception)
+
+                }
+
+            })
+        }
+
+        if (multipart != null) {
+            coinliveApi.uploadProfileImage(multipart, object : ResponseCallback<String> {
+                override fun onSuccess(value: String) {
+                    myInfo = myInfo?.copy(profileImage = value)
+                    callback.onSuccess(true)
+                }
+
+                override fun onFail(exception: CoinliveException) {
+                    exception.printStackTrace()
+                    LoggerHelper.de(exception.message ?: "")
+                    callback.onFail(exception)
+
+                }
+
+            })
         }
     }
 

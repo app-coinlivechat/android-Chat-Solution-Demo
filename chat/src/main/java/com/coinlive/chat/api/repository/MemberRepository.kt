@@ -26,7 +26,7 @@ class MemberRepository {
         }
     }
 
-    suspend fun setNickName(nickName: String, auth: String, customerId: String): String {
+    suspend fun setNickName(nickName: String, auth: String, customerId: String): Boolean {
         val response: RestApiResponse<NickName>
         try {
             response = service.setNickName(auth, NickNameBody(nickName, customerId))
@@ -34,10 +34,14 @@ class MemberRepository {
             throw NetworkException("MemberRepository.setNickName error!")
         }
 
-        if (!response.isSuccess() && response.d == null) {
-            throw RequestFailException(response.code, response.msg)
+        return when {
+            response.isSuccess() -> {
+                true
+            }
+            else -> {
+                throw RequestFailException(response.code, response.msg)
+            }
         }
-        return response.d!!.word
     }
 
     suspend fun signupCheck(firebaseUuid: String): MemberSignupCheck {

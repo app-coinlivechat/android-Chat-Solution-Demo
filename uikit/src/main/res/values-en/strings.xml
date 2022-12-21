@@ -45,6 +45,9 @@
 
     <string name="copied_url">URL copied</string>
     <string name="copied_text">Paste</string>
+    <string name="menu_profile">프로필 설정</string>
+    <string name="save">Save</string>
+    <string name="nick_name_error">Please insert 3~10 characters using KOR/ENG/Number!</string>
 
 
 

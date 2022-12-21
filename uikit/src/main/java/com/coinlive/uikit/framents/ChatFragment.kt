@@ -5,11 +5,15 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.pm.ActivityInfo
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -28,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.coinlive.chat.Coinlive
 import com.coinlive.chat.api.ResponseCallback
 import com.coinlive.chat.api.model.Channel
+import com.coinlive.chat.api.model.Customer
 import com.coinlive.chat.api.model.CustomerUser
 import com.coinlive.chat.api.model.ReportType
 import com.coinlive.chat.exception.CoinliveException
@@ -37,6 +42,7 @@ import com.coinlive.chat.firebase.listener.DynamicLinkListener
 import com.coinlive.chat.firebase.listener.MessageListener
 import com.coinlive.chat.firebase.model.Ama
 import com.coinlive.chat.firebase.model.Chat
+import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.uikit.R
 import com.coinlive.uikit.adapters.MessageEventListener
@@ -45,6 +51,7 @@ import com.coinlive.uikit.databinding.FragmentCoinBinding
 import com.coinlive.uikit.models.Notification
 import com.coinlive.uikit.utils.Constants
 import com.coinlive.uikit.utils.KeyboardHelper
+import com.coinlive.uikit.utils.MultipartHelper
 import com.coinlive.uikit.utils.PreferenceHelper
 import com.coinlive.uikit.utils.PreferenceHelper.translatorLanguage
 import com.coinlive.uikit.viewmodels.ChatViewModel
@@ -55,6 +62,7 @@ import com.coinlive.uikit.views.OnMessageMenuEventListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 
 
 class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListener, OnClickListener,
@@ -202,21 +210,24 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
         arguments?.let { it ->
-            val customerName = it.getString(Constants.argKeyCustomerName)
+            val customer = it.getParcelable<Customer>(Constants.argKeyCustomer)
             val channel = it.getParcelable<Channel>(Constants.argKeyChannel)
             val myInfo = it.getParcelable<CustomerUser>(Constants.argKeyMyInfo)
-            if (customerName == null || channel == null) {
-                LoggerHelper.de("please check channel or myInfo or customerName")
+            if (customer == null) {
+                LoggerHelper.de("please check customer")
+                return@let
+            }
+            if (channel == null) {
+                LoggerHelper.de("please check channel")
                 return@let
             }
             messageMenuView.setMyMid(myInfo?.id)
-            viewModel.initCoinLiveChat(myInfo, 50, channel, customerName, this, this, this, requireContext())
+            viewModel.initCoinLiveChat(myInfo, 50, channel, customer, this, this, this, requireContext())
+            messageMenuView.setListener(messageMenuEventListener)
+            adapter =
+                MessageListAdapter(coinName = viewModel.channel!!.name!!, myInfo = viewModel.myInfo, eventListener = this)
+            adapter.setHasStableIds(true)
         }
-        messageMenuView.setListener(messageMenuEventListener)
-        adapter =
-            MessageListAdapter(coinName = viewModel.channel!!.name!!, myInfo = viewModel.myInfo, eventListener = this)
-        adapter.setHasStableIds(true)
-
     }
 
 
@@ -371,6 +382,13 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 //                val popupMenu = PopupMenu(wrapper,v)
                 val popupMenu = PopupMenu(v.context, v)
                 popupMenu.inflate(R.menu.menu_chat)
+
+                if (viewModel.myInfo == null) {
+                    val menu = popupMenu.menu
+                    menu.removeItem(R.id.m_notification)
+                    menu.removeItem(R.id.m_profile)
+                }
+
                 popupMenu.setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.m_shared -> viewModel.getDynamicLink(this)
@@ -390,6 +408,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                         }
                         R.id.m_tranlator -> v.findNavController()
                             .navigate(R.id.action_chatFragment_to_translatorSettingFragment)
+                        R.id.m_profile -> showProfile()
                     }
                     true
                 }
@@ -498,7 +517,60 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     private fun messageMenuDismiss() {
         binding?.rvList?.suppressLayout(false)
         messagePopupWindow.dismiss()
+    }
 
+    private fun showProfile() {
+        val bundle = Bundle()
+        bundle.putString(Constants.argKeyNickName, viewModel.myInfo!!.nickName)
+        bundle.putString(Constants.argKeyUrl, viewModel.myInfo!!.profileImage)
+        binding?.root?.findNavController()?.navigate(R.id.action_chatFragment_to_profileDialog, bundle)
+        setFragmentResultListener(Constants.reqKeyProfile) { _, bundle ->
+            if (bundle.getBoolean(Constants.argKeyIsConfirmClick)) {
+                var multipart: MultipartBody.Part? = null
+                bundle.getString(Constants.argKeyUrl)?.let {
+                    LoggerHelper.de("url!!!!!!! : $it")
+                    val input = requireContext().contentResolver.openInputStream(Uri.parse(it))
+                    val img: Bitmap = BitmapFactory.decodeStream(input)
+                    input?.close()
+                    val fileName = "${CalendarHelper.nowCalendar().timeInMillis}_image.png"
+                    multipart = MultipartHelper.buildBitmapBodyPart(fileName, img, requireContext())
+                }
+                var nickName = bundle.getString(Constants.argKeyNickName)
+
+                if (nickName != null) {
+                    if (nickName.length < 3 || nickName.length > 10) {
+                        showInfoDialogWithDelayed(getString(R.string.nick_name_error))
+                        nickName = null
+                    }
+                } else {
+                    showInfoDialogWithDelayed(getString(R.string.nick_name_error))
+                }
+
+                if(multipart != null || nickName != null) {
+                    binding?.clProgress?.visibility = View.VISIBLE
+                    viewModel.editProfile(multipart, nickName, object : ResponseCallback<Boolean> {
+                        override fun onSuccess(value: Boolean) {
+                            binding?.clProgress?.visibility = View.GONE
+                        }
+
+                        override fun onFail(exception: CoinliveException) {
+                            binding?.clProgress?.visibility = View.GONE
+                            showInfoDialogWithDelayed(exception.message?:"")
+                        }
+
+                    })
+                }
+
+
+            }
+        }
+    }
+
+    private fun showInfoDialogWithDelayed(description: String) {
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding?.root?.findNavController()?.navigate(R.id.action_chatFragment_to_infoDialog, bundleOf(Constants
+                .argKeyDescription to description))
+        },500)
     }
 
 }

@@ -2,10 +2,9 @@ package com.coinlive.uikit.utils
 
 object Constants {
     // fragment argument key
-    const val argKeyChannelName = "channelName"
     const val argKeyChannel = "channel"
     const val argKeyMyInfo = "myInfo"
-    const val argKeyCustomerName = "customerName"
+    const val argKeyCustomer = "customer"
     const val argKeyList = "list"
     const val argKeyTitle = "title"
     const val argKeyDescription = "description"
@@ -17,7 +16,6 @@ object Constants {
     const val argKeyOldTransLanguage = "selectTransLanguage"
     const val argKeyAutoTranslator = "autoTranslator"
     const val argKeyIsMyMessage = "isMyMessage"
-    const val argKeyUserMid = "userMid"
     const val argKeyIsReadyBlock = "isReadyBlock"
     const val argKeyReportTypeList = "reportTypeList"
     const val argKeyReportType = "reportType"
@@ -31,6 +29,7 @@ object Constants {
     const val reqKeyTranslatorDownload = "translatorDownload"
     const val reqKeyBlock = "Block"
     const val reqKeyReport = "Report"
+    const val reqKeyProfile = "Profile"
 
 
 }

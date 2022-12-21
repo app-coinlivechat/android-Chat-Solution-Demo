@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import com.coinlive.uikit.R
 import com.coinlive.uikit.databinding.ViewDialogConfirmBinding
 
@@ -28,15 +27,12 @@ class DialogConfirmView @JvmOverloads constructor(
         context.theme.obtainStyledAttributes(attrs, R.styleable.ConfirmDialog, 0, 0).apply {
             if (!isInEditMode) {
 
-
-
                 getDrawable(R.styleable.ConfirmDialog_confirmBackground)?.let {
-//                    binding.btnConfirm.background = it
-                    binding.btnConfirm.background = ContextCompat.getDrawable(context, R.drawable.select_dialog_confirm_red_background)
+                    binding.btnConfirm.background = it
                 }
-//                getDrawable(R.styleable.ConfirmDialog_cancelBackground)?.let {
-//                    binding.btnCancel.background = it
-//                }
+                getDrawable(R.styleable.ConfirmDialog_cancelBackground)?.let {
+                    binding.btnCancel.background = it
+                }
                 binding.btnConfirm.setOnClickListener {
                     listener?.onConfirmClick()
                 }
