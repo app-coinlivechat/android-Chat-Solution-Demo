@@ -53,5 +53,6 @@ class MyTextMessageViewHolder(
         binding.isSameDate = isSameDate
         binding.isShowTime = isShowTime
         binding.message = if (Coinlive.locale.language.equals("ko")) item.koMessage else item.enMessage ?: ""
+        binding.messageLine = binding.message!!.lines().size
     }
 }

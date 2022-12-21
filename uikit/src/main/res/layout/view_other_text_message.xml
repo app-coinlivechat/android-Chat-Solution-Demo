@@ -25,6 +25,10 @@
             type="String" />
 
         <variable
+            name="originMsgLine"
+            type="int" />
+
+        <variable
             name="isSameDate"
             type="Boolean" />
 
@@ -139,18 +143,17 @@
                 android:text="@{originMsg}"
                 android:textColor="@color/normal_text"
                 android:textColorLink="@color/sub_blue_500"
-                android:visibility="@{originMsg.length > 400 ? View.GONE :  (transMsg == null ? View.VISIBLE : View.GONE)}" />
+                android:visibility="@{(originMsg.length > 400 || originMsgLine > 10) ? View.GONE :  (transMsg == null ? View.VISIBLE : View.GONE)}" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_max_msg"
                 android:layout_width="wrap_content"
-
                 android:layout_height="wrap_content"
                 android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
                 android:maxWidth="246dp"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="8dp"
-                android:visibility="@{originMsg.length > 400 ? View.VISIBLE :View.GONE, default = gone}">
+                android:visibility="@{(originMsg.length > 400 || originMsgLine > 10) ? View.VISIBLE :View.GONE, default = gone}">
 
                 <TextView
                     android:id="@+id/tv_max_msg"
@@ -162,6 +165,7 @@
                     android:linksClickable="true"
                     android:maxWidth="222dp"
                     android:maxLength="400"
+                    android:maxLines="10"
                     android:text="@{originMsg}"
                     android:textColor="@color/normal_text"
                     android:textColorLink="@color/sub_blue_500"
@@ -179,17 +183,21 @@
                     android:text="@string/read_all"
                     android:textColor="@color/normal_text"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/iv_right"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_max_msg" />
 
                 <ImageView
+                    android:id="@+id/iv_right"
                     android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="0dp"
                     android:src="@drawable/icon_chevron_right"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_all"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_max_msg"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintStart_toEndOf="@id/tv_all"
+                    app:layout_constraintTop_toTopOf="@id/tv_all"
                     tools:ignore="ContentDescription" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

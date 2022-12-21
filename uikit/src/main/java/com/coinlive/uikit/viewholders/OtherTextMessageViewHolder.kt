@@ -103,6 +103,8 @@ class OtherTextMessageViewHolder(
                 binding.root.context.getString(R.string.blocked_user_message)
             else
                 super.messageParser(message!!)
+
+        binding.originMsgLine =  binding.originMsg.lines().size
         binding.emoji.setMyMid(myInfo?.id)
     }
 
