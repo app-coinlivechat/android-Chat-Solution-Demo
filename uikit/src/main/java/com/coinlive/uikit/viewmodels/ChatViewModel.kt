@@ -185,7 +185,7 @@ class ChatViewModel : ViewModel() {
         }
         originNotiList.clear()
         originNotiList.addAll(list)
-        if(changeCount > 0) {
+        if (changeCount > 0) {
             coinliveChat?.reloadMessages(getNotificationMap())
         }
     }
@@ -322,46 +322,53 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    fun editProfile(multipart: MultipartBody.Part?, nickName: String?, callback: ResponseCallback<Boolean>) = viewModelScope.launch {
-        if (customer == null || myInfo == null) return@launch
+    fun editProfile(multipart: MultipartBody.Part?, nickName: String?, callback: ResponseCallback<Boolean>) =
+        viewModelScope.launch {
+            if (customer == null || myInfo == null) return@launch
 
-        if (nickName != null) {
-
-            if(myInfo!!.nickName == nickName) {
-                callback.onSuccess(false)
-                return@launch
-            }
-
-            coinliveApi.isAvailableNickName(nickName, customer!!.id, object : ResponseCallback<Boolean> {
-                override fun onSuccess(value: Boolean) {
-                    viewModelScope.launch {
-                        coinliveApi.setNickName(nickName, customer!!.id, object : ResponseCallback<Boolean> {
-                            override fun onSuccess(value: Boolean) {
-                                myInfo = myInfo?.copy(nickName = nickName)
-                                callback.onSuccess(true)
-                            }
-
-                            override fun onFail(exception: CoinliveException) {
-                                exception.printStackTrace()
-                                LoggerHelper.de(exception.message ?: "")
-                                callback.onFail(exception)
-                            }
-
-                        })
+            if (nickName != null) {
+                if (myInfo!!.nickName == nickName) {
+                    if (multipart != null) {
+                        uploadProfileImage(multipart, callback)
+                    } else {
+                        callback.onSuccess(false)
+                        return@launch
                     }
+                } else {
+                    coinliveApi.isAvailableNickName(nickName, customer!!.id, object : ResponseCallback<Boolean> {
+                        override fun onSuccess(value: Boolean) {
+                            viewModelScope.launch {
+                                coinliveApi.setNickName(nickName, customer!!.id, object : ResponseCallback<Boolean> {
+                                    override fun onSuccess(value: Boolean) {
+                                        myInfo = myInfo?.copy(nickName = nickName)
+                                        if (multipart != null) {
+                                            uploadProfileImage(multipart, callback)
+                                        } else {
+                                            callback.onSuccess(true)
+                                        }
+                                    }
+
+                                    override fun onFail(exception: CoinliveException) {
+                                        exception.printStackTrace()
+                                        LoggerHelper.de(exception.message ?: "")
+                                        callback.onFail(exception)
+                                    }
+                                })
+                            }
+                        }
+
+                        override fun onFail(exception: CoinliveException) {
+                            exception.printStackTrace()
+                            LoggerHelper.de(exception.message ?: "")
+                            callback.onFail(exception)
+                        }
+                    })
                 }
-
-                override fun onFail(exception: CoinliveException) {
-                    exception.printStackTrace()
-                    LoggerHelper.de(exception.message ?: "")
-                    callback.onFail(exception)
-
-                }
-
-            })
+            }
         }
 
-        if (multipart != null) {
+    private fun uploadProfileImage(multipart: MultipartBody.Part, callback: ResponseCallback<Boolean>) =
+        viewModelScope.launch {
             coinliveApi.uploadProfileImage(multipart, object : ResponseCallback<String> {
                 override fun onSuccess(value: String) {
                     myInfo = myInfo?.copy(profileImage = value)
@@ -372,12 +379,10 @@ class ChatViewModel : ViewModel() {
                     exception.printStackTrace()
                     LoggerHelper.de(exception.message ?: "")
                     callback.onFail(exception)
-
                 }
 
             })
         }
-    }
 
 
     fun destroy() {
