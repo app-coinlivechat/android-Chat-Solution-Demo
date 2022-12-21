@@ -1,4 +1,4 @@
-package com.coinlive.demo.utils
+package com.coinlive.uikit.utils
 
 import android.content.Context
 import android.graphics.Bitmap
