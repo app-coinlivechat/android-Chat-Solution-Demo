@@ -87,18 +87,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/s_translator"
-                    android:layout_width="52dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="32dp"
-                    android:checked="true"
-                    android:padding="0dp"
                     android:thumb="@drawable/shape_switch_thumb"
-                    android:track="@drawable/selector_switch_track"
+                    app:track="@drawable/selector_switch_track"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:gravity="center"
                     app:showText="false"
                     app:switchMinWidth="52dp"
                     tools:ignore="TouchTargetSizeCheck" />
