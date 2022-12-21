@@ -161,12 +161,25 @@ class LoginFragmentViewModel : ViewModel() {
                 exception.printStackTrace()
             }
         })
-
-
     }
 
-    suspend fun signInAnonymously() {
-        CoinliveAuthentication.signInWithUnknownUser()
+    fun signInAnonymously(customerName : String,callback: ResponseCallback<Boolean>) = viewModelScope.launch{
+        clApi.getCustomerInfo(customerName, object : ResponseCallback<Customer> {
+            override fun onSuccess(value: Customer) {
+                customer = value
+                viewModelScope.launch { CoinliveAuthentication.signInWithUnknownUser()
+                    callback.onSuccess(true)
+                }
+            }
+
+            override fun onFail(exception: CoinliveException) {
+                loginResultMsg.value = "customer 정보를 불러오지 못했습니다."
+                customer = null
+                exception.printStackTrace()
+                callback.onFail(exception)
+            }
+        })
+
     }
 
 

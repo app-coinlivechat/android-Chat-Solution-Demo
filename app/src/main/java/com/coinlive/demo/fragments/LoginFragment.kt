@@ -22,21 +22,20 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.coinlive.chat.api.ResponseCallback
 import com.coinlive.chat.api.model.enums.UserStatus
+import com.coinlive.chat.exception.CoinliveException
 import com.coinlive.chat.util.CalendarHelper
 import com.coinlive.demo.DemoApplication
 import com.coinlive.demo.R
 import com.coinlive.demo.databinding.FragmentLoginBinding
 import com.coinlive.demo.dialogs.LoginResultDialog
 import com.coinlive.demo.dialogs.OkCallback
-import com.coinlive.demo.utils.MultipartHelper
 import com.coinlive.demo.utils.RandomStringHelper
 import com.coinlive.demo.viewmodels.LoginFragmentViewModel
+import com.coinlive.uikit.utils.MultipartHelper
 import com.coinlive.uikit.views.CoinLiveToast
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
 class LoginFragment : Fragment(), OkCallback {
@@ -70,9 +69,9 @@ class LoginFragment : Fragment(), OkCallback {
     private val callback: OnBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(System.currentTimeMillis() - waitTime >=1500 ) {
+                if (System.currentTimeMillis() - waitTime >= 1500) {
                     waitTime = System.currentTimeMillis()
-                    CoinLiveToast.make(binding.root,getString(R.string.please_back_press)).show()
+                    CoinLiveToast.make(binding.root, getString(R.string.please_back_press)).show()
                 } else {
                     activity?.finishAffinity()
                     exitProcess(0)
@@ -145,13 +144,17 @@ class LoginFragment : Fragment(), OkCallback {
         }
         binding.bAnonymouslyLogIn.setOnClickListener {
             showProgress()
-            lifecycleScope.launch(Dispatchers.Main) {
-                try {
-                    viewModel.signInAnonymously()
-                    moveChannelListFragment()
-                } catch (e: Exception) {
-                    showLoginResultDialog(e.message ?: "signInAnonymously 실패")
-                }
+            try {
+                viewModel.signInAnonymously(binding.etBandId.text.toString(),object :ResponseCallback<Boolean> {
+                    override fun onSuccess(value: Boolean) {
+                        moveChannelListFragment()
+                    }
+
+                    override fun onFail(exception: CoinliveException) {
+                    }
+                })
+            } catch (e: Exception) {
+                showLoginResultDialog(e.message ?: "signInAnonymously 실패")
             }
         }
     }
@@ -170,7 +173,7 @@ class LoginFragment : Fragment(), OkCallback {
 
         val bundle = Bundle()
         viewModel.customer?.let {
-            bundle.putString("customerName", it.name)
+            bundle.putParcelable("customer", it)
         }
         // use FragmentManager
 //        requireActivity().supportFragmentManager.beginTransaction()

@@ -11,11 +11,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.coinlive.chat.api.model.Channel
+import com.coinlive.chat.api.model.Customer
 import com.coinlive.demo.R
 import com.coinlive.demo.adapters.ChannelItemOnClick
 import com.coinlive.demo.adapters.ChannelListAdapter
 import com.coinlive.demo.databinding.FragmentChannelListBinding
 import com.coinlive.demo.viewmodels.ChannelListFragmentViewModel
+import com.coinlive.uikit.utils.Constants
 import com.coinlive.uikit.views.CoinLiveToast
 
 /**
@@ -26,7 +28,7 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
 
     private var _binding: FragmentChannelListBinding? = null
     private lateinit var viewModel: ChannelListFragmentViewModel
-    private var customerName: String? = null
+    private var customer: Customer? = null
     private val binding get() = _binding!!
     private var selectItem: Channel? = null
     private val adapter: ChannelListAdapter by lazy {
@@ -46,7 +48,7 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
         super.onCreate(savedInstanceState)
         Log.d(TAG,"onCreate")
         arguments?.let {
-            customerName = it.getString("customerName")
+            customer = it.getParcelable(Constants.argKeyCustomer)
         }
         viewModel = ViewModelProvider(this)[ChannelListFragmentViewModel::class.java]
     }
@@ -87,7 +89,7 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
             }
         }
         binding.tvConfirm.setOnClickListener {
-            selectItem?.let {
+            selectItem?.let {channel ->
                 if(viewModel.myInfoLoading) {
                     CoinLiveToast.make(binding.root, "내 정보를 불러오는 중입니다.\n잠시후 다시 시도해주세요").show()
                     return@let
@@ -95,10 +97,10 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
 
 
                 val bundle = Bundle()
-                customerName?.let {
-                    bundle.putString("customerName", it)
+                customer?.let {
+                    bundle.putParcelable("customer", it)
                 }
-                bundle.putParcelable("channel", selectItem)
+                bundle.putParcelable("channel", channel)
                 bundle.putParcelable("myInfo", viewModel.myInfo)
 
                 // use FragmentManager
