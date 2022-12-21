@@ -295,6 +295,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         if (viewModel.channel != null) {
 
             binding!!.rvList.apply {
+                this.itemAnimator = null
                 this.adapter = this@ChatFragment.adapter
                 val layoutManager = LinearLayoutManager(requireContext())
                 layoutManager.reverseLayout = true
