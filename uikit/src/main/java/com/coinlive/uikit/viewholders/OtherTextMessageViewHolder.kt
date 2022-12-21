@@ -104,7 +104,7 @@ class OtherTextMessageViewHolder(
             else
                 super.messageParser(message!!)
 
-        binding.originMsgLine =  binding.originMsg.lines().size
+        binding.originMsgLine =  binding.originMsg!!.lines().size
         binding.emoji.setMyMid(myInfo?.id)
     }
 

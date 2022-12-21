@@ -10,14 +10,12 @@ import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -61,7 +59,6 @@ import kotlinx.coroutines.launch
 
 class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListener, OnClickListener,
     OnInputViewListener, MessageEventListener, ViewTreeObserver.OnGlobalLayoutListener, DynamicLinkListener {
-    private val TAG = ChatFragment::class.java.simpleName
     private var binding: FragmentCoinBinding? = null
     private lateinit var viewModel: ChatViewModel
     private lateinit var adapter: MessageListAdapter
@@ -107,7 +104,10 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                             }
 
                             override fun onFail(exception: CoinliveException) {
-                                showToast("차단 해제 실패")
+                                exception.message?.let {
+                                    showToast(it)
+                                }
+
                             }
                         })
 
@@ -119,7 +119,9 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                             }
 
                             override fun onFail(exception: CoinliveException) {
-                                showToast("차단 추가 실패")
+                                exception.message?.let {
+                                    showToast(it)
+                                }
                             }
 
                         })
@@ -158,11 +160,13 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                     }
                     viewModel.report(selectType, chat.memberId!!, object : ResponseCallback<Boolean> {
                         override fun onSuccess(value: Boolean) {
-                            Toast.makeText(requireContext(), "신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
+                            showToast(getString(R.string.report_success))
                         }
 
                         override fun onFail(exception: CoinliveException) {
-                            Toast.makeText(requireContext(), "신고 접수 실패하였습니다.,", Toast.LENGTH_SHORT).show()
+                            exception.message?.let {
+                                showToast(it)
+                            }
                         }
 
                     })
@@ -286,7 +290,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         binding?.rvList?.removeOnScrollListener(scrollListener)
 
         super.onDestroyView()
-        Log.i(TAG, "onDestroyView")
+        LoggerHelper.i("onDestroyView")
     }
 
     override fun onDestroy() {
@@ -474,7 +478,9 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun onFail(exception: Exception) {
         exception.printStackTrace()
-        showToast("공유 링크 생성 실패")
+        exception.message?.let {
+            showToast(it)
+        }
     }
 
     private fun setClipboard(text: String) {

@@ -40,6 +40,8 @@
     <string name="blocked_user_message">Message from blocked user</string>
     <string name="new_message">New Message!</string>
     <string name="shared_cl_chatting">CL chat sharing</string>
+    <string name="report_success">Report is received.\nThanks for your valuable opinion.</string>
+
 
     <string name="copied_url">URL copied</string>
     <string name="copied_text">Paste</string>
