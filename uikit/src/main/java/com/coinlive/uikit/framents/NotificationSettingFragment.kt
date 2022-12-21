@@ -14,7 +14,6 @@ import com.coinlive.uikit.models.Notification
 import com.coinlive.uikit.utils.Constants
 
 class NotificationSettingFragment : BaseFragment(), AllItemChangeListener {
-    private val TAG = NotificationSettingFragment::class.java.simpleName
 
     private var binding: FragmentNotificationSettingBinding? = null
     private val adapter: NotificationListAdapter by lazy {
@@ -42,7 +41,7 @@ class NotificationSettingFragment : BaseFragment(), AllItemChangeListener {
         binding!!.rvList.adapter = adapter
         binding!!.rvList.layoutManager = LinearLayoutManager(requireContext()) //레이아웃 매니저 연결
         originList?.let { it ->
-            binding!!.progressBar.visibility = View.GONE
+            binding!!.clProgress.visibility = View.GONE
             binding!!.rvList.visibility = View.VISIBLE
             adapter.addAllItems(it)
             val enableList = it.filter { it.enable }
