@@ -1,7 +1,6 @@
 package com.coinlive.uikit.viewmodels
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,7 +28,6 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class ChatViewModel : ViewModel() {
-    private val TAG = ChatViewModel::class.java.simpleName
     private var coinliveChat: CoinliveChat? = null
     private val coinliveApi = CoinliveRestApi()
     val userCount: MutableLiveData<Int> = MutableLiveData(0)
@@ -171,12 +169,12 @@ class ChatViewModel : ViewModel() {
 
     fun setNotification(list: ArrayList<Notification>) = viewModelScope.launch {
         if (channel == null) return@launch
+        var changeCount = 0
         list.forEach { noti ->
             val origin: Notification? = originNotiList.find { it.id == noti.id }
             origin?.let {
                 if (origin.enable != noti.enable) {
-                    Log.d(TAG, "new : $noti, origin : $origin")
-
+                    changeCount++
                     if (noti.enable) {
                         setNotification(noti.id)
                     } else {
@@ -187,6 +185,9 @@ class ChatViewModel : ViewModel() {
         }
         originNotiList.clear()
         originNotiList.addAll(list)
+        if(changeCount > 0) {
+            coinliveChat?.reloadMessages(getNotificationMap())
+        }
     }
 
     private fun deleteNotification(type: String) = viewModelScope.launch {

@@ -249,7 +249,17 @@ class MessageListAdapter(
     fun addOldMessage(chatList: ArrayList<Chat>) {
         val pushIndex = items.size
         items.addAll(pushIndex, chatList)
-        notifyItemRangeChanged(if (pushIndex == 0) 0 else pushIndex - 1, chatList.size)
+        notifyItemRangeInserted(if (pushIndex == 0) 0 else pushIndex - 1, chatList.size)
     }
+
+    fun reloadMessage(chatList: ArrayList<Chat>) {
+        val oldListSize = items.size
+        items.clear()
+        notifyItemRangeRemoved(0,oldListSize)
+
+        items.addAll(chatList)
+        notifyItemRangeInserted(0, chatList.size)
+    }
+
 
 }

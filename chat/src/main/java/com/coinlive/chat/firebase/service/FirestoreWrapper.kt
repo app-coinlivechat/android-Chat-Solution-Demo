@@ -231,7 +231,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
     private fun isShowMessage(chat: Chat, chatNotiMap: Map<String, Boolean>?): Boolean {
         if (chatNotiMap == null) return true
 
-        when (chat.messageType) {
+        when (chat.messageType.lowercase()) {
             MessageType.TWITTER.toLowName() -> {
                 return chatNotiMap[CoinNotiType.CHAT_TWITTER.name] ?: true
             }

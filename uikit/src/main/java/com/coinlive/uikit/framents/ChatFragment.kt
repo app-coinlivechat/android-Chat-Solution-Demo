@@ -356,7 +356,13 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun oldMessages(chatList: ArrayList<Chat>, isReload: Boolean) {
         if (chatList.size > 0) {
-            adapter.addOldMessage(chatList)
+            if(isReload) {
+                adapter.reloadMessage(chatList)
+            } else {
+                adapter.addOldMessage(chatList)
+            }
+
+
             if (binding?.rvList?.layoutManager != null) {
                 binding?.rvList?.scrollToPosition(adapter.itemCount)
             }
