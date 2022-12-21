@@ -37,19 +37,7 @@ class MessageListAdapter(
     RecyclerView.Adapter<BaseViewHolder>(), ItemListener {
     private val items = ArrayList<Chat>()
     private val translatorItem: HashMap<String, String> = HashMap()
-    private val attachedPosition = ArrayList<Int>()
     private var failMessageSize = 0
-
-
-    override fun onViewAttachedToWindow(holder: BaseViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        attachedPosition.add(holder.adapterPosition)
-    }
-
-    override fun onViewDetachedFromWindow(holder: BaseViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        attachedPosition.remove(holder.adapterPosition)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         when (viewType) {
@@ -195,20 +183,22 @@ class MessageListAdapter(
 
     fun addBlockUser(myInfo: CustomerUser, mId: String) {
         this.myInfo = myInfo
-        attachedPosition.forEach {
-            if (items[it].memberId == mId) {
+
+        items.forEachIndexed { index, chat ->
+            if (chat.memberId == mId) {
                 LoggerHelper.d("change item!!")
-                notifyItemChanged(it)
+                notifyItemChanged(index)
             }
         }
     }
 
     fun deleteBlockUser(myInfo: CustomerUser, mId: String) {
         this.myInfo = myInfo
-        attachedPosition.forEach {
-            if (items[it].memberId == mId) {
+
+        items.forEachIndexed { index, chat ->
+            if (chat.memberId == mId) {
                 LoggerHelper.d("change item!!")
-                notifyItemChanged(it)
+                notifyItemChanged(index)
             }
         }
     }
