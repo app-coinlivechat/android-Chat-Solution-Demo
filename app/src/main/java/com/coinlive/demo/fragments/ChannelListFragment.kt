@@ -16,6 +16,7 @@ import com.coinlive.demo.adapters.ChannelItemOnClick
 import com.coinlive.demo.adapters.ChannelListAdapter
 import com.coinlive.demo.databinding.FragmentChannelListBinding
 import com.coinlive.demo.viewmodels.ChannelListFragmentViewModel
+import com.coinlive.uikit.views.CoinLiveToast
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -35,7 +36,6 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
     private val callback: OnBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-
                 moveLoginFragment()
             }
         }
@@ -76,7 +76,7 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG,"onViewCreated")
-
+        viewModel.loadMyInfo()
         binding.list.adapter = adapter
         binding.list.layoutManager = LinearLayoutManager(requireContext()) //레이아웃 매니저 연결
         adapter.itemOnClick(this)
@@ -88,6 +88,12 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
         }
         binding.tvConfirm.setOnClickListener {
             selectItem?.let {
+                if(viewModel.myInfoLoading) {
+                    CoinLiveToast.make(binding.root, "내 정보를 불러오는 중입니다.\n잠시후 다시 시도해주세요").show()
+                    return@let
+                }
+
+
                 val bundle = Bundle()
                 customerName?.let {
                     bundle.putString("customerName", it)

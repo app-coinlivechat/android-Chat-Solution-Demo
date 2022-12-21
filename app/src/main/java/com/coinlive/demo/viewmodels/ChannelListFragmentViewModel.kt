@@ -19,24 +19,29 @@ class ChannelListFragmentViewModel : ViewModel() {
     private val clApi = CoinliveRestApi()
     val itemList = MutableLiveData<List<Channel>>()
     var myInfo:CustomerUser? = null
+    var myInfoLoading : Boolean = false
 
     init {
-        loadMyInfo()
         getChannelList()
     }
 
-    private fun loadMyInfo() = viewModelScope.launch {
+    fun loadMyInfo() = viewModelScope.launch {
 
         if (!CoinliveAuthentication.isAnonymously()) {
+            myInfoLoading = true
             clApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
                 override fun onSuccess(value: CustomerUser) {
                     myInfo = value
+                    myInfoLoading = false
                 }
 
                 override fun onFail(exception: CoinliveException) {
                     myInfo = null
+                    myInfoLoading = false
                 }
             })
+        } else {
+            myInfoLoading = false
         }
     }
 
