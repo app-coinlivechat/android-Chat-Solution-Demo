@@ -559,10 +559,10 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         bundle.putString(Constants.argKeyNickName, viewModel.myInfo!!.nickName)
         bundle.putString(Constants.argKeyUrl, viewModel.myInfo!!.profileImage)
         binding?.root?.findNavController()?.navigate(R.id.action_chatFragment_to_profileDialog, bundle)
-        setFragmentResultListener(Constants.reqKeyProfile) { _, bundle ->
-            if (bundle.getBoolean(Constants.argKeyIsConfirmClick)) {
+        setFragmentResultListener(Constants.reqKeyProfile) { _, resultBundle ->
+            if (resultBundle.getBoolean(Constants.argKeyIsConfirmClick)) {
                 var multipart: MultipartBody.Part? = null
-                bundle.getString(Constants.argKeyUrl)?.let {
+                resultBundle.getString(Constants.argKeyUrl)?.let {
                     LoggerHelper.de("url!!!!!!! : $it")
                     val input = requireContext().contentResolver.openInputStream(Uri.parse(it))
                     val img: Bitmap = BitmapFactory.decodeStream(input)
@@ -570,7 +570,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                     val fileName = "${CalendarHelper.nowCalendar().timeInMillis}_image.png"
                     multipart = MultipartHelper.buildBitmapBodyPart(fileName, img, requireContext())
                 }
-                var nickName = bundle.getString(Constants.argKeyNickName)
+                var nickName = resultBundle.getString(Constants.argKeyNickName)
 
                 if (nickName != null) {
                     if (nickName.length < 3 || nickName.length > 10) {
