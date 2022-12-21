@@ -98,9 +98,11 @@ class LoginFragment : Fragment(), OkCallback {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[LoginFragmentViewModel::class.java]
         viewModel.loginResultMsg.observe(viewLifecycleOwner) {
+            hideProgress()
             LoginResultDialog(requireContext(), this, it).show()
         }
         viewModel.memberCheckMsg.observe(viewLifecycleOwner) {
+            hideProgress()
             if (it == UserStatus.ACTIVE) {
                 moveChannelListFragment()
             } else {
@@ -133,13 +135,16 @@ class LoginFragment : Fragment(), OkCallback {
             binding.etUuId.setText(RandomStringHelper.generateString())
         }
         binding.bSignUp.setOnClickListener {
+            showProgress()
             viewModel.signUp(binding.etBandId.text.toString(), binding.etUuId.text.toString(), binding.etNickname.text
                 .toString())
         }
         binding.bLogIn.setOnClickListener {
+            showProgress()
             viewModel.logIn(binding.etBandId.text.toString(), binding.etUuId.text.toString())
         }
         binding.bAnonymouslyLogIn.setOnClickListener {
+            showProgress()
             lifecycleScope.launch(Dispatchers.Main) {
                 try {
                     viewModel.signInAnonymously()
@@ -148,7 +153,6 @@ class LoginFragment : Fragment(), OkCallback {
                     showLoginResultDialog(e.message ?: "signInAnonymously 실패")
                 }
             }
-
         }
     }
 
@@ -179,6 +183,15 @@ class LoginFragment : Fragment(), OkCallback {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun showProgress() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgress() {
+        binding.progressBar.visibility = View.GONE
+
     }
 
     override fun okClick(dialog: Dialog) {
