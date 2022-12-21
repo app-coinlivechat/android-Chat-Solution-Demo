@@ -64,7 +64,7 @@ class OtherTextMessageViewHolder(
         })
 
         binding.ibtnTranslator.setOnClickListener {
-            if (binding.originMsg!!.length > 400) {
+            if (binding.originMsg!!.length > 400 || binding.originMsgLine > 10) {
                 moveTextFragment(binding.originMsg!!)
             } else {
                 val options = TranslatorOptions.Builder()
