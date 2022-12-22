@@ -30,6 +30,7 @@
     <color name="line_color">#1F000000</color>
     <color name="menu_line_color">#1F000000</color>
     <color name="normal_text">#000000</color>
+    <color name="my_message_text">#FFFFFF</color>
 
     <color name="chat_other_msg_background">#AEB7C1</color>
     <color name="chat_me_msg_background">@color/primary</color>

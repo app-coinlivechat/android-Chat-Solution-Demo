@@ -24,6 +24,7 @@
 
     <color name="background">#101010</color>
     <color name="normal_text">#FFFFFF</color>
+    <color name="my_message_text">#FFFFFF</color>
     <color name="line_color">#1FFFFFFF</color>
     <color name="menu_line_color">#E4E4E6</color>
 
