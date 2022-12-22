@@ -87,12 +87,12 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 binding?.clProgress?.let {
-                    if(it.visibility == View.VISIBLE){
+                    if (it.visibility == View.VISIBLE) {
                         LoggerHelper.di("작업 중 화면을 나갈수 없습니다.")
                     } else {
                         popFragment()
                     }
-                } ?: run{
+                } ?: run {
                     popFragment()
                 }
             }
@@ -253,7 +253,9 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             viewModel.initCoinLiveChat(myInfo, 50, channel, customer, this, this, this, requireContext())
             messageMenuView.setListener(messageMenuEventListener)
             adapter =
-                MessageListAdapter(coinName = viewModel.channel!!.name!!, myInfo = viewModel.myInfo, eventListener = this)
+                MessageListAdapter(coinName = viewModel.channel!!.name!!,
+                    myInfo = viewModel.myInfo,
+                    eventListener = this)
             adapter.setHasStableIds(true)
         }
     }
@@ -357,7 +359,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun oldMessages(chatList: ArrayList<Chat>, isReload: Boolean) {
         if (chatList.size > 0) {
-            if(isReload) {
+            if (isReload) {
                 adapter.reloadMessage(chatList)
             } else {
                 adapter.addOldMessage(chatList)
@@ -509,25 +511,13 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         rootView.getLocationOnScreen(location)
         val screenHeight = rootView.height
         val keyboardHeight = screenHeight - rect.height() - location[1]
-        if (keyboardHeight > screenHeight * 0.15 && binding?.rvList?.layoutManager != null && !isShowKeyboard) {
-            isShowKeyboard = true
-            //show keyboard
-            val linearLayoutManager: LinearLayoutManager = this.binding?.rvList?.layoutManager!! as LinearLayoutManager
-            val visibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
-            LoggerHelper.e("visible position : $visibleItemPosition")
-            if (visibleItemPosition in 1..7) {
-                binding?.rvList?.scrollToPosition(0)
-            }
-        } else {
-            // hide keyboard
-            isShowKeyboard = false
-        }
+        isShowKeyboard =
+            keyboardHeight > screenHeight * 0.15 && binding?.rvList?.layoutManager != null && !isShowKeyboard
     }
 
     override fun onSuccess(uri: Uri) {
         setClipboard(uri.toString())
         showToast(getString(R.string.copied_url))
-
     }
 
     override fun onFail(exception: Exception) {
@@ -581,7 +571,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                     showInfoDialogWithDelayed(getString(R.string.nick_name_error))
                 }
 
-                if(multipart != null || nickName != null) {
+                if (multipart != null || nickName != null) {
                     binding?.clProgress?.visibility = View.VISIBLE
                     viewModel.editProfile(multipart, nickName, object : ResponseCallback<Boolean> {
                         override fun onSuccess(value: Boolean) {
@@ -590,7 +580,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
                         override fun onFail(exception: CoinliveException) {
                             binding?.clProgress?.visibility = View.GONE
-                            showInfoDialogWithDelayed(exception.message?:"")
+                            showInfoDialogWithDelayed(exception.message ?: "")
                         }
 
                     })
@@ -603,7 +593,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         Handler(Looper.getMainLooper()).postDelayed({
             binding?.root?.findNavController()?.navigate(R.id.action_chatFragment_to_infoDialog, bundleOf(Constants
                 .argKeyDescription to description))
-        },500)
+        }, 500)
     }
 
 }
