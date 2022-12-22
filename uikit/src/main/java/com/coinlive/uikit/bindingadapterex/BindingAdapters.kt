@@ -36,18 +36,25 @@ object BindingAdapters {
     @BindingAdapter("loadIcon")
     @JvmStatic
     fun loadIcon(view: ImageView, url: String?) {
-
-        url?.let {
-            Glide.with(view.context).load(url).circleCrop()
-                .error(R.drawable.img_error)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(view)
+        if(url.isNullOrEmpty() || url.isBlank()) {
+            view.setImageResource(R.drawable.img_error)
+            return
         }
+
+        Glide.with(view.context).load(url).circleCrop()
+            .error(R.drawable.img_error)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(view)
     }
 
     @BindingAdapter("loadImageMessage")
     @JvmStatic
     fun loadImageMessage(view: ImageView, url: String) {
+        if(url.isEmpty() || url.isBlank()) {
+            view.setImageResource(R.drawable.img_error)
+            return
+        }
+
         Glide.with(view.context)
             .load(url)
             .transform(CenterCrop(), RoundedCorners(view.dpToPx(6F)))
@@ -59,8 +66,10 @@ object BindingAdapters {
     @BindingAdapter("loadProfile")
     @JvmStatic
     fun loadProfile(view: ImageView, url: String?) {
-
-        if (url == null) return
+        if (url.isNullOrEmpty() || url.isBlank()) {
+            view.setImageResource(R.drawable.icon_profile)
+            return
+        }
 
         Glide.with(view.context).load(url)
             .error(R.drawable.icon_profile)
@@ -81,13 +90,17 @@ object BindingAdapters {
             MessageType.JUMP.name, MessageType.DROP.name -> view.setImageResource(R.drawable.icon_waring)
             MessageType.MEDIUM.name -> view.setImageResource(R.drawable.icon_medium)
             else -> {
-                val url = chat.profileUrl ?: return
-                Glide.with(view.context).load(url)
-                    .error(R.drawable.icon_profile)
-                    .placeholder(R.drawable.icon_profile)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .circleCrop()
-                    .into(view)
+                if (chat.profileUrl.isNullOrEmpty() || chat.profileUrl.isNullOrBlank()) {
+                    view.setImageResource(R.drawable.icon_profile)
+                } else {
+                    Glide.with(view.context).load(chat.profileUrl)
+                        .error(R.drawable.icon_profile)
+                        .placeholder(R.drawable.icon_profile)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .circleCrop()
+                        .into(view)
+                }
+
             }
         }
     }
