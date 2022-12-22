@@ -2,7 +2,6 @@ package com.coinlive.demo.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.coinlive.chat.api.model.Channel
 import com.coinlive.chat.api.model.Customer
+import com.coinlive.chat.util.LoggerHelper
 import com.coinlive.demo.R
 import com.coinlive.demo.adapters.ChannelItemOnClick
 import com.coinlive.demo.adapters.ChannelListAdapter
@@ -24,7 +24,6 @@ import com.coinlive.uikit.views.CoinLiveToast
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class ChannelListFragment : Fragment(), ChannelItemOnClick {
-    private val TAG = ChannelListFragment::class.java.simpleName
 
     private var _binding: FragmentChannelListBinding? = null
     private lateinit var viewModel: ChannelListFragmentViewModel
@@ -46,7 +45,7 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG,"onCreate")
+        LoggerHelper.d("onCreate")
         arguments?.let {
             customer = it.getParcelable(Constants.argKeyCustomer)
         }
@@ -68,7 +67,7 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
         savedInstanceState: Bundle?,
     ): View {
 
-        Log.d(TAG,"onCreateView")
+        LoggerHelper.d("onCreateView")
         _binding = FragmentChannelListBinding.inflate(inflater, container, false)
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
 
@@ -77,8 +76,13 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG,"onViewCreated")
+        LoggerHelper.d("onViewCreated")
         viewModel.loadMyInfo()
+        LoggerHelper.d("adapter.selectPosition : ${adapter.selectPosition}")
+
+        if(adapter.selectPosition > -1) {
+            binding.tvConfirm.setTextColor(requireContext().getColor(R.color.blue_text))
+        }
         binding.list.adapter = adapter
         binding.list.layoutManager = LinearLayoutManager(requireContext()) //레이아웃 매니저 연결
         adapter.itemOnClick(this)
@@ -128,7 +132,7 @@ class ChannelListFragment : Fragment(), ChannelItemOnClick {
     }
 
     override fun onDestroyView() {
-        Log.d(TAG, "onDestroyView")
+        LoggerHelper.d("onDestroyView")
 
         super.onDestroyView()
         _binding = null
