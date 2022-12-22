@@ -11,13 +11,25 @@
         tools:layout="@layout/fragment_coin">
         <action
             android:id="@+id/action_chatFragment_to_textFragment"
-            app:destination="@id/textFragment" />
+            app:destination="@id/textFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_chatFragment_to_translatorSettingFragment"
-            app:destination="@id/translatorSettingFragment" />
+            app:destination="@id/translatorSettingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_chatFragment_to_notificationSettingFragment"
-            app:destination="@id/notificationSettingFragment" />
+            app:destination="@id/notificationSettingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_chatFragment_to_profileBottomSheet"
             app:destination="@id/profileBottomSheet" />
@@ -69,38 +81,38 @@
             app:destination="@id/chatFragment" />
     </fragment>
     <dialog
-        tools:layout="@layout/bottom_sheet_profile"
         android:id="@+id/profileBottomSheet"
         android:name="com.coinlive.uikit.framents.ProfileBottomSheet"
-        android:label="ProfileBottomSheet" />
+        android:label="ProfileBottomSheet"
+        tools:layout="@layout/bottom_sheet_profile" />
     <dialog
-        tools:layout="@layout/bottom_sheet_translator"
         android:id="@+id/translatorBottomSheet"
         android:name="com.coinlive.uikit.framents.TranslatorBottomSheet"
-        android:label="TranslatorBottomSheet" />
+        android:label="TranslatorBottomSheet"
+        tools:layout="@layout/bottom_sheet_translator" />
     <dialog
         android:id="@+id/translatorConfirmDialog"
-        tools:layout="@layout/dialog_translator_download"
         android:name="com.coinlive.uikit.framents.TranslatorConfirmDialog"
-        android:label="TranslatorConfirmDialog" />
+        android:label="TranslatorConfirmDialog"
+        tools:layout="@layout/dialog_translator_download" />
     <dialog
         android:id="@+id/blockDialog"
-        tools:layout="@layout/dialog_block"
         android:name="com.coinlive.uikit.framents.BlockDialog"
-        android:label="BlockDialog" />
+        android:label="BlockDialog"
+        tools:layout="@layout/dialog_block" />
     <dialog
         android:id="@+id/reportDialog"
-        tools:layout="@layout/dialog_report"
         android:name="com.coinlive.uikit.framents.ReportDialog"
-        android:label="ReportDialog" />
+        android:label="ReportDialog"
+        tools:layout="@layout/dialog_report" />
     <dialog
         android:id="@+id/profileDialog"
-        tools:layout="@layout/dialog_profile"
         android:name="com.coinlive.uikit.framents.ProfileDialog"
-        android:label="ProfileDialog" />
+        android:label="ProfileDialog"
+        tools:layout="@layout/dialog_profile" />
     <dialog
         android:id="@+id/infoDialog"
-        tools:layout="@layout/dialog_info"
         android:name="com.coinlive.uikit.framents.InfoDialog"
-        android:label="InfoDialog" />
+        android:label="InfoDialog"
+        tools:layout="@layout/dialog_info" />
 </navigation>

@@ -26,23 +26,27 @@ class ChannelListFragmentViewModel : ViewModel() {
     }
 
     fun loadMyInfo() = viewModelScope.launch {
+        try{
+            if (!CoinliveAuthentication.isAnonymously()) {
+                myInfoLoading = true
+                clApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
+                    override fun onSuccess(value: CustomerUser) {
+                        myInfo = value
+                        myInfoLoading = false
+                    }
 
-        if (!CoinliveAuthentication.isAnonymously()) {
-            myInfoLoading = true
-            clApi.getCustomerMemberInfo(object : ResponseCallback<CustomerUser> {
-                override fun onSuccess(value: CustomerUser) {
-                    myInfo = value
-                    myInfoLoading = false
-                }
-
-                override fun onFail(exception: CoinliveException) {
-                    myInfo = null
-                    myInfoLoading = false
-                }
-            })
-        } else {
+                    override fun onFail(exception: CoinliveException) {
+                        myInfo = null
+                        myInfoLoading = false
+                    }
+                })
+            } else {
+                myInfoLoading = false
+            }
+        } catch (exception : Exception) {
             myInfoLoading = false
         }
+
     }
 
     private fun getChannelList() = viewModelScope.launch {
