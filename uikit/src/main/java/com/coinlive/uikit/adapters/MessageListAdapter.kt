@@ -110,14 +110,14 @@ class MessageListAdapter(
         if (items.size - 1 >= previousIndex) {
             previousChat = items[previousIndex]
         }
-        if (nextIndex > 0) {
+        if (nextIndex >= 0) {
             nextChat = items[nextIndex]
         }
 
         holder.bind(item,
             isPreviousMessageSameDate(item, previousChat),
-            isRoundMessage(item, nextChat, previousChat),
-            isShowTime(item, nextChat, previousChat))
+            isRoundMessage(item, previousChat),
+            isShowTime(item, nextChat))
     }
 
     override fun getItemCount(): Int = items.size
@@ -144,41 +144,32 @@ class MessageListAdapter(
         return chatCalendar[Calendar.DATE] - previousCalendar[Calendar.DATE] < 1
     }
 
-    private fun isRoundMessage(chat: Chat, nextChat: Chat?, previousChat: Chat?): Boolean {
-        return if (nextChat == null) {
+    private fun isRoundMessage(chat: Chat, previousChat: Chat?): Boolean {
+        val previousTimeDiff = chat.insertTime - (previousChat?.insertTime ?: 0)
+        val previousChatMyChat = chat.memberId == previousChat?.memberId
+        val previousChatSameTime = if(previousChat == null) false else previousTimeDiff < (60 * 1000)
+
+        return if(previousChat == null) {
             false
-        } else if (previousChat == null) {
-            false
-        } else if (previousChat.memberId != chat.memberId) {
+        } else if(!previousChatMyChat) {
             false
         } else {
-            chat.insertTime - previousChat.insertTime < (60 * 1000)
+            previousChatSameTime
         }
     }
 
-    private fun isShowTime(chat: Chat, nextChat: Chat?, previousChat: Chat?): Boolean {
-
-        return if (nextChat == null) {
+    private fun isShowTime(chat: Chat, nextChat: Chat?): Boolean {
+        val nextChatMyChat = if(nextChat == null) false else chat.memberId == nextChat.memberId
+        val nextChatSameTime = if(nextChat == null) false else nextChat.insertTime  - chat.insertTime < (60 * 1000)
+        return if(nextChat == null) {
             true
-        } else if (previousChat == null) {
-            true
-        } else if (nextChat.memberId != chat.memberId) {    // 이전 채팅 유저랑 현재 유저랑 다른 유저일 경우
+        } else if(!nextChatMyChat){
             true
         } else {
-            nextChat.insertTime - chat.insertTime > (60 * 1000)
+            !nextChatSameTime
         }
-
-//        return if (nextChat == null && previousChat == null) {
-//            true
-//        } else if (nextChat != null && previousChat == null) {
-//            nextChat.memberId == chat.memberId && nextChat.insertTime - chat.insertTime > 60000
-//        } else if (nextChat == null && previousChat != null) {
-//            previousChat.memberId == chat.memberId && chat.insertTime - previousChat.insertTime > 60000
-//        } else {
-//            val previousTimeDiff = chat.insertTime - previousChat!!.insertTime
-//            previousTimeDiff < 60000
-//        }
     }
+
 
 
     fun addBlockUser(myInfo: CustomerUser, mId: String) {
@@ -210,7 +201,7 @@ class MessageListAdapter(
     fun addNewItem(chat: Chat) {
         val inputIndex = if (failMessageSize < 0) 0 else failMessageSize
         items.add(inputIndex, chat)
-        notifyItemInserted(0)
+        notifyItemRangeChanged(inputIndex,2)
     }
 
     fun addFailItem(chat: Chat) {
@@ -255,7 +246,7 @@ class MessageListAdapter(
     fun reloadMessage(chatList: ArrayList<Chat>) {
         val oldListSize = items.size
         items.clear()
-        notifyItemRangeRemoved(0,oldListSize)
+        notifyItemRangeRemoved(0, oldListSize)
 
         items.addAll(chatList)
         notifyItemRangeInserted(0, chatList.size)
