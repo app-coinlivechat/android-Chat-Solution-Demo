@@ -408,6 +408,9 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.cl_new -> {
+                if(!messagePopupWindow.isShowing) {
+                    binding?.rvList?.suppressLayout(false)
+                }
                 binding?.newMessage = null
                 binding?.rvList?.scrollToPosition(0)
             }
