@@ -291,7 +291,7 @@
             android:layout_marginStart="4dp"
             android:background="@android:color/transparent"
             android:src="@drawable/icon_translator_16"
-            android:visibility="@{isMessageMenu ? View.GONE :(transMsg != null ? View.GONE : (enableTranslator ? View.VISIBLE : View.GONE))}"
+            android:visibility="@{isMessageMenu ? View.GONE :(transMsg != null ? View.GONE : (enableTranslator ? View.VISIBLE : View.GONE)),default=gone}"
             app:layout_constraintBottom_toTopOf="@id/tv_time"
             app:layout_constraintStart_toEndOf="@id/rl_msg"
             tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
