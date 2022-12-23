@@ -282,7 +282,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         LoggerHelper.d("onViewCreated")
 
         binding!!.refresh.setOnChildScrollUpCallback { _, _ ->
-            if(!messagePopupWindow.isShowing && binding?.rvList?.isLayoutSuppressed == true) {
+            if (!messagePopupWindow.isShowing && binding?.rvList?.isLayoutSuppressed == true) {
                 binding?.rvList?.suppressLayout(false)
             }
             false
@@ -408,7 +408,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.cl_new -> {
-                if(!messagePopupWindow.isShowing) {
+                if (!messagePopupWindow.isShowing) {
                     binding?.rvList?.suppressLayout(false)
                 }
                 binding?.newMessage = null
@@ -524,12 +524,8 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
         val rect = Rect()
         rootView.getWindowVisibleDisplayFrame(rect)
-        val location = IntArray(2)
-        rootView.getLocationOnScreen(location)
-        val screenHeight = rootView.height
-        val keyboardHeight = screenHeight - rect.height() - location[1]
-        isShowKeyboard =
-            keyboardHeight > screenHeight * 0.15 && binding?.rvList?.layoutManager != null && !isShowKeyboard
+        val heightDiff = rootView.height - rect.height()
+        isShowKeyboard = heightDiff > (0.25 * rootView.height)
     }
 
     override fun onSuccess(uri: Uri) {
