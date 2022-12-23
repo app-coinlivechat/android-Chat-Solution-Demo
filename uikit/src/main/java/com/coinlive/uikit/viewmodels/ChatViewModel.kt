@@ -18,6 +18,7 @@ import com.coinlive.chat.firebase.listener.MessageListener
 import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.chat.firebase.model.enum.EmojiType
 import com.coinlive.chat.util.LoggerHelper
+import com.coinlive.uikit.models.NoticeStatus
 import com.coinlive.uikit.models.Notification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +34,7 @@ class ChatViewModel : ViewModel() {
     val userCount: MutableLiveData<Int> = MutableLiveData(0)
     val userStatus: MutableLiveData<UserStatus> = MutableLiveData(UserStatus.NONE)
     val cm: MutableLiveData<String> = MutableLiveData<String>(null)
+    var cmViewStatus: NoticeStatus = NoticeStatus.NONE
     val originNotiList = ArrayList<Notification>()
     val reportType = ArrayList<ReportType>()
     var standardSize = 50

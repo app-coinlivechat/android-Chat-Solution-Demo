@@ -46,13 +46,15 @@ class CmView @JvmOverloads constructor(
         binding.status = status
     }
 
+    fun getNoticeStatus(): NoticeStatus? = binding.status
+
     fun setMessage(message: String?) {
-        if(message == null) {
+        if (message == null) {
             binding.status = NoticeStatus.NONE
             return
         }
         binding.message = message
-        if(binding.status == NoticeStatus.NONE) {
+        if (binding.status == NoticeStatus.NONE) {
             binding.status = NoticeStatus.SMALL
         }
     }

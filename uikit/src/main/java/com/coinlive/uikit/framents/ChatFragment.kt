@@ -327,6 +327,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
     override fun onDestroyView() {
         messageMenuDismiss()
+        viewModel.cmViewStatus = binding?.vCm?.getNoticeStatus() ?: NoticeStatus.NONE
         binding?.vAma?.closeCountDownTimer()
         binding?.root?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
         binding?.rvList?.removeOnScrollListener(scrollListener)

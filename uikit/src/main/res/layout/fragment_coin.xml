@@ -149,6 +149,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_appbar"
+            app:noticeStatus="@{chattingViewModel.cmViewStatus}"
             app:message="@{chattingViewModel.cm}" />
 
         <com.coinlive.uikit.views.InputView
