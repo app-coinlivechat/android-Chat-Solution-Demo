@@ -70,6 +70,9 @@
     <color name="toast_background">#AEB7C1</color>
     <color name="input_hint">#8D94A1</color>
     <color name="input_background">#DADEE2</color>
+    <color name="chatting_menu_divider">#E4E4E6</color>
+    <color name="chatting_menu_background">#FFFFFF</color>
+
 
 
 </resources>

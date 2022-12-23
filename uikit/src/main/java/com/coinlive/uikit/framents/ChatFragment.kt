@@ -20,7 +20,6 @@ import android.view.View.OnClickListener
 import android.widget.PopupWindow
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResultListener
@@ -54,11 +53,9 @@ import com.coinlive.uikit.utils.KeyboardHelper
 import com.coinlive.uikit.utils.MultipartHelper
 import com.coinlive.uikit.utils.PreferenceHelper
 import com.coinlive.uikit.utils.PreferenceHelper.translatorLanguage
+import com.coinlive.uikit.utils.ViewUtils.dpToPx
 import com.coinlive.uikit.viewmodels.ChatViewModel
-import com.coinlive.uikit.views.CoinLiveToast
-import com.coinlive.uikit.views.MessageMenuView
-import com.coinlive.uikit.views.OnInputViewListener
-import com.coinlive.uikit.views.OnMessageMenuEventListener
+import com.coinlive.uikit.views.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,7 +63,7 @@ import okhttp3.MultipartBody
 
 
 class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListener, OnClickListener,
-    OnInputViewListener, MessageEventListener, ViewTreeObserver.OnGlobalLayoutListener, DynamicLinkListener {
+    OnInputViewListener, MessageEventListener, ViewTreeObserver.OnGlobalLayoutListener, DynamicLinkListener, ChattingMenuItemClickListener {
     private var binding: FragmentCoinBinding? = null
     private lateinit var viewModel: ChatViewModel
     private lateinit var adapter: MessageListAdapter
@@ -74,12 +71,22 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     private var visibleItemPosition = 0
 
     private val messageMenuView by lazy { MessageMenuView(requireContext()) }
+    private val chattingMenuView by lazy { ChattingMenuView(requireContext()) }
     private val messagePopupWindow by lazy {
         PopupWindow(messageMenuView.rootView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
             .LayoutParams.MATCH_PARENT).apply {
             isOutsideTouchable = true
             isFocusable = false
-            overlapAnchor = true
+            overlapAnchor = false
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+    }
+    private val chattingPopupWindow by lazy {
+        PopupWindow(chattingMenuView.rootView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup
+            .LayoutParams.WRAP_CONTENT).apply {
+            isOutsideTouchable = true
+            isFocusable = false
+            overlapAnchor = false
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
     }
@@ -251,9 +258,11 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 LoggerHelper.de("please check channel")
                 return@let
             }
-            messageMenuView.setMyMid(myInfo?.id)
             viewModel.initCoinLiveChat(myInfo, 50, channel, customer, this, this, this, requireContext())
+            messageMenuView.setMyMid(myInfo?.id)
             messageMenuView.setListener(messageMenuEventListener)
+            chattingMenuView.setIsAnonymously(myInfo == null)
+            chattingMenuView.setListener(this)
             adapter =
                 MessageListAdapter(coinName = viewModel.channel!!.name!!,
                     myInfo = viewModel.myInfo,
@@ -423,41 +432,7 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
                 popFragment()
             }
             R.id.ibtn_more -> {
-//                val wrapper = ContextThemeWrapper(v.context, R.style.PopupMenu)
-//                val popupMenu = PopupMenu(wrapper,v)
-                val popupMenu = PopupMenu(v.context, v)
-                popupMenu.inflate(R.menu.menu_chat)
-
-                if (viewModel.myInfo == null) {
-                    val menu = popupMenu.menu
-                    menu.removeItem(R.id.m_notification)
-                    menu.removeItem(R.id.m_profile)
-                }
-
-                popupMenu.setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.m_shared -> viewModel.getDynamicLink(this)
-                        R.id.m_notification -> {
-                            if (viewModel.originNotiList.isNotEmpty()) {
-                                val bundle = Bundle()
-
-                                bundle.putParcelableArrayList(Constants.argKeyList,
-                                    ArrayList(viewModel.originNotiList.map { notification ->
-                                        notification.copy()
-                                    }))
-                                v.findNavController()
-                                    .navigate(R.id.action_chatFragment_to_notificationSettingFragment, bundle)
-                            } else {
-                                LoggerHelper.di("익명 사용자는 알림 설정을 할 수 없습니다.")
-                            }
-                        }
-                        R.id.m_tranlator -> v.findNavController()
-                            .navigate(R.id.action_chatFragment_to_translatorSettingFragment)
-                        R.id.m_profile -> showProfile()
-                    }
-                    true
-                }
-                popupMenu.show()
+                chattingPopupWindow.showAsDropDown(v,v.dpToPx(-16F),0)
             }
         }
     }
@@ -607,6 +582,38 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
             binding?.root?.findNavController()?.navigate(R.id.action_chatFragment_to_infoDialog, bundleOf(Constants
                 .argKeyDescription to description))
         }, 500)
+    }
+
+    override fun onClickShare() {
+        chattingPopupWindow.dismiss()
+        viewModel.getDynamicLink(this)
+    }
+
+    override fun onClickNoti() {
+        chattingPopupWindow.dismiss()
+
+        if (viewModel.originNotiList.isNotEmpty()) {
+            val bundle = Bundle()
+
+            bundle.putParcelableArrayList(Constants.argKeyList,
+                ArrayList(viewModel.originNotiList.map { notification ->
+                    notification.copy()
+                }))
+            binding?.root?.findNavController()?.navigate(R.id.action_chatFragment_to_notificationSettingFragment, bundle)
+        } else {
+            LoggerHelper.di("익명 사용자는 알림 설정을 할 수 없습니다.")
+        }
+    }
+
+    override fun onClickProfile() {
+        chattingPopupWindow.dismiss()
+        showProfile()
+    }
+
+    override fun onClickTrans() {
+        chattingPopupWindow.dismiss()
+        binding?.root?.findNavController()?.navigate(R.id.action_chatFragment_to_translatorSettingFragment)
+
     }
 
 }
