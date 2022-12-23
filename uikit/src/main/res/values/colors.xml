@@ -46,7 +46,7 @@
     <color name="ama_label">#FA5B4A</color>
     <color name="swipe_background">#FFFFFF</color>
     <color name="swipe_progress">#353C4A</color>
-    <color name="new_message_background">#AEB7C1</color>
+    <color name="new_message_background">#DADEE2</color>
     <color name="profile_nickname">#E0000000</color>
     <color name="translator_item_background">#DADEE2</color>
     <color name="translator_bottom_sheet_background">#FFFFFF</color>
