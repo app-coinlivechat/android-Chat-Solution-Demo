@@ -42,7 +42,7 @@
 
     <color name="ama_label">#FA5B4A</color>
     <color name="swipe_background">#2B2B33</color>
-    <color name="swipe_progress">#FFFFFF</color>
+    <color name="swipe_progress">#101010</color>
     <color name="new_message_background">#2B2B33</color>
     <color name="profile_nickname">#E0FFFFFF</color>
     <color name="translator_item_background">#464650</color>
@@ -54,7 +54,7 @@
     <color name="emoji_item_background">#2B2B33</color>
     <color name="emoji_item_stoke">@android:color/transparent</color>
     <color name="message_background_stroke">#464650</color>
-    <color name="message_background">#464650</color>
+    <color name="message_background">#2B2B33</color>
     <color name="message_menu_emoji_select_background">#464650</color>
     <color name="primary_press">#166B77</color>
     <color name="cm_background">#2B2B33</color>
