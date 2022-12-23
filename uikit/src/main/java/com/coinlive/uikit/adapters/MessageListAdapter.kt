@@ -145,13 +145,14 @@ class MessageListAdapter(
     }
 
     private fun isRoundMessage(chat: Chat, previousChat: Chat?): Boolean {
-        val previousTimeDiff = chat.insertTime - (previousChat?.insertTime ?: 0)
         val previousChatMyChat = chat.memberId == previousChat?.memberId
-        val previousChatSameTime = if(previousChat == null) false else previousTimeDiff < (60 * 1000)
+        val previousChatSameTime =
+            if (previousChat == null) false else CalendarHelper.getCalendar(chat.insertTime)[Calendar.MINUTE] - CalendarHelper.getCalendar(
+                previousChat.insertTime)[Calendar.MINUTE] == 0
 
-        return if(previousChat == null) {
+        return if (previousChat == null) {
             false
-        } else if(!previousChatMyChat) {
+        } else if (!previousChatMyChat) {
             false
         } else {
             previousChatSameTime
@@ -159,17 +160,18 @@ class MessageListAdapter(
     }
 
     private fun isShowTime(chat: Chat, nextChat: Chat?): Boolean {
-        val nextChatMyChat = if(nextChat == null) false else chat.memberId == nextChat.memberId
-        val nextChatSameTime = if(nextChat == null) false else nextChat.insertTime  - chat.insertTime < (60 * 1000)
-        return if(nextChat == null) {
+        val nextChatMyChat = if (nextChat == null) false else chat.memberId == nextChat.memberId
+        val nextChatSameTime =
+            if (nextChat == null) false else CalendarHelper.getCalendar(chat.insertTime)[Calendar.MINUTE] - CalendarHelper.getCalendar(
+                nextChat.insertTime)[Calendar.MINUTE] == 0
+        return if (nextChat == null) {
             true
-        } else if(!nextChatMyChat){
+        } else if (!nextChatMyChat) {
             true
         } else {
             !nextChatSameTime
         }
     }
-
 
 
     fun addBlockUser(myInfo: CustomerUser, mId: String) {
@@ -205,7 +207,6 @@ class MessageListAdapter(
     }
 
     fun addFailItem(chat: Chat) {
-
         failMessageSize += 1
         items.add(0, chat)
         notifyItemInserted(0)
@@ -238,9 +239,14 @@ class MessageListAdapter(
     }
 
     fun addOldMessage(chatList: ArrayList<Chat>) {
-        val pushIndex = items.size
+        var pushIndex = items.size
+        var newDataSize = chatList.size
         items.addAll(pushIndex, chatList)
-        notifyItemRangeInserted(if (pushIndex == 0) 0 else pushIndex - 1, chatList.size)
+        if (pushIndex - 1 >= 0) {   // 이전 메세지 날짜 표기때문에 다시 그려줘야 함.
+            pushIndex -= 1
+            newDataSize += 1
+        }
+        notifyItemRangeChanged(pushIndex, newDataSize)
     }
 
     fun reloadMessage(chatList: ArrayList<Chat>) {
