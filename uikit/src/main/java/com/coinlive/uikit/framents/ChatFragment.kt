@@ -15,11 +15,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 import android.view.View.OnClickListener
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.PopupWindow
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -50,6 +47,7 @@ import com.coinlive.uikit.R
 import com.coinlive.uikit.adapters.MessageEventListener
 import com.coinlive.uikit.adapters.MessageListAdapter
 import com.coinlive.uikit.databinding.FragmentCoinBinding
+import com.coinlive.uikit.models.NoticeStatus
 import com.coinlive.uikit.models.Notification
 import com.coinlive.uikit.utils.Constants
 import com.coinlive.uikit.utils.KeyboardHelper
@@ -72,6 +70,9 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     private var binding: FragmentCoinBinding? = null
     private lateinit var viewModel: ChatViewModel
     private lateinit var adapter: MessageListAdapter
+    private var isShowKeyboard = false
+    private var visibleItemPosition = 0
+
     private val messageMenuView by lazy { MessageMenuView(requireContext()) }
     private val messagePopupWindow by lazy {
         PopupWindow(messageMenuView.rootView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
@@ -115,12 +116,13 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             recyclerView.layoutManager?.let {
-                val visibleItemPosition = (it as LinearLayoutManager).findFirstVisibleItemPosition()
+                visibleItemPosition = (it as LinearLayoutManager).findFirstVisibleItemPosition()
                 if (visibleItemPosition > 0 && binding?.btnBottom?.visibility == View.GONE && binding?.newMessage == null) {
                     binding?.btnBottom?.visibility = View.VISIBLE
-                } else if (visibleItemPosition == 0 && binding?.btnBottom?.visibility == View.VISIBLE) {
+                } else if (visibleItemPosition == 0) {
                     binding?.btnBottom?.visibility = View.GONE
                     binding?.clNew?.visibility = View.GONE
+                    binding?.newMessage = null
                 }
             }
         }
@@ -279,6 +281,12 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         super.onViewCreated(view, savedInstanceState)
         LoggerHelper.d("onViewCreated")
 
+        binding!!.refresh.setOnChildScrollUpCallback { _, _ ->
+            if(!messagePopupWindow.isShowing && binding?.rvList?.isLayoutSuppressed == true) {
+                binding?.rvList?.suppressLayout(false)
+            }
+            false
+        }
         setFragmentResultListener(Constants.reqKeyTranslator) { _, bundle ->
             val originLanguage = bundle.getString(Constants.argKeyOldTransLanguage) ?: return@setFragmentResultListener
             val newSelectLanguage = PreferenceHelper.defaultPreference(requireContext()).translatorLanguage
@@ -349,7 +357,6 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     }
 
     override fun getCmNotice(msg: String?) {
-        LoggerHelper.d("cm : $msg")
         viewModel.cm.value = msg
     }
 
@@ -375,16 +382,13 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     }
 
     override fun newMessages(chat: Chat) {
-        adapter.addNewItem(chat)
-
-        binding?.rvList?.layoutManager?.let {
-            val visibleItemPosition = (it as LinearLayoutManager).findFirstVisibleItemPosition()
-            if (visibleItemPosition > 0) {
-                binding?.newMessage = chat
-                binding?.btnBottom?.visibility = View.GONE
-            } else {
-                binding?.rvList?.scrollToPosition(0)
-            }
+        if (visibleItemPosition > 0) {
+            binding?.rvList?.suppressLayout(true)
+            adapter.addNewItem(chat)
+            binding?.newMessage = chat
+            binding?.btnBottom?.visibility = View.GONE
+        } else {
+            adapter.addNewItem(chat)
         }
     }
 
@@ -466,14 +470,24 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
     }
 
     override fun onLongClick(item: Chat, view: View, viewType: Int, isRoundMessage: Boolean) {
+        if (item.memberId == null) return
 
-        if (item.memberId != null) {
-            binding?.rvList?.suppressLayout(true)
-            messageMenuView.addMessage(view, viewType, item, adapter, isRoundMessage)
-            messageMenuView.setChat(item)
-            messageMenuView.setIsReadyBlock(viewModel.isBlockUser(item.memberId!!))
-            messagePopupWindow.showAsDropDown(view)
+        if (isShowKeyboard) {
+            KeyboardHelper.hideKeyboard(view)
+            Handler(Looper.getMainLooper()).postDelayed({
+                showMessageMenu(item, view, viewType, isRoundMessage)
+            }, 100)
+        } else {
+            showMessageMenu(item, view, viewType, isRoundMessage)
         }
+    }
+
+    private fun showMessageMenu(item: Chat, view: View, viewType: Int, isRoundMessage: Boolean) {
+        binding?.rvList?.suppressLayout(true)
+        messageMenuView.addMessage(view, viewType, item, adapter, isRoundMessage)
+        messageMenuView.setChat(item)
+        messageMenuView.setIsReadyBlock(viewModel.isBlockUser(item.memberId!!))
+        messagePopupWindow.showAsDropDown(view)
     }
 
     override fun onProfileClick(item: Chat, view: View) {
@@ -502,7 +516,6 @@ class ChatFragment : BaseFragment(), MessageListener, CmNoticeListener, AmaListe
         viewModel.retryFailMessage(item)
     }
 
-    private var isShowKeyboard = false
     override fun onGlobalLayout() {
         val rootView = activity?.window?.decorView?.rootView ?: return
 
