@@ -1,5 +1,6 @@
 package com.coinlive.uikit.bindingadapterex
 
+import android.graphics.drawable.Drawable
 import android.text.format.DateFormat
 import android.widget.ImageView
 import android.widget.TextView
@@ -8,6 +9,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.coinlive.chat.firebase.model.Chat
 import com.coinlive.chat.firebase.model.enum.MessageType
 import com.coinlive.uikit.R
@@ -60,7 +63,15 @@ object BindingAdapters {
             .transform(CenterCrop(), RoundedCorners(view.dpToPx(6F)))
             .error(R.drawable.img_error)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(view)
+            .into(object : CustomTarget<Drawable>() {
+                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+//                    LoggerHelper.e("${resource.intrinsicWidth}, ${resource.intrinsicHeight}")
+                    view.setImageDrawable(resource)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+            })
     }
 
     @BindingAdapter("loadProfile")

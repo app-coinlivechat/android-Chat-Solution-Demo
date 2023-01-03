@@ -119,14 +119,24 @@
             app:layout_constraintStart_toEndOf="@id/tv_appName"
             app:layout_constraintTop_toTopOf="@id/tv_appName" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/g1"
+            app:layout_constraintGuide_end="78dp"
+            app:layout_constraintStart_toEndOf="@id/rl_msg"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"/>
+
 
         <RelativeLayout
             android:id="@+id/rl_msg"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            app:layout_constraintWidth_max="wrap"
-            app:layout_constraintWidth_percent="0.6"
+            app:layout_constraintEnd_toStartOf="@id/g1"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constrainedWidth="true"
             app:layout_constraintStart_toEndOf="@id/ibtn_profile"
             app:layout_constraintTop_toBottomOf="@id/tv_nickName">
 
@@ -206,7 +216,6 @@
                 android:id="@+id/cl_trans"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="246dp"
                 android:visibility="@{transMsg == null ? View.GONE : View.VISIBLE,default=gone}">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -277,8 +286,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="19dp"
             android:textColor="@color/chat_msg_time_text"
+            android:gravity="start"
             android:visibility="@{!isShowTime ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/rl_msg"
             app:layout_constraintStart_toEndOf="@id/rl_msg"

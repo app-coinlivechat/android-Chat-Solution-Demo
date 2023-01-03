@@ -3,6 +3,7 @@ package com.coinlive.uikit.views
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -207,9 +208,12 @@ class MessageMenuView @JvmOverloads constructor(
                     }
                 }
                 binding.llMessage.apply {
+                    gravity = Gravity.START
                     addView(holder.itemView)
                     layoutParams = (layoutParams as MarginLayoutParams).apply {
                         topMargin = (screen[1] - dpToPx(30F))
+                        marginStart = dpToPx(56F)
+                        marginEnd = 0
                     }
                 }
             }
@@ -232,9 +236,12 @@ class MessageMenuView @JvmOverloads constructor(
                 }
 
                 binding.llMessage.apply {
+                    gravity = Gravity.START
                     addView(holder.itemView)
                     layoutParams = (layoutParams as MarginLayoutParams).apply {
                         topMargin = (screen[1] - dpToPx(72F))
+                        marginStart = dpToPx(56F)
+                        marginEnd = 0
                     }
                 }
             }
@@ -250,9 +257,13 @@ class MessageMenuView @JvmOverloads constructor(
                     }
                 }
                 binding.llMessage.apply {
+                    gravity = Gravity.START
                     addView(holder.itemView)
                     layoutParams = (layoutParams as MarginLayoutParams).apply {
                         topMargin = (screen[1] - dpToPx(30F))
+                        marginStart = dpToPx(56F)
+                        marginEnd = 0
+
                     }
                 }
             }
@@ -275,9 +286,12 @@ class MessageMenuView @JvmOverloads constructor(
                 }
 
                 binding.llMessage.apply {
+                    gravity = Gravity.END
                     addView(holder.itemView)
                     layoutParams = (layoutParams as MarginLayoutParams).apply {
                         topMargin = (screen[1] - dpToPx(30F))
+                        marginStart = 0
+                        marginEnd = dpToPx(16F)
                     }
                 }
 

@@ -42,8 +42,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp">
+        android:layout_height="wrap_content">
 
 
         <TextView
@@ -76,8 +75,8 @@
             style="@style/caption1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
             android:layout_marginStart="8dp"
+            android:paddingBottom="4dp"
             android:text="@{chat.userNickname}"
             android:textColor="@color/normal_text"
             android:visibility="@{isMessageMenu ? View.GONE : (isRoundMessage ? View.GONE : View.VISIBLE)}"
@@ -110,55 +109,53 @@
             app:layout_constraintStart_toEndOf="@id/tv_appName"
             app:layout_constraintTop_toTopOf="@id/tv_appName"
             tools:ignore="TextContrastCheck" />
+        <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/g1"
+            app:layout_constraintGuide_end="78dp"
+            app:layout_constraintStart_toEndOf="@id/rl_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"/>
 
-
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/rl_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constrainedWidth="true"
             android:layout_marginStart="8dp"
             android:gravity="start"
-            app:layout_constraintBottom_toTopOf="@id/v_bottom"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintEnd_toStartOf="@id/g1"
             app:layout_constraintStart_toEndOf="@id/ibtn_profile"
-            app:layout_constraintTop_toBottomOf="@id/tv_nickName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toBottomOf="@id/tv_nickName">
+
             <ImageView
                 android:id="@+id/iv_one"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:maxHeight="264dp"
                 android:adjustViewBounds="true"
-                android:cropToPadding="false"
-                android:maxWidth="241dp"
+                android:scaleType="fitStart"
                 android:visibility="@{isBlockUser ? View.VISIBLE :(chat.images.size() > 1 ? View.GONE : View.VISIBLE)}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="ContentDescription" />
 
             <GridLayout
                 android:id="@+id/gl_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="241dp"
-                android:minHeight="75dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnCount="@{chat.images.size() > 4 ? 3 : 2}"
                 android:orientation="horizontal"
+                android:rowCount="@{(chat.images.size() / (chat.images.size() > 4 ? 3 : 2)) + 1}"
                 android:useDefaultMargins="false"
-                android:visibility="@{isBlockUser ? View.GONE : (chat.images.size() > 1 ? View.VISIBLE : View.GONE)}"/>
+                android:visibility="@{isBlockUser ? View.GONE : (chat.images.size() > 1 ? View.VISIBLE : View.GONE)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <!--        <androidx.recyclerview.widget.RecyclerView-->
-            <!--            android:id="@+id/rv_list"-->
-            <!--            android:layout_width="wrap_content"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_marginStart="8dp"-->
-            <!--            android:layout_marginTop="4dp"-->
-            <!--            android:layout_marginEnd="60dp"-->
-            <!--            android:clipChildren="false"-->
-            <!--            android:clipToPadding="false"-->
-            <!--            android:longClickable="true"-->
-            <!--            android:padding="0dp"-->
-            <!--            android:visibility="gone"-->
-            <!--            app:layout_constraintBottom_toTopOf="@id/v_bottom"-->
-            <!--            app:layout_constraintEnd_toEndOf="parent"-->
-            <!--            app:layout_constraintStart_toEndOf="@id/ibtn_profile"-->
-            <!--            app:layout_constraintTop_toBottomOf="@id/tv_nickName" />-->
-
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tv_time"
