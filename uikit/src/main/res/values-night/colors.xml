@@ -66,7 +66,7 @@
     <color name="toast_background">#464650</color>
     <color name="input_hint">#7E7E86</color>
     <color name="input_background">#464650</color>
-    <color name="chatting_menu_divider">##42424C</color>
+    <color name="chatting_menu_divider">#42424C</color>
     <color name="chatting_menu_background">#2B2B33</color>
 
 
