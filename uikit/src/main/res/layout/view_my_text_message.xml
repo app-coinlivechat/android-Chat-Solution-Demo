@@ -58,8 +58,10 @@
 
         <RelativeLayout
             android:id="@+id/rl_msg"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:layout_constraintWidth_max="wrap"
+            app:layout_constraintWidth_percent="0.7"
             app:layout_constraintBottom_toTopOf="@id/emoji"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_date">
@@ -73,7 +75,6 @@
                 android:background="@{isRoundMessage ? @drawable/shape_round_my_msg_background : @drawable/shape_my_msg_background}"
                 android:gravity="start"
                 android:linksClickable="true"
-                android:maxWidth="246dp"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="8dp"
                 android:text="@{message}"
@@ -99,7 +100,6 @@
                     android:autoLink="web"
                     android:ellipsize="end"
                     android:linksClickable="true"
-                    android:maxWidth="222dp"
                     android:maxLength="400"
                     android:maxLines="10"
                     android:text="@{message}"

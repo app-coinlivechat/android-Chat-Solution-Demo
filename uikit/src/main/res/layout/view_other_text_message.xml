@@ -122,9 +122,11 @@
 
         <RelativeLayout
             android:id="@+id/rl_msg"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            app:layout_constraintWidth_max="wrap"
+            app:layout_constraintWidth_percent="0.6"
             app:layout_constraintStart_toEndOf="@id/ibtn_profile"
             app:layout_constraintTop_toBottomOf="@id/tv_nickName">
 
@@ -137,7 +139,6 @@
                 android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
                 android:gravity="start"
                 android:linksClickable="true"
-                android:maxWidth="246dp"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="8dp"
                 android:text="@{originMsg}"
@@ -150,7 +151,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@{isRoundMessage ? @drawable/shape_round_other_msg_background : @drawable/shape_other_msg_background}"
-                android:maxWidth="246dp"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="8dp"
                 android:visibility="@{(originMsg.length > 400 || originMsgLine > 10) ? View.VISIBLE :View.GONE, default = gone}">
