@@ -16,6 +16,7 @@ import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 interface SendEventListener {
@@ -108,10 +109,11 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
         if (isLoading) return
         isLoading = true
 
-        val now = CalendarHelper.nowCalendar()
-        val result = now.get(Calendar.DATE) - standardTime.get(Calendar.DATE)
+        val result = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis()) - TimeUnit.MILLISECONDS.toDays(standardTime.timeInMillis)
+//        LoggerHelper.d("day diff : $result")
+//        LoggerHelper.d("query Calendar : ${standardTime.timeInMillis}")
+
         if (result in 0..7) {
-            LoggerHelper.d("day diff : $result")
             var queryCalendar: Calendar = standardTime.clone() as Calendar
             var collectionPath = "$BASE_PATH/${standardTime.timeInMillis}/$coinId"
             var collection: CollectionReference = Firebase.firestore.collection(collectionPath)
@@ -161,7 +163,7 @@ class FirestoreWrapper(private val coinId: String, private val listener: Message
                 }
             }.addOnFailureListener {
                 isLoading = false
-                LoggerHelper.de("FirestoreWrapper.fetchMessage error!!\n" +
+                LoggerHelper.e("FirestoreWrapper.fetchMessage error!!\n" +
                         "${Error.QUERY_FETCH_MESSAGE.code}, ${Error.QUERY_FETCH_MESSAGE.msg}\n" +
                         "${it.message}")
             }
