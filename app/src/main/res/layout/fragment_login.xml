@@ -21,7 +21,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 tools:context=".fragments.LoginFragment">
 
@@ -37,7 +37,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/ll_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -46,177 +46,165 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_title">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
+
+                    <TextView
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp">
+                        android:text="BAND ID"
+                        android:textColor="@color/normal_text"
+                        app:layout_constraintBottom_toBottomOf="@id/et_bandId"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/et_bandId" />
+
+                    <EditText
+                        android:id="@+id/et_bandId"
+                        style="@style/body2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/login_editext_outline"
+                        android:gravity="center_vertical"
+                        android:hint="@string/login_band_id_hit"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingHorizontal="16dp"
+                        android:text="@{appName}"
+                        android:textColor="@color/normal_text"
+                        android:textColorHint="@color/login_input_hint"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/et_nickname"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="Autofill,TouchTargetSizeCheck" />
+
+
+                    <TextView
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="43dp"
+                        android:text="UUID"
+                        android:textColor="@color/grey_090"
+                        app:layout_constraintBottom_toBottomOf="@id/et_uuId"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/et_uuId" />
+
+                    <EditText
+                        android:id="@+id/et_uuId"
+                        style="@style/body2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/login_editext_outline"
+                        android:gravity="center_vertical"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/normal_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/et_nickname"
+                        app:layout_constraintTop_toBottomOf="@id/et_bandId"
+                        tools:ignore="Autofill,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+                    <ImageButton
+                        android:id="@+id/ibtn_refresh"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/icon_refresh"
+                        app:layout_constraintBottom_toBottomOf="@id/et_uuId"
+                        app:layout_constraintEnd_toEndOf="@id/et_uuId"
+                        app:layout_constraintTop_toTopOf="@id/et_uuId"
+                        tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                    <TextView
+                        android:id="@+id/tv_nickName"
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="Nickname"
+                        android:textColor="@color/grey_090"
+                        app:layout_constraintBottom_toBottomOf="@id/et_nickname"
+                        app:layout_constraintEnd_toStartOf="@id/et_nickname"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/et_nickname" />
+
+                    <EditText
+                        android:id="@+id/et_nickname"
+                        style="@style/body2"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/login_editext_outline"
+                        android:gravity="center_vertical"
+                        android:hint="@string/login_nickname_hit"
+                        android:inputType="text"
+                        android:maxWidth="263dp"
+                        android:maxLines="1"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="@color/normal_text"
+                        android:textColorHint="@color/login_input_hint"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/tv_nickName"
+                        app:layout_constraintTop_toBottomOf="@id/et_uuId"
+                        tools:ignore="Autofill,TouchTargetSizeCheck" />
+
+
+                    <TextView
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Profile"
+                        android:textColor="@color/grey_090"
+                        app:layout_constraintBottom_toBottomOf="@id/cl_profile"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/cl_profile" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_profile"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/login_profile_outline"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/et_nickname"
+                        app:layout_constraintTop_toBottomOf="@id/et_nickname">
 
                         <TextView
-                            style="@style/body1"
+                            android:id="@+id/tv_profile"
+                            style="@style/body2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="20dp"
-                            android:text="BAND ID"
-                            android:textColor="@color/normal_text"
+                            android:text="@string/login_profile_hit"
+                            android:textColor="@color/profile_input_text"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-                        <EditText
-                            android:id="@+id/et_bandId"
-                            style="@style/body2"
-                            android:layout_width="263dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_vertical"
-                            android:background="@drawable/login_editext_outline"
-                            android:gravity="center_vertical"
-                            android:hint="@string/login_band_id_hit"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:paddingHorizontal="16dp"
-                            android:text="@{appName}"
-                            android:textColor="@color/normal_text"
-                            android:textColorHint="@color/login_input_hint"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="Autofill,TouchTargetSizeCheck" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp">
-
-                        <TextView
-                            style="@style/body1"
+                        <Button
+                            android:id="@+id/btn_image"
+                            style="@style/caption1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="43dp"
-                            android:text="UUID"
-                            android:textColor="@color/grey_090"
+                            android:background="@drawable/select_blue_button_background"
+                            android:minWidth="0dp"
+                            android:minHeight="0dp"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="5dp"
+                            android:text="@string/select"
+                            android:textColor="@android:color/white"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <EditText
-                            android:id="@+id/et_uuId"
-                            style="@style/body2"
-                            android:layout_width="263dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/login_editext_outline"
-                            android:gravity="center_vertical"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:paddingHorizontal="16dp"
-                            android:textColor="@color/normal_text"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="Autofill,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
-
-                        <ImageButton
-                            android:id="@+id/ibtn_refresh"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_marginEnd="6dp"
-                            android:background="@android:color/transparent"
-                            android:src="@drawable/icon_refresh"
-                            app:layout_constraintBottom_toBottomOf="@id/et_uuId"
-                            app:layout_constraintEnd_toEndOf="@id/et_uuId"
-                            app:layout_constraintTop_toTopOf="@id/et_uuId"
-                            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp">
-
-                        <TextView
-                            style="@style/body1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Nickname"
-                            android:textColor="@color/grey_090"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <EditText
-                            android:id="@+id/et_nickname"
-                            style="@style/body2"
-                            android:layout_width="263dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/login_editext_outline"
-                            android:gravity="center_vertical"
-                            android:hint="@string/login_nickname_hit"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:paddingHorizontal="16dp"
-                            android:textColor="@color/normal_text"
-                            android:textColorHint="@color/login_input_hint"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:ignore="TouchTargetSizeCheck" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/body1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Profile"
-                            android:textColor="@color/grey_090"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="263dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/login_profile_outline"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="8dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <TextView
-                                android:id="@+id/tv_profile"
-                                style="@style/body2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/login_profile_hit"
-                                android:textColor="@color/profile_input_text"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <Button
-                                android:id="@+id/btn_image"
-                                style="@style/caption1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/select_blue_button_background"
-                                android:minWidth="0dp"
-                                android:minHeight="0dp"
-                                android:paddingHorizontal="10dp"
-                                android:paddingVertical="5dp"
-                                android:text="@string/select"
-                                android:textColor="@android:color/white"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                tools:ignore="TouchTargetSizeCheck" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_sign"
@@ -305,10 +293,10 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/progressBar"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#99000000">
+            android:background="#99000000"
+            android:visibility="gone">
 
             <ProgressBar
                 android:layout_width="wrap_content"
