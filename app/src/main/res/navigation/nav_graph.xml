@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:defaultNavHost="true"
+    app:startDestination="@id/LoginFragment">
+    <include
+        app:graph="@navigation/chat_navigation" />
+
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="com.coinlive.demo.fragments.LoginFragment"
+        android:label="@string/login_fragment_label"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_LoginFragment_to_ChannelListFragment"
+            app:destination="@id/ChannelListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/ChannelListFragment"
+        android:name="com.coinlive.demo.fragments.ChannelListFragment"
+        android:label="@string/channel_list_fragment_label"
+        tools:layout="@layout/fragment_channel_list">
+
+        <action
+            android:id="@+id/action_ChannelListFragment_to_ChatFragment"
+            app:destination="@id/chatGraph"
+            app:enterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out" />
+
+        <action
+            android:id="@+id/action_ChannelListFragment_to_LoginFragment"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:destination="@id/LoginFragment" />
+
+    </fragment>
+
+</navigation>

@@ -1,0 +1,90 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="header1">
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textSize">28dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">34dp</item>
+    </style>
+
+    <style name="header2">
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">30dp</item>
+    </style>
+
+    <style name="header3">
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">26dp</item>
+    </style>
+
+    <style name="subtitle1">
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">24dp</item>
+    </style>
+    <style name="subtitle2">
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">22dp</item>
+
+    </style>
+    <style name="subtitle2.5">
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">20dp</item>
+
+    </style>
+
+    <style name="subtitle3">
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">20dp</item>
+
+    </style>
+    <style name="subtitle4">
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">18dp</item>
+
+    </style>
+    <style name="body1">
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineHeight">22dp</item>
+    </style>
+    <style name="body2">
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineHeight">20dp</item>
+    </style>
+
+    <style name="caption1">
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineHeight">18dp</item>
+    </style>
+    <style name="caption1.5">
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">11dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineHeight">14dp</item>
+    </style>
+    <style name="caption2">
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">10dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineHeight">12dp</item>
+    </style>
+
+</resources>

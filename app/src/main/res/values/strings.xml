@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">코인라이브 CHAT Solution Demo</string>
+    <string name="login_fragment_label">Login</string>
+    <string name="channel_list_fragment_label">Channel List</string>
+
+    <string name="login_title">coinlive\nCHAT solution\nSample</string>
+    <string name="menu_confirm">확인</string>
+    <string name="login_description">익명 접속 테스트를 원하신다면 위 버튼을 눌러주세요.\n문의사항은 메일로 발송해주세요.\napp@coinlive.net</string>
+    <string name="login_nickname_hit">최대 10자, 중복불가</string>
+    <string name="login_profile_hit">최대 15MB (jpeg, png)</string>
+    <string name="login_band_id_hit" translatable="false">Email</string>
+    <string name="sign_up">가입</string>
+    <string name="connect_cl">회원 접속</string>
+    <string name="select">선택</string>
+    <string name="guest_log_in">익명 접속</string>
+    <string name="channel_list_title">채널 선택</string>
+    <string name="please_back_press">\'뒤로\'버튼을 한 번 더 누르시면 서비스가 종료됩니다.</string>
+    <string name="please_login">채팅을 하려면 로그인을 해주세요</string>
+
+</resources>

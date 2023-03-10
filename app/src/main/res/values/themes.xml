@@ -1,0 +1,85 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Chat_solution_demo" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:itemTextAppearance">@color/blue_text</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.Chat_solution_demo.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Chat_solution_demo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Chat_solution_demo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="header1">
+        <item name="android:textSize">28dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="header2">
+        <item name="android:textSize">24dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="header3">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="subtitle1">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="subtitle2">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="subtitle2.5">
+        <item name="android:textSize">15dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="subtitle3">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="subtitle4">
+        <item name="android:textSize">12dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="body1">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="body2">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="caption1">
+        <item name="android:textSize">12dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="caption1.5">
+        <item name="android:textSize">11dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="caption2">
+        <item name="android:textSize">10dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+</resources>

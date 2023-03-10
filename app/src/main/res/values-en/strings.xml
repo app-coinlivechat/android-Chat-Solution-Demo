@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Coinlive CHAT Solution Demo</string>
+    <string name="login_fragment_label">Login</string>
+    <string name="channel_list_fragment_label">Channel List</string>
+
+    <string name="login_title">coinlive\nCHAT solution\nSample</string>
+    <string name="menu_confirm">confirm</string>
+    <string name="login_description">Please click \'Guest log in\' if you wish to log in as a guest. Please contact
+        app@coinlive.net if you need any support.</string>
+    <string name="login_nickname_hit">Max 10 characters </string>
+    <string name="login_profile_hit">Max 15MB (jpeg, png)</string>
+
+    <string name="sign_up">Join Coinlive</string>
+    <string name="connect_cl">CL user log in </string>
+    <string name="select">Select</string>
+    <string name="guest_log_in">Guest log in</string>
+    <string name="channel_list_title">Select Channel</string>
+    <string name="please_back_press">Press back button again to Exit.</string>
+    <string name="please_login">Please log in to Chat </string>
+
+</resources>

@@ -1,0 +1,50 @@
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+<!--    <color name="black">#FF000000</color>-->
+<!--    <color name="white">#FFFFFFFF</color>-->
+
+
+
+
+    // grey
+    <color name="grey_005">#FFFFFF</color>
+    <color name="grey_010">#F2F4F6</color>
+    <color name="grey_015">#202025</color>
+    <color name="grey_020">#DADEE2</color>
+    <color name="grey_030">#AEB7C1</color>
+    <color name="grey_040">#8D94A1</color>
+    <color name="grey_050">#6D7583</color>
+    <color name="grey_060">#4F5866</color>
+    <color name="grey_070">#353C4A</color>
+    <color name="grey_080">#E4E4E6</color>
+    <color name="grey_090">#000000</color>
+
+
+    // sub
+    <color name="sub_blue_500">#4880EE</color>
+    <color name="sub_red_400">#E64E3C</color>
+    <color name="yellow_050">#FFF028</color>
+    <color name="yellow_060">#FFD324</color>
+    <color name="green_050">#27AB86</color>
+    <color name="green_060">#137B5E</color>
+
+    <color name="background">#FFFFFF</color>
+    <color name="dialog_background">#FFFFFF</color>
+    <color name="blue_text">#32A4B3</color>
+    <color name="primary_press">#267F8B</color>
+    <color name="channel_item_background">@color/grey_080</color>
+    <color name="login_input_border">#AEB7C1</color>
+    <color name="login_input_solid">#FFFFFF</color>
+    <color name="login_input_hint">#C3C3C7</color>
+    <color name="normal_text">#000000</color>
+    <color name="divider">#1F000000</color>
+    <color name="profile_input_border">#AEB7C1</color>
+    <color name="profile_input_solid">#DADEE2</color>
+    <color name="profile_input_text">#8D94A1</color>
+    <color name="btn_grey">#353C4A</color>
+
+</resources>
