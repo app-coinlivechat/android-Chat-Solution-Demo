@@ -1,1 +1,0 @@
-# android-Chat-Solution-Demo
